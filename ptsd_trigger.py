@@ -24,7 +24,6 @@ class PTSDTriggerSkill(BaseSkill):
  "immediate_reaction": "角色的即刻创伤反应（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"triggered": False}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"triggered": False}

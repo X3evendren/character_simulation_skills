@@ -29,7 +29,6 @@ class MaslowSkill(BaseSkill):
  "behavior_explanation": "当前行为由哪层需求驱动（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"current_dominant": 3}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"current_dominant": 3}

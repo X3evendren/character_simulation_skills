@@ -6,9 +6,37 @@ Skill 基类
 """
 from __future__ import annotations
 
+import json
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Optional
+
+
+def extract_json(raw_output: str) -> dict:
+    """从 LLM 原始输出中提取 JSON 字典。
+
+    处理三种常见情况:
+    1. ```json ... ``` 围栏代码块
+    2. ``` ... ``` 无标记围栏
+    3. 裸 JSON 字符串
+    返回解析后的 dict，失败返回空 dict。
+    """
+    text = raw_output.strip()
+    # 优先匹配围栏代码块
+    match = re.search(r'```(?:json)?\s*\n?(.*?)\n?```', text, re.DOTALL)
+    if match:
+        text = match.group(1).strip()
+    else:
+        # 回退: 取首尾花括号之间的内容
+        start = text.find('{')
+        end = text.rfind('}')
+        if start >= 0 and end > start:
+            text = text[start:end + 1]
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return {}
 
 
 @dataclass

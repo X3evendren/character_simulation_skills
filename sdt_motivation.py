@@ -30,7 +30,6 @@ class SDTSkill(BaseSkill):
  "intrinsic_motivation_level": "0.0-1.0 当前内在动机水平"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"intrinsic_motivation_level": 0.5}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"intrinsic_motivation_level": 0.5}

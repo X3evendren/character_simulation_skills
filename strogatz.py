@@ -26,7 +26,6 @@ Strogatz Romeo-Juliet模型: dR/dt = aR + bJ
  "equilibrium_point": "如果有的话，系统将趋于什么状态"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"system_trend": "unknown"}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"system_trend": "unknown"}

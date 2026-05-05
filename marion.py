@@ -29,7 +29,6 @@ class MarionSkill(BaseSkill):
  "erotic_tension": "当前的爱欲张力描述（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"who_is_advancing": "neither"}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"who_is_advancing": "neither"}

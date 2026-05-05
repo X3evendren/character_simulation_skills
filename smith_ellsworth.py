@@ -85,18 +85,6 @@ class SmithEllsworthSkill(BaseSkill):
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import re
-        import json
-        text = raw_output.strip()
-        match = re.search(r'```(?:json)?\s*\n?(.*?)\n?```', text, re.DOTALL)
-        if match:
-            text = match.group(1).strip()
-        else:
-            start = text.find('{')
-            end = text.rfind('}')
-            if start >= 0 and end > start:
-                text = text[start:end + 1]
-        try:
-            return json.loads(text)
-        except json.JSONDecodeError:
-            return {"appraisal_profile": "无法解析", "certainty": 0.5, "pleasantness": 0.0}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"appraisal_profile": "无法解析", "certainty": 0.5, "pleasantness": 0.0}

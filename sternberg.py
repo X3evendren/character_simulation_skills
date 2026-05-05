@@ -33,7 +33,6 @@ class SternbergSkill(BaseSkill):
  "triangle_description": "三角形状描述（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"love_type": "未定义"}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"love_type": "未定义"}

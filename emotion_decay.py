@@ -15,6 +15,8 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 
+_LN2 = math.log(2)
+
 
 @dataclass
 class PADState:
@@ -104,8 +106,8 @@ class EmotionDecayModel:
 
     def decay(self, dt_events: float = 1.0) -> None:
         """应用半衰期衰减: value *= 2^(-dt/half_life)"""
-        lambda_fast = math.log(2) / max(0.1, self.half_life_fast)
-        lambda_slow = math.log(2) / max(0.1, self.half_life_slow)
+        lambda_fast = _LN2 / max(0.1, self.half_life_fast)
+        lambda_slow = _LN2 / max(0.1, self.half_life_slow)
 
         decay_fast = math.exp(-lambda_fast * dt_events)
         decay_slow = math.exp(-lambda_slow * dt_events)

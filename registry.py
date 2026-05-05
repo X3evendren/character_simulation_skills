@@ -29,6 +29,9 @@ class SkillRegistry:
     def get(self, name: str) -> BaseSkill | None:
         return self._skills.get(name)
 
+    def __contains__(self, name: str) -> bool:
+        return name in self._skills
+
     def list_all(self) -> list[str]:
         return list(self._skills.keys())
 
@@ -44,22 +47,6 @@ class SkillRegistry:
         for t in triggers:
             selected.update(self._by_trigger.get(t, []))
         return list(selected)
-
-    def select_layer3(self, event_type: str, has_partner: bool = False, has_authority: bool = False,
-                      has_conflict: bool = False, has_resources: bool = False, has_group: bool = False) -> list[str]:
-        """Layer 3 按触发条件选择性激活"""
-        selected: set[str] = set()
-        if has_partner:
-            selected.update(self._by_trigger.get("romantic", []))
-        if has_authority:
-            selected.update(self._by_trigger.get("authority", []))
-        if has_conflict:
-            selected.update(self._by_trigger.get("conflict", []))
-        if has_resources:
-            selected.update(self._by_trigger.get("economic", []))
-        if has_group:
-            selected.update(self._by_trigger.get("group", []))
-        return [s for s in selected if s in self._by_layer.get(3, [])]
 
     @property
     def skill_count(self) -> int:

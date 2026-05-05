@@ -27,7 +27,6 @@ ACE≥4: 探索行为减少(exploration↓)、奖励反馈迟钝(reward sensitiv
  "protective_factor": "角色当前的保护因素（如果有）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"ace_activation": 0.0}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"ace_activation": 0.0}

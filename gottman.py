@@ -30,7 +30,6 @@ Gottman核心指标:
  "intervention_suggestion": "如果角色想修复关系，此刻的最佳行动"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"interaction_diagnosis": "无法解析"}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"interaction_diagnosis": "无法解析"}

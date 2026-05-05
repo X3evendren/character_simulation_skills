@@ -101,22 +101,10 @@ Plutchik 8种基础情绪: joy/sadness/trust/disgust/fear/anger/surprise/anticip
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import re
-        import json
-        text = raw_output.strip()
-        match = re.search(r'```(?:json)?\s*\n?(.*?)\n?```', text, re.DOTALL)
-        if match:
-            text = match.group(1).strip()
-        else:
-            start = text.find('{')
-            end = text.rfind('}')
-            if start >= 0 and end > start:
-                text = text[start:end + 1]
-        try:
-            return json.loads(text)
-        except json.JSONDecodeError:
-            return {
-                "internal": {"dominant": "neutral", "pleasantness": 0.0, "intensity": 0.5},
-                "expressed": {"dominant": "neutral", "pleasantness": 0.0},
-                "emotion_gap": {"exists": False, "type": "none"}
-            }
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {
+            "internal": {"dominant": "neutral", "pleasantness": 0.0, "intensity": 0.5},
+            "expressed": {"dominant": "neutral", "pleasantness": 0.0},
+            "emotion_gap": {"exists": False, "type": "none"}
+        }

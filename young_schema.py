@@ -31,7 +31,6 @@ class YoungSchemaSkill(BaseSkill):
  "schema_shift_summary": "本次事件后图式结构的整体变化（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"affected_schemas": []}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"affected_schemas": []}

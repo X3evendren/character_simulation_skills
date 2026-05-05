@@ -50,9 +50,6 @@ class AttachmentSkill(BaseSkill):
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip()
-        if text.startswith("```"): text = text[text.find("\n")+1:] if "\n" in text else text[3:]
-        if text.endswith("```"): text = text[:-3]
-        try: return json.loads(text.strip())
-        except json.JSONDecodeError: return {"activation_level": 0.5}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"activation_level": 0.5}

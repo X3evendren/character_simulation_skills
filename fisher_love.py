@@ -25,7 +25,6 @@ class FisherLoveSkill(BaseSkill):
  "stuck_risk": "是否卡在当前阶段? 风险描述"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip().lstrip("```json").rstrip("```").strip()
-        try: return json.loads(text)
-        except json.JSONDecodeError: return {"current_stage": "unknown"}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"current_stage": "unknown"}

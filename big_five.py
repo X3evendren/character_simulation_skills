@@ -47,14 +47,6 @@ class BigFiveSkill(BaseSkill):
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import json
-        text = raw_output.strip()
-        if text.startswith("```"):
-            nl = text.find("\n")
-            text = text[nl + 1:] if nl > 0 else text[3:]
-        if text.endswith("```"):
-            text = text[:-3]
-        try:
-            return json.loads(text.strip())
-        except json.JSONDecodeError:
-            return {"behavioral_bias": "无法解析", "emotional_reactivity": 0.5}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"behavioral_bias": "无法解析", "emotional_reactivity": 0.5}

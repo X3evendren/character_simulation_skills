@@ -17,6 +17,7 @@ Layer 0 始终在线。Layer 3 按触发条件选择。Layer 4-5 仅在关键场
 from __future__ import annotations
 
 import asyncio
+import time
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
@@ -81,47 +82,50 @@ class CognitiveOrchestrator:
         # ── 情感衰减 + 记忆检索 + 状态更新 ──
         ctx = self._prepare_context(character_state, event, ctx)
 
+        # SPASM 自我中心上下文投射 — 每事件计算一次
+        projected_ctx = self._project_egocentric_context(ctx, character_state)
+
         # ── Layer 0: 人格滤镜 — 使用情境化OCEAN ──
         l0_skills = ["big_five_analysis"]
-        l0_prompt_override = self._get_layer0_bias(character_state)
+        l0_prompt_override = self._get_layer0_bias(ctx)
         l0 = await self._run_layer(0, l0_skills, provider, character_state, event, ctx,
-                                   system_hint=l0_prompt_override)
+                                   projected_ctx, system_hint=l0_prompt_override)
         result.layer_results[0] = l0
         ctx["l0"] = [s.output for s in l0 if s.success]
 
         # ── Layer 1: 快速前意识 — 并行 ──
         l1_skills = [s for s in ["plutchik_emotion", "ptsd_trigger_check"]
-                     if s in self.registry._skills]
-        l1 = await self._run_layer(1, l1_skills, provider, character_state, event, ctx)
+                     if s in self.registry]
+        l1 = await self._run_layer(1, l1_skills, provider, character_state, event, ctx, projected_ctx)
         result.layer_results[1] = l1
         ctx["l1"] = [s.output for s in l1 if s.success]
 
         # ── Layer 2: 意识层情绪评估 — 并行 ──
         l2_skills = [s for s in ["occ_emotion_appraisal", "cognitive_bias_detect",
                                   "defense_mechanism_analysis", "smith_ellsworth_appraisal"]
-                     if s in self.registry._skills]
-        l2 = await self._run_layer(2, l2_skills, provider, character_state, event, ctx)
+                     if s in self.registry]
+        l2 = await self._run_layer(2, l2_skills, provider, character_state, event, ctx, projected_ctx)
         result.layer_results[2] = l2
         ctx["l2"] = [s.output for s in l2 if s.success]
 
         # ── Layer 3: 关系/社会处理 — 按触发条件选择性激活 ──
         l3_skills = self._select_l3(character_state, event)
         if l3_skills:
-            l3 = await self._run_layer(3, l3_skills, provider, character_state, event, ctx)
+            l3 = await self._run_layer(3, l3_skills, provider, character_state, event, ctx, projected_ctx)
             result.layer_results[3] = l3
             ctx["l3"] = [s.output for s in l3 if s.success]
 
         # ── Layer 4: 反思处理 — 仅在关键场景激活 ──
         if self._is_significant(event, result):
             l4_skills = [s for s in ["gross_emotion_regulation", "kohlberg_moral_reasoning"]
-                         if s in self.registry._skills]
-            l4 = await self._run_layer(4, l4_skills, provider, character_state, event, ctx)
+                         if s in self.registry]
+            l4 = await self._run_layer(4, l4_skills, provider, character_state, event, ctx, projected_ctx)
             result.layer_results[4] = l4
             ctx["l4"] = [s.output for s in l4 if s.success]
 
         # ── Layer 5: 状态更新 — 串行（依赖前面所有层） ──
-        if "state_diff_generator" in self.registry._skills:
-            l5 = await self._run_layer(5, ["state_diff_generator"], provider, character_state, event, ctx)
+        if "state_diff_generator" in self.registry:
+            l5 = await self._run_layer(5, ["state_diff_generator"], provider, character_state, event, ctx, projected_ctx)
             result.layer_results[5] = l5
             ctx["l5"] = [s.output for s in l5 if s.success]
             for s in l5:
@@ -178,13 +182,7 @@ class CognitiveOrchestrator:
             # 从 character_state 的 personality 字段初始化基线
             pers = character_state.get("personality", {})
             from .personality_state_machine import OCEANProfile
-            baseline = OCEANProfile(
-                openness=pers.get("openness", 0.5),
-                conscientiousness=pers.get("conscientiousness", 0.5),
-                extraversion=pers.get("extraversion", 0.5),
-                agreeableness=pers.get("agreeableness", 0.5),
-                neuroticism=pers.get("neuroticism", 0.5),
-            )
+            baseline = OCEANProfile.from_dict(pers)
             psm = PersonalityStateMachine(baseline=baseline)
 
         # 判定权威关系
@@ -205,18 +203,16 @@ class CognitiveOrchestrator:
             "state_description": psm.get_state_description(),
             "transition": state_transition,
         }
-        # 将情境化OCEAN写入character_state供Layer 0使用
+        # 情境化OCEAN存入ctx供Layer 0使用
         active_ocean = psm.get_active_profile()
-        character_state["_active_ocean"] = active_ocean.to_dict()
+        ctx["_active_ocean"] = active_ocean.to_dict()
 
         # 4. 反RLHF模板偏差: 注入系统级指令片段（角色特异性）
         if self.anti_alignment_enabled:
             ctx["_anti_alignment_hint"] = self._build_anti_alignment_hint(character_state)
 
         # 5. 外置对话历史
-        # 对话历史存储在外部，拼接为字符串注入prompt，不进入API上下文窗口
-        # 每次LLM调用仍是全新会话——从根本上消除注意力权重漂移
-        if self.conversation_store and self.conversation_store:
+        if self.conversation_store:
             ctx["external_history"] = self.conversation_store.format_history_string()
             ctx["external_history_compact"] = self.conversation_store.format_compact_context()
             ctx["time_since_last_turn"] = self.conversation_store.time_since_last_turn()
@@ -380,9 +376,9 @@ class CognitiveOrchestrator:
 
         return "\n".join(parts)
 
-    def _get_layer0_bias(self, character_state: dict) -> str | None:
+    def _get_layer0_bias(self, ctx: dict) -> str | None:
         """获取Layer 0 (BigFive) 的情境化偏置提示"""
-        active = character_state.get("_active_ocean")
+        active = ctx.get("_active_ocean")
         if not active:
             return None
         return (
@@ -417,7 +413,7 @@ class CognitiveOrchestrator:
             internal = l1_data.get("internal", {})
             emotions = internal.get("emotions", l1_data.get("emotions", {}))
             memory = EpisodicMemory(
-                timestamp=__import__("time").time(),
+                timestamp=time.time(),
                 description=event.get("description", ""),
                 emotional_signature=emotions,
                 significance=significance,
@@ -434,7 +430,7 @@ class CognitiveOrchestrator:
             result.updated_personality_state = psm.to_dict()
 
         # 4. Clean up temp fields
-        character_state.pop("_active_ocean", None)
+        ctx.pop("_active_ocean", None)
 
     def _update_decay_from_l1(self, decay_model: EmotionDecayModel,
                               ctx: dict, event: dict) -> None:
@@ -459,14 +455,12 @@ class CognitiveOrchestrator:
     async def _run_layer(
         self, layer: int, skill_names: list[str],
         provider, character_state: dict, event: dict, context: dict,
+        projected_context: dict,
         system_hint: str | None = None,
     ) -> list[SkillResult]:
         """并行执行同一层的所有 Skill"""
         if not skill_names:
             return []
-
-        # SPASM: 构建自我中心上下文投射
-        projected_context = self._project_egocentric_context(context, character_state)
 
         async def run_one(name: str) -> SkillResult:
             skill = self.registry.get(name)
@@ -476,7 +470,6 @@ class CognitiveOrchestrator:
                     success=False, error=f"Skill not found: {name}"
                 )
 
-            # 将增强上下文注入到 build_prompt 的 context 参数中
             enhanced_context = {
                 **projected_context,
                 "l0": context.get("l0", []),
@@ -485,11 +478,11 @@ class CognitiveOrchestrator:
                 "l3": context.get("l3", []),
                 "l4": context.get("l4", []),
                 "l5": context.get("l5", []),
-                # 新增
                 "mood_bias": context.get("mood_bias", {}),
                 "episodic_memories": context.get("episodic_memories", []),
                 "recent_events": context.get("recent_events", []),
                 "personality_state": context.get("personality_state", {}),
+                "_anti_alignment_hint": context.get("_anti_alignment_hint", ""),
             }
 
             return await skill.run(provider, character_state, event, enhanced_context)
@@ -566,12 +559,11 @@ class CognitiveOrchestrator:
         if event.get("significance", 0) >= 0.5:
             triggers.append("reflective")
 
-        all_l3 = self.registry.list_by_layer(3)
-        selected = self.registry.select_by_triggers(triggers)
+        all_l3 = set(self.registry.list_by_layer(3))
+        selected = [s for s in self.registry.select_by_triggers(triggers) if s in all_l3]
 
         # 总是尝试激活 diri_gent (如果注册了)
-        selected = [s for s in selected if s in all_l3]
-        if "dirigent_world_tension" in self.registry._skills and "dirigent_world_tension" not in selected:
+        if "dirigent_world_tension" in self.registry and "dirigent_world_tension" not in selected:
             selected.append("dirigent_world_tension")
 
         return selected

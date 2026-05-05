@@ -73,18 +73,6 @@ Level 4 (成熟): 幽默/升华/利他/预期——建设性应对
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        import re
-        import json
-        text = raw_output.strip()
-        match = re.search(r'```(?:json)?\s*\n?(.*?)\n?```', text, re.DOTALL)
-        if match:
-            text = match.group(1).strip()
-        else:
-            start = text.find('{')
-            end = text.rfind('}')
-            if start >= 0 and end > start:
-                text = text[start:end + 1]
-        try:
-            return json.loads(text)
-        except json.JSONDecodeError:
-            return {"activated_defense": {"name": "未检测到", "level": 3}, "activation_relevance": 0.5}
+        from .base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"activated_defense": {"name": "未检测到", "level": 3}, "activation_relevance": 0.5}
