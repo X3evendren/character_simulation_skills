@@ -49,4 +49,16 @@ class BigFiveSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"behavioral_bias": "无法解析", "emotional_reactivity": 0.5}
+        defaults = {
+            "behavioral_bias": "按基线人格做出反应",
+            "emotional_reactivity": 0.5,
+            "social_approach": "neutral",
+            "decision_style": "deliberate",
+            "stress_response": "在压力下保持惯常应对模式",
+            "interpretation_bias": "从自身人格视角解读事件",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result
