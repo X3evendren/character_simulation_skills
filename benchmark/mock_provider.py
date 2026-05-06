@@ -208,6 +208,13 @@ SKILL_SCHEMAS: dict[str, dict[str, tuple[Any, bool]]] = {
         "long_term_trajectory": ("轻微负面但可控", False),
         "protective_factor": ("当前关系中的安全感部分缓冲了ACE的影响", False),
     },
+    "response_generator": {
+        "response_text": ("我...我不知道该说什么。", True),
+        "action": ("stay_silent", False),
+        "subtext": ("内心有太多想说但无法表达", False),
+        "emotional_expression": ("anxiety", False),
+        "authenticity_note": ("回应反映了真实的情感矛盾", False),
+    },
 }
 
 
@@ -262,7 +269,10 @@ class MockProvider:
 
     # Keyword patterns for each skill (searched in prompt text).
     # Use very specific phrases to avoid false matches from the anti-alignment hint.
+    # IMPORTANT: response_generator must be first since its prompt contains ALL analysis data.
     _SKILL_KEYWORDS: list[tuple[str, str]] = [
+        ("response_generator", "完整心理状态分析"),
+        ("response_generator", "回应生成"),
         ("big_five_analysis", "大五人格模型"),
         ("big_five_analysis", "OCEAN"),
         ("attachment_style_analysis", "依恋理论专家"),

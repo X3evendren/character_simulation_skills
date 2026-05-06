@@ -53,3 +53,4 @@ from .sdt_motivation import SDTSkill
 # L5
 from .young_schema import YoungSchemaSkill
 from .ace_trauma import ACETraumaSkill
+from .response_generator import ResponseGeneratorSkill

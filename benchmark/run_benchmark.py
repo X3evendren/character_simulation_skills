@@ -25,7 +25,7 @@ from character_simulation_skills import (
     OCCEmotionSkill, CognitiveBiasSkill, DefenseMechanismSkill, SmithEllsworthSkill,
     GottmanSkill, MarionSkill, FoucaultSkill, SternbergSkill, StrogatzSkill, FisherLoveSkill, DiriGentSkill,
     GrossRegulationSkill, KohlbergSkill, MaslowSkill, SDTSkill,
-    YoungSchemaSkill, ACETraumaSkill,
+    YoungSchemaSkill, ACETraumaSkill, ResponseGeneratorSkill,
     CognitiveResult, SkillResult,
 )
 
@@ -63,7 +63,7 @@ def register_all_skills():
         # L4
         GrossRegulationSkill(), KohlbergSkill(), MaslowSkill(), SDTSkill(),
         # L5
-        YoungSchemaSkill(), ACETraumaSkill(),
+        YoungSchemaSkill(), ACETraumaSkill(), ResponseGeneratorSkill(),
     ]
     for skill in skills:
         registry.register(skill)

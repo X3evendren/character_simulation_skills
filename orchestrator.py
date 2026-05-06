@@ -86,7 +86,8 @@ class CognitiveOrchestrator:
         projected_ctx = self._project_egocentric_context(ctx, character_state)
 
         # ── Layer 0: 人格滤镜 — 使用情境化OCEAN ──
-        l0_skills = ["big_five_analysis"]
+        l0_skills = [s for s in ["big_five_analysis", "attachment_style_analysis"]
+                     if s in self.registry]
         l0_prompt_override = self._get_layer0_bias(ctx)
         l0 = await self._run_layer(0, l0_skills, provider, character_state, event, ctx,
                                    projected_ctx, system_hint=l0_prompt_override)
@@ -117,20 +118,30 @@ class CognitiveOrchestrator:
 
         # ── Layer 4: 反思处理 — 仅在关键场景激活 ──
         if self._is_significant(event, result):
-            l4_skills = [s for s in ["gross_emotion_regulation", "kohlberg_moral_reasoning"]
+            l4_skills = [s for s in ["gross_emotion_regulation", "kohlberg_moral_reasoning",
+                                      "maslow_need_stack", "sdt_motivation_analysis"]
                          if s in self.registry]
             l4 = await self._run_layer(4, l4_skills, provider, character_state, event, ctx, projected_ctx)
             result.layer_results[4] = l4
             ctx["l4"] = [s.output for s in l4 if s.success]
 
-        # ── Layer 5: 状态更新 — 串行（依赖前面所有层） ──
-        if "state_diff_generator" in self.registry:
-            l5 = await self._run_layer(5, ["state_diff_generator"], provider, character_state, event, ctx, projected_ctx)
+        # ── Layer 5: 状态更新 + 回应生成 — 串行 ──
+        l5_skills = [s for s in ["young_schema_update", "ace_trauma_processing",
+                                  "response_generator"]
+                     if s in self.registry]
+        if l5_skills:
+            # 回应生成器需要反RLHF提示词；分析层不需要
+            l5 = await self._run_layer(5, l5_skills, provider, character_state, event, ctx, projected_ctx)
             result.layer_results[5] = l5
             ctx["l5"] = [s.output for s in l5 if s.success]
-            for s in l5:
-                if s.success and "changes" in s.output:
-                    result.state_changes = s.output["changes"]
+
+        # ── 提取回应文本 ──
+        l5_outputs = ctx.get("l5", [])
+        for out in l5_outputs:
+            if out.get("response_text"):
+                result.state_changes = [{"response_text": out.get("response_text")}]
+                result.combined_analysis = out.get("response_text", "")
+                break
 
         # ── 持久化状态 ──
         self._persist_state(character_state, event, result, ctx)
@@ -458,7 +469,10 @@ class CognitiveOrchestrator:
         projected_context: dict,
         system_hint: str | None = None,
     ) -> list[SkillResult]:
-        """并行执行同一层的所有 Skill"""
+        """并行执行同一层的所有 Skill
+
+        反RLHF提示词仅在 Layer 5 (回应生成) 注入——分析层不需要角色行为约束。
+        """
         if not skill_names:
             return []
 
@@ -482,8 +496,11 @@ class CognitiveOrchestrator:
                 "episodic_memories": context.get("episodic_memories", []),
                 "recent_events": context.get("recent_events", []),
                 "personality_state": context.get("personality_state", {}),
-                "_anti_alignment_hint": context.get("_anti_alignment_hint", ""),
             }
+
+            # 反RLHF提示词仅在回应生成层注入
+            if layer == 5:
+                enhanced_context["_anti_alignment_hint"] = context.get("_anti_alignment_hint", "")
 
             return await skill.run(provider, character_state, event, enhanced_context)
 
