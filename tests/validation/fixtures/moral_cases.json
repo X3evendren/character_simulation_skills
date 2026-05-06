@@ -1,0 +1,61 @@
+[
+  {
+    "id": "mor_001",
+    "source": "Kohlberg Stage 3: Interpersonal Expectations",
+    "character_state": {
+      "name": "阶段3角色",
+      "personality": {
+        "openness": 0.5, "conscientiousness": 0.5, "extraversion": 0.6,
+        "agreeableness": 0.75, "neuroticism": 0.5,
+        "attachment_style": "secure", "defense_style": [], "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {"ace_score": 0, "active_schemas": [], "trauma_triggers": []},
+      "ideal_world": {}, "motivation": {"current_goal": ""}, "emotion_decay": {}
+    },
+    "event": {
+      "description": "她的好朋友考试作弊被抓。老师让她作证，如果说实话朋友会被开除，如果说谎她自己会受处分。",
+      "type": "moral_choice", "participants": [{"name": "朋友", "relation": "friend", "role": "peer"}, {"name": "老师", "relation": "teacher", "role": "authority"}],
+      "significance": 0.85, "tags": ["moral_dilemma", "loyalty", "honesty"]
+    },
+    "expected": {
+      "kohlberg_moral_reasoning": {
+        "stage_used": {"in": [3, 4]},
+        "reasoning": {"contains_any": ["关系", "朋友", "期望", "忠诚", "规则"]},
+        "moral_conflict": {"not_empty": true}
+      },
+      "gross_emotion_regulation": {
+        "detected_strategy": {"not_empty": true}
+      },
+      "response_generator": {"response_text": {"not_empty": true}}
+    }
+  },
+  {
+    "id": "mor_002",
+    "source": "Kohlberg Stage 4: Law and Order",
+    "character_state": {
+      "name": "阶段4角色",
+      "personality": {
+        "openness": 0.3, "conscientiousness": 0.85, "extraversion": 0.4,
+        "agreeableness": 0.5, "neuroticism": 0.35,
+        "attachment_style": "secure", "defense_style": ["合理化"], "cognitive_biases": [],
+        "moral_stage": 4
+      },
+      "trauma": {"ace_score": 0, "active_schemas": [], "trauma_triggers": []},
+      "ideal_world": {}, "motivation": {"current_goal": ""}, "emotion_decay": {}
+    },
+    "event": {
+      "description": "她发现公司存在严重的环境污染行为，但举报会导致工厂关闭、数百人失业。公司高层暗示如果她保持沉默会得到晋升。",
+      "type": "moral_choice", "participants": [{"name": "公司高层", "relation": "superior", "role": "authority"}],
+      "significance": 0.9, "tags": ["moral_dilemma", "law", "social_good"]
+    },
+    "expected": {
+      "kohlberg_moral_reasoning": {
+        "stage_used": {"min": 3},
+        "reasoning": {"contains_any": ["法律", "规则", "秩序", "社会", "责任"]},
+        "stage_consistency": {"in": ["consistent", "mixed"]}
+      },
+      "response_generator": {"response_text": {"not_empty": true}}
+    }
+  }
+]
