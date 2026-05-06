@@ -33,4 +33,15 @@ class YoungSchemaSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"affected_schemas": []}
+        defaults = {
+            "affected_schemas": [],
+            "schema_driven_interpretation": "基于已有图式的解读",
+            "healing_opportunity": "无明显疗愈机会",
+            "reinforcement_risk": 0.5,
+            "schema_shift_summary": "图式无显著变化",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

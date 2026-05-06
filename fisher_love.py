@@ -27,4 +27,15 @@ class FisherLoveSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"current_stage": "unknown"}
+        defaults = {
+            "current_stage": "unknown",
+            "stage_markers": [],
+            "neurochemical_profile": "unknown",
+            "transition_readiness": 0.5,
+            "stuck_risk": 0.3,
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

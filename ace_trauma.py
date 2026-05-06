@@ -29,4 +29,16 @@ ACE≥4: 探索行为减少(exploration↓)、奖励反馈迟钝(reward sensitiv
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"ace_activation": 0.0}
+        defaults = {
+            "ace_activation": 0.0,
+            "exploration_impact": 0.0,
+            "reward_sensitivity": 0.5,
+            "ace_driven_behavior": "无明显ACE驱动行为",
+            "long_term_trajectory": "维持当前发展轨迹",
+            "protective_factor": "无特定保护因素",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

@@ -55,4 +55,15 @@ Kohlberg 六阶段:
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"stage_used": 3}
+        defaults = {
+            "stage_used": 3,
+            "reasoning": "基于常规道德判断",
+            "stage_consistency": "consistent",
+            "moral_conflict": "无明显道德冲突",
+            "justification_style": "基于社会规范",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

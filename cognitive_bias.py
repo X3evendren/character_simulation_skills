@@ -56,4 +56,14 @@ class CognitiveBiasSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"activated_biases": []}
+        defaults = {
+            "activated_biases": [],
+            "alternative_interpretation": "可用更客观的视角解读",
+            "bias_summary": "认知偏差处于基线水平",
+            "activation_relevance": 0.5,
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

@@ -26,4 +26,16 @@ class PTSDTriggerSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"triggered": False}
+        defaults = {
+            "triggered": False,
+            "matched_triggers": [],
+            "intrusion_risk": 0.3,
+            "avoidance_risk": 0.3,
+            "hyperarousal_risk": 0.3,
+            "immediate_reaction": "无明显创伤反应",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

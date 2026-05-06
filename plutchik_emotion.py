@@ -103,8 +103,14 @@ Plutchik 8种基础情绪: joy/sadness/trust/disgust/fear/anger/surprise/anticip
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {
+        defaults = {
             "internal": {"dominant": "neutral", "pleasantness": 0.0, "intensity": 0.5},
             "expressed": {"dominant": "neutral", "pleasantness": 0.0},
-            "emotion_gap": {"exists": False, "type": "none"}
+            "emotion_gap": {"exists": False, "type": "none"},
+            "novelty": {"is_novel": False, "similar_to_past": True},
         }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

@@ -28,4 +28,16 @@ Strogatz Romeo-Juliet模型: dR/dt = aR + bJ
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"system_trend": "unknown"}
+        defaults = {
+            "system_trend": "unknown",
+            "a_parameter": 0.0,
+            "b_parameter": 0.0,
+            "stability_assessment": "未知",
+            "delay_effect": "无明显延迟效应",
+            "equilibrium_point": 0.0,
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

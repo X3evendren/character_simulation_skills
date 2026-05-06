@@ -32,4 +32,16 @@ class SDTSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"intrinsic_motivation_level": 0.5}
+        defaults = {
+            "intrinsic_motivation_level": 0.5,
+            "autonomy_impact": 0.0,
+            "competence_impact": 0.0,
+            "relatedness_impact": 0.0,
+            "most_threatened": "none",
+            "compensation_behavior": "无显著补偿行为",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

@@ -31,4 +31,15 @@ class MaslowSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"current_dominant": 3}
+        defaults = {
+            "current_dominant": 3,
+            "need_stack": [],
+            "blocked_needs": [],
+            "deficiency_vs_growth": "neutral",
+            "behavior_explanation": "行为受多层次需求驱动",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result
