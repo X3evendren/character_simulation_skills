@@ -14,6 +14,7 @@ from typing import Any
 
 from .blackboard import Blackboard
 from .perception_stream import PerceptionStream
+from .consciousness import ConsciousnessLayer
 
 
 @dataclass
@@ -71,6 +72,9 @@ class TocaRunner:
         self._next_id = 1
         self._tasks: list[asyncio.Task] = []
 
+        # 意识层: GWT + HOT + 预测加工
+        self.consciousness = ConsciousnessLayer(blackboard)
+
         # 初始化 Blackboard 基线状态
         if "pad" not in self.bb:
             self.bb.write("pad", {"pleasure": 0.0, "arousal": 0.3, "dominance": 0.0})
@@ -112,25 +116,36 @@ class TocaRunner:
             snap = self.bb.read_with_versions()
             perception_window = self.ps.get_window(self.config.window_s)
 
-            # 2. 构建事件（感知 + 当前心理状态）
+            # 2. 预测加工: 预测下一帧状态
+            self.consciousness.predict_next()
+
+            # 3. 构建事件（感知 + 当前心理状态）
             event = self._build_event(perception_window, snap)
             if event is None:
                 meta.status = "idle"
                 return
 
-            # 3. 注入 Blackboard 累积状态到 character_state
-            #    这是连续性的核心：每次管道看到的是"此刻"的角色
+            # 4. 注入 Blackboard 累积状态到 character_state
             cs = self._build_continuous_state(snap)
 
-            # 4. 运行管道（复用 orchestrator，不重建）
+            # 5. 运行管道（复用 orchestrator，不重建）
             from character_simulation_skills.core import orchestrator as orch
             orch._orchestrator = self.orchestrator
 
             result = await self.orchestrator.process_event(self.provider, cs, event)
             meta.tokens_used = result.total_tokens
 
-            # 5. 写回 Blackboard（实时版本号）
+            # 6. 写回 Blackboard（实时版本号）
             self._write_back(result, instance_id)
+
+            # 7. 意识层处理
+            # 预测误差计算
+            self.consciousness.compute_prediction_error()
+            # 选择性广播: 只有显著性高的心理内容才"进入意识"
+            broadcast = self.consciousness.filter_broadcast()
+            # 定期自我感知
+            self.consciousness.self_perceive()
+
             meta.status = "completed"
             meta.completed_at = time.time()
 
