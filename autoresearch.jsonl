@@ -1,3 +1,4 @@
 {"type":"config","name":"json-parse-quality","metricName":"json_parse_rate","metricUnit":"fraction","bestDirection":"higher"}
 {"run":1,"commit":"1beebe3","metric":0.5707,"metrics":{"field_coverage":0.7030,"total_tokens":9009.6,"skill_error_rate":0.0},"status":"keep","description":"baseline","timestamp":1778029837,"segment":0}
 {"run":2,"commit":"a16bec6","metric":0.6299,"metrics":{"field_coverage":0.7076,"total_tokens":8978.8,"skill_error_rate":0.0},"status":"keep","description":"trailing comma and BOM handling in extract_json","timestamp":1778029906,"segment":0}
+{"run":3,"commit":"c01e60d","metric":0.7215,"metrics":{"field_coverage":0.7346,"total_tokens":8940.2,"skill_error_rate":0.0},"status":"keep","description":"single-quote JSON handling in extract_json fallback","timestamp":1778029966,"segment":0}

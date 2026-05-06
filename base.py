@@ -51,7 +51,26 @@ def extract_json(raw_output: str) -> dict:
     try:
         return json.loads(text.replace("'", '"'))
     except json.JSONDecodeError:
-        return {}
+        pass
+
+    # 尝试修复截断的 JSON: 补全缺失的闭合括号
+    open_braces = text.count('{') - text.count('}')
+    open_brackets = text.count('[') - text.count(']')
+    if open_braces > 0 or open_brackets > 0:
+        # 在截断的字符串值处截断到最后一个完整的键或值
+        fixed = text.rstrip()
+        fixed = re.sub(r',\s*$', '', fixed)  # 移除尾部逗号
+        # 检查是否因字符串未闭合而截断: 奇数个引号
+        if fixed.count('"') % 2 != 0:
+            fixed += '"'
+        fixed += ']' * max(0, open_brackets)
+        fixed += '}' * max(0, open_braces)
+        try:
+            return json.loads(fixed)
+        except json.JSONDecodeError:
+            pass
+
+    return {}
 
 
 @dataclass
