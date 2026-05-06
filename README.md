@@ -198,6 +198,96 @@ class YourLLM:
         }
 ```
 
+## 🐳 部署指南
+
+### 支持的 LLM 后端
+
+| 后端 | 环境变量 | 说明 |
+|------|---------|------|
+| DeepSeek (默认) | `DEEPSEEK_API_KEY=sk-...` | OpenAI 兼容，快且便宜 |
+| Ollama 本地 | `LLM_BACKEND=ollama` | 免费，需本地 GPU |
+| OpenAI | `LLM_BACKEND=openai` `OPENAI_API_KEY=sk-...` | 标准 API |
+
+### 运行方式
+
+```bash
+# 1. 克隆
+git clone https://github.com/X3evendren/character_simulation_skills.git
+cd character_simulation_skills
+
+# 2. 安装依赖
+pip install openai  # 仅 API 后端需要
+
+# 3. 设置 API Key (选一个)
+export DEEPSEEK_API_KEY="sk-..."
+
+# 4. 运行验证
+python tests/validation/run_llm_validation.py --cases 10
+
+# 5. 运行技术基准
+python benchmark/run_benchmark.py --quality 0.35 --scenarios 0
+```
+
+## 🧪 测试
+
+### 三层测试体系
+
+| 层 | 命令 | 测什么 |
+|----|------|--------|
+| 技术基准 | `python benchmark/run_benchmark.py` | JSON 解析率、字段覆盖率、Token 消耗 |
+| 心理学验证 | `python tests/validation/run_llm_validation.py --cases 20` | 真实 LLM 心理学准确性 (4,500+ 用例) |
+| Mock 验证 | `python tests/validation/run_validation.py` | 快速回归测试 (Mock LLM) |
+
+### 添加新 Skill
+
+1. 在 `skills/lX_xxx/` 下创建新文件，继承 `BaseSkill`：
+
+```python
+from ...core.base import BaseSkill, SkillMeta
+
+class MyNewSkill(BaseSkill):
+    meta = SkillMeta(
+        name="my_new_skill",
+        domain="psychology",
+        layer=2,
+        description="分析角色的...",
+        scientific_basis="Paper (Year)",
+        scientific_rating=4,
+        trigger_conditions=["always"],
+        estimated_tokens=400,
+    )
+
+    def build_prompt(self, character_state, event, context):
+        return f"..."  # 构建分析 prompt
+
+    def parse_output(self, raw_output):
+        from ...core.base import extract_json
+        result = extract_json(raw_output)
+        return result if result else {"key": "default"}
+```
+
+2. 在 `skills/lX_xxx/__init__.py` 中导出
+3. 在 `__init__.py` 中导入
+4. 在 `core/orchestrator.py` 的对应层添加 skill 名称
+5. 在 `benchmark/run_benchmark.py` 和 `tests/validation/validator.py` 中注册
+6. 在 `tests/validation/fixtures/` 中添加验证用例
+
+### 项目结构
+
+```
+core/               — 基础设施 (8 模块)
+skills/
+  l0_personality/   — 人格滤镜 (OCEAN, 依恋)
+  l1_preconscious/  — 快速前意识 (Plutchik, PTSD, 情感探针)
+  l2_conscious/     — 意识层评估 (OCC, 偏差, 防御, Smith-Ellsworth)
+  l3_social/        — 关系/社会 (Gottman, 福柯, ToM 等 8 个)
+  l4_reflective/    — 反思处理 (Gross, Kohlberg, Maslow, SDT)
+  l5_state_update/  — 状态更新 (图式, ACE, 回应生成)
+tests/validation/   — 4,500 条心理学验证用例
+benchmark/          — 技术基准
+docs/superpowers/specs/ — 设计文档 (含 TOCA 连续状态流架构)
+```
+
 ## 📄 许可
 
 MIT

@@ -79,8 +79,31 @@ orchestrator = get_orchestrator()
 result = await orchestrator.process_event(provider, character_state, event)
 ```
 
+## 测试
+
+```bash
+# 技术基准 (Mock LLM, JSON解析/字段覆盖/Token)
+python benchmark/run_benchmark.py --quality 0.35 --scenarios 0
+
+# 心理学验证 (真实 LLM, >4,500用例)
+export DEEPSEEK_API_KEY="sk-..."
+python tests/validation/run_llm_validation.py --cases 20
+
+# Mock 快速回归
+python tests/validation/run_validation.py
+```
+
+## 设计文档
+
+- `docs/superpowers/specs/2026-05-06-polish-and-validate-design.md` — 打磨计划 (Phase A-D)
+- `docs/superpowers/specs/2026-05-06-toca-architecture-design.md` — TOCA 连续状态流架构
+  - 同一五层管道在时间偏移上运行多实例
+  - 间隔 = 推理时间/N → 体感连续
+  - Blackboard + Event Bus 状态共享
+
 ## 注意事项
 
 - 所有 Skill 通过 `build_prompt()` 构建分析 prompt → LLM 调用 → `parse_output()` 解析 JSON 结果
 - temperature=0.3 (分析任务用低温)
 - prompt 中注入角色语境豁免声明，防止安全对齐干扰角色模拟
+- Provider 接口：`async def chat(messages, temperature, max_tokens)` → OpenAI 格式
