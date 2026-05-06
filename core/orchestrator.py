@@ -106,9 +106,7 @@ class CognitiveOrchestrator:
         ctx["l1"] = [s.output for s in l1 if s.success]
 
         # ── Layer 2: 意识层情绪评估 — 并行 ──
-        # L2: 认知评价(OCC) + 潜意识防御(Defense) + 思维偏差(Bias) — 三个互补维度
-        l2_skills = [s for s in ["occ_emotion_appraisal", "defense_mechanism_analysis",
-                                  "cognitive_bias_detect"]
+        l2_skills = [s for s in ["occ_emotion_appraisal", "defense_mechanism_analysis"]
                      if s in self.registry]
         l2 = await self._run_layer(2, l2_skills, provider, character_state, event, ctx, projected_ctx)
         result.layer_results[2] = l2
@@ -123,9 +121,7 @@ class CognitiveOrchestrator:
 
         # ── Layer 4: 反思处理 — 仅在关键场景激活 ──
         if self._is_significant(event, result):
-            # L4: 情绪调节(Gross) + 道德推理(Kohlberg) + 自决动机(SDT) — 三个互补维度
-            l4_skills = [s for s in ["gross_emotion_regulation", "kohlberg_moral_reasoning",
-                                      "sdt_motivation_analysis"]
+            l4_skills = [s for s in ["gross_emotion_regulation", "sdt_motivation_analysis"]
                          if s in self.registry]
             l4 = await self._run_layer(4, l4_skills, provider, character_state, event, ctx, projected_ctx)
             result.layer_results[4] = l4
@@ -527,9 +523,7 @@ class CognitiveOrchestrator:
         selected = [s for s in self.registry.select_by_triggers(triggers) if s in all_l3]
 
         # 精简 L3: 移除理论价值高但实用冗余的技能
-        # L3: ToM(读心) + Gottman(互动行为) + Marion(情爱现象) + Foucault(权力) — 四个不重叠维度
-        # 移除: Sternberg/Fisher/Strogatz(与Gottman同域的关系状态建模), DiriGent(与SDT重叠的动机)
-        SKIP_L3 = {"strogatz_love_dynamics", "fisher_love_stages", "sternberg_triangle", "dirigent_world_tension"}
+        SKIP_L3 = {"marion_erotic_phenomenology", "strogatz_love_dynamics", "fisher_love_stages", "sternberg_triangle", "dirigent_world_tension"}
         selected = [s for s in selected if s not in SKIP_L3]
 
         return selected
