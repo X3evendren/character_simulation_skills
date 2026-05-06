@@ -15,6 +15,9 @@ from typing import Any
 from .blackboard import Blackboard
 from .perception_stream import PerceptionStream
 from .consciousness import ConsciousnessLayer
+from .thalamic_gate import ThalamicGate
+from .offline_consolidation import OfflineConsolidation
+from .wm_ltm_bridge import WmLtmBridge
 
 
 @dataclass
@@ -75,6 +78,20 @@ class TocaRunner:
         # 意识层: GWT + HOT + 预测加工
         self.consciousness = ConsciousnessLayer(blackboard)
 
+        # 丘脑门控: 感知过滤
+        self.thalamic_gate = ThalamicGate()
+
+        # 离线巩固: Nudge Engine + 记忆重播
+        self.offline_consolidation = OfflineConsolidation(
+            blackboard, orchestrator.episodic_store if orchestrator else None)
+
+        # WM-LTM 桥接
+        self.wm_ltm_bridge = WmLtmBridge(
+            orchestrator.episodic_store if orchestrator else None)
+
+        # 记录最后一次输入时间
+        self._last_input_time = time.time()
+
         # 初始化 Blackboard 基线状态
         if "pad" not in self.bb:
             self.bb.write("pad", {"pleasure": 0.0, "arousal": 0.3, "dominance": 0.0})
@@ -83,14 +100,25 @@ class TocaRunner:
         """启动连续流调度。"""
         self._running = True
         self._schedule_loop = asyncio.create_task(self._scheduler())
+        self._consolidation_loop = asyncio.create_task(self._consolidation_monitor())
 
     async def stop(self):
         """停止调度，等待所有运行中的实例完成。"""
         self._running = False
         if self._schedule_loop:
             self._schedule_loop.cancel()
+        if hasattr(self, '_consolidation_loop') and self._consolidation_loop:
+            self._consolidation_loop.cancel()
         if self._tasks:
             await asyncio.gather(*self._tasks, return_exceptions=True)
+
+    async def _consolidation_monitor(self):
+        """后台监控：定期检查是否需要离线巩固。"""
+        while self._running:
+            await asyncio.sleep(5)  # 每5秒检查一次
+            if self.offline_consolidation.should_consolidate(self._last_input_time):
+                await self.offline_consolidation.consolidate(
+                    self.orchestrator, self.provider)
 
     async def _scheduler(self):
         """主调度循环：按时间间隔启动管道实例。"""
@@ -116,11 +144,26 @@ class TocaRunner:
             snap = self.bb.read_with_versions()
             perception_window = self.ps.get_window(self.config.window_s)
 
-            # 2. 预测加工: 预测下一帧状态
+            # 2. 丘脑门控: 过滤低显著性感知
+            if perception_window:
+                latest = perception_window[-1]
+                gate_result = self.thalamic_gate.evaluate(latest)
+                if not gate_result["should_process"]:
+                    meta.status = "gated"
+                    return
+
+            # 3. 预测加工: 层次化预测下一帧状态
             self.consciousness.predict_next()
 
-            # 3. 构建事件（感知 + 当前心理状态）
-            event = self._build_event(perception_window, snap)
+            # 4. WM-LTM 桥接: 检索相关历史记忆
+            retrieved_memories = self.wm_ltm_bridge.check_and_retrieve(
+                perception_window,
+                current_emotion=snap.get("dominant_emotion", (None,))[0] or "",
+            )
+            memory_context = self.wm_ltm_bridge.format_for_context(retrieved_memories)
+
+            # 5. 构建事件（感知 + 心理状态 + 记忆上下文）
+            event = self._build_event(perception_window, snap, memory_context)
             if event is None:
                 meta.status = "idle"
                 return
@@ -139,12 +182,13 @@ class TocaRunner:
             self._write_back(result, instance_id)
 
             # 7. 意识层处理
-            # 预测误差计算
             self.consciousness.compute_prediction_error()
-            # 选择性广播: 只有显著性高的心理内容才"进入意识"
             broadcast = self.consciousness.filter_broadcast()
-            # 定期自我感知
             self.consciousness.self_perceive()
+
+            # 8. Nudge Engine: 记录显著事件
+            if event.get("significance", 0) >= 0.4:
+                self.offline_consolidation.on_significant_event(event["significance"])
 
             meta.status = "completed"
             meta.completed_at = time.time()
@@ -181,8 +225,9 @@ class TocaRunner:
 
         return cs
 
-    def _build_event(self, perception_window: list[dict], snap: dict | None = None) -> dict | None:
-        """从感知窗口 + 当前心理状态构建管道事件。"""
+    def _build_event(self, perception_window: list[dict], snap: dict | None = None,
+                     memory_context: str = "") -> dict | None:
+        """从感知窗口 + 当前心理状态 + 记忆上下文构建管道事件。"""
         if not perception_window:
             return None
 
@@ -195,15 +240,18 @@ class TocaRunner:
             descriptions.append(desc)
             tags.add(p.get("modality", ""))
 
-        # 注入当前心理状态作为事件上下文
         context = ""
         if snap:
             dom = snap.get("dominant_emotion", (None,))[0]
             if dom:
-                context = f"（当前角色情绪基调: {dom}）"
+                context = f"（当前情绪: {dom}）"
+
+        desc = context + " " + " ".join(descriptions[-6:])
+        if memory_context:
+            desc = memory_context + "\n" + desc
 
         return {
-            "description": context + " " + " ".join(descriptions[-6:]),
+            "description": desc,
             "type": "continuous",
             "participants": [],
             "significance": 0.4,

@@ -40,21 +40,35 @@ class ConsciousnessLayer:
     # ═══ 1. 预测加工 (Predictive Processing) ═══
 
     def predict_next(self) -> dict:
-        """基于当前 Blackboard 状态预测下一帧。
+        """层次化预测：L1情绪 / L2认知 / L4反思 三层独立预测。
         线性外推: next = current + alpha * (current - last)。
         纯数学，零 Token。"""
-        current = self.bb.read(["pad", "dominant_emotion"])
+        current = self.bb.read(["pad", "dominant_emotion", "active_defense",
+                                 "ptsd_triggered"])
         predictions = {}
+        last_predictions = self.state.predictions
 
+        # L1: 情绪层预测 (PAD)
         pad = current.get("pad", {})
-        if pad and "pleasure" in pad:
-            last_pad = self.state.predictions.get("pad", {})
-            predictions["pad"] = {
+        if pad:
+            last_pad = last_predictions.get("L1_pad", {})
+            predictions["L1_pad"] = {
                 "pleasure": self._extrapolate(pad.get("pleasure", 0),
                                               last_pad.get("pleasure", pad.get("pleasure", 0))),
                 "arousal": self._extrapolate(pad.get("arousal", 0.5),
                                              last_pad.get("arousal", pad.get("arousal", 0.5))),
             }
+
+        # L2: 认知层预测 (防御激活)
+        defense = current.get("active_defense", {})
+        if defense and isinstance(defense, dict):
+            last_def = last_predictions.get("L2_defense_intensity", defense.get("intensity", 0.3))
+            predictions["L2_defense_intensity"] = self._extrapolate(
+                defense.get("intensity", 0.3), last_def)
+
+        # L4: 反思层预测 (是否可能触发PTSD)
+        triggered = current.get("ptsd_triggered", False)
+        predictions["L4_triggered"] = triggered  # PTSD触发是二值的，不做外推
 
         self.state.predictions = predictions
         return predictions
@@ -66,17 +80,33 @@ class ConsciousnessLayer:
         return max(-1.0, min(1.0, val))
 
     def compute_prediction_error(self) -> dict:
-        """计算当前实际值 vs 预测值的误差。返回各字段的误差大小(0-1)。"""
-        actual = self.bb.read(["pad"])
+        """层次化预测误差：L1情绪/L2认知/L4反思 三层独立误差。
+        每层误差独立驱动该层的显著性权重。"""
+        actual = self.bb.read(["pad", "active_defense", "ptsd_triggered"])
+        preds = self.state.predictions
         errors = {}
 
+        # L1 情绪误差
         pad = actual.get("pad", {})
-        pred_pad = self.state.predictions.get("pad", {})
+        pred_pad = preds.get("L1_pad", {})
         if pad and pred_pad:
             p_err = abs(pad.get("pleasure", 0) - pred_pad.get("pleasure", 0))
             a_err = abs(pad.get("arousal", 0.5) - pred_pad.get("arousal", 0.5))
-            errors["pad_pleasure"] = min(1.0, p_err)
-            errors["pad_arousal"] = min(1.0, a_err)
+            errors["L1_pleasure"] = min(1.0, p_err)
+            errors["L1_arousal"] = min(1.0, a_err)
+            errors["L1_combined"] = min(1.0, (p_err + a_err) / 2)
+
+        # L2 认知误差
+        defense = actual.get("active_defense", {})
+        pred_def = preds.get("L2_defense_intensity", 0.3)
+        if defense and isinstance(defense, dict):
+            actual_def = defense.get("intensity", 0.3)
+            errors["L2_defense_delta"] = min(1.0, abs(actual_def - pred_def))
+
+        # L4 反思误差
+        triggered = actual.get("ptsd_triggered", False)
+        pred_triggered = preds.get("L4_triggered", False)
+        errors["L4_surprise"] = 0.7 if triggered != pred_triggered else 0.0
 
         self.state.errors = errors
         return errors
