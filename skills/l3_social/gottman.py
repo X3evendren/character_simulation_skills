@@ -1,5 +1,5 @@
 """Gottman 方法 Skill — Layer 3 伴侣互动分析"""
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 class GottmanSkill(BaseSkill):
     meta = SkillMeta(
@@ -30,7 +30,7 @@ Gottman核心指标:
  "intervention_suggestion": "如果角色想修复关系，此刻的最佳行动"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "interaction_diagnosis": "中性互动",

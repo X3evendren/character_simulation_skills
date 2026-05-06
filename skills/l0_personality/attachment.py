@@ -6,7 +6,7 @@ LLM 已通过 AAI 模拟测试 (Soares et al., 2024)。
 
 论文: Soares et al. (2024); Htet et al. (2024)
 """
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 
 class AttachmentSkill(BaseSkill):
@@ -50,7 +50,7 @@ class AttachmentSkill(BaseSkill):
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "activation_level": 0.5,

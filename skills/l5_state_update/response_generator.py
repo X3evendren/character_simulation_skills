@@ -7,7 +7,7 @@
 这是唯一应该接收反RLHF偏差提示的Skill——分析层不需要角色行为约束，
 只有生成角色实际回应时才需要。
 """
-from .base import BaseSkill, SkillMeta, SkillResult
+from ...core.base import BaseSkill, SkillMeta, SkillResult
 
 
 class ResponseGeneratorSkill(BaseSkill):
@@ -121,7 +121,7 @@ class ResponseGeneratorSkill(BaseSkill):
         return prompt
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "response_text": "",

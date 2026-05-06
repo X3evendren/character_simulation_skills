@@ -1,7 +1,7 @@
 """Kohlberg 道德推理 Skill — Layer 4
 
 """
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 
 class KohlbergSkill(BaseSkill):
@@ -53,7 +53,7 @@ Kohlberg 六阶段:
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "stage_used": 3,

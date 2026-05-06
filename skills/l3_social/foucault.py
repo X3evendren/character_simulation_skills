@@ -1,7 +1,7 @@
 """福柯权力分析 Skill — Layer 3
 
 """
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 
 class FoucaultSkill(BaseSkill):
@@ -53,7 +53,7 @@ class FoucaultSkill(BaseSkill):
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "subjectivation_tension": "权力关系处于动态平衡",

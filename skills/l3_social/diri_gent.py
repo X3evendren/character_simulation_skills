@@ -7,7 +7,7 @@
 
 这个skill分析角色"想要的"和"得到的"之间的差距——驱动角色行动的根本动力。
 """
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 
 class DiriGentSkill(BaseSkill):
@@ -77,7 +77,7 @@ class DiriGentSkill(BaseSkill):
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "overall_cognitive_dissonance": 0.5,

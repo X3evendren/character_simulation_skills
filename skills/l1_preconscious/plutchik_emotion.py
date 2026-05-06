@@ -6,8 +6,8 @@ Emotion Circuits Discovery (Wang et al., arXiv:2510.11328) 的发现：
 - 内部真实情感和外部表达情感是解耦的
 
 """
-from .base import BaseSkill, SkillMeta
-from .emotion_vocabulary import FINE_GRAINED_EMOTIONS, COMPLEX_EMOTIONS, FUNCTIONAL_EMOTIONS, ALL_FINE_GRAINED
+from ...core.base import BaseSkill, SkillMeta
+from ...core.emotion_vocabulary import FINE_GRAINED_EMOTIONS, COMPLEX_EMOTIONS, FUNCTIONAL_EMOTIONS, ALL_FINE_GRAINED
 
 
 class PlutchikEmotionSkill(BaseSkill):
@@ -101,7 +101,7 @@ Plutchik 8种基础情绪: joy/sadness/trust/disgust/fear/anger/surprise/anticip
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "internal": {"dominant": "neutral", "pleasantness": 0.0, "intensity": 0.5},

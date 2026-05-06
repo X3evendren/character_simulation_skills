@@ -1,5 +1,5 @@
 """Fisher 恋爱三阶段 Skill — Layer 3"""
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 class FisherLoveSkill(BaseSkill):
     meta = SkillMeta(
@@ -25,7 +25,7 @@ class FisherLoveSkill(BaseSkill):
  "stuck_risk": "是否卡在当前阶段? 风险描述"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "current_stage": "unknown",

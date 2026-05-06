@@ -153,7 +153,7 @@ async def run_scenario(provider, character_state: dict, event: dict,
                        run_index: int = 0) -> dict[str, float]:
     """Run a single scenario through the pipeline and measure all metrics."""
     # Reset global singletons for clean state
-    from character_simulation_skills import orchestrator as orch
+    from character_simulation_skills.core import orchestrator as orch
     orch._orchestrator = None
 
     orchestrator = get_orchestrator(anti_alignment_enabled=True)

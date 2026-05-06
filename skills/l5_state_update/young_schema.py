@@ -1,5 +1,5 @@
 """Young 图式更新 Skill — Layer 5"""
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 class YoungSchemaSkill(BaseSkill):
     meta = SkillMeta(
@@ -31,7 +31,7 @@ class YoungSchemaSkill(BaseSkill):
  "schema_shift_summary": "本次事件后图式结构的整体变化（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "affected_schemas": [],

@@ -3,7 +3,7 @@
 基于 Smith & Ellsworth (1985, JPSP) 的认知评价理论，对角色在事件中的16个评价维度进行分析。
 参考 CoRE benchmark (Bhattacharyya et al., NeurIPS 2025)。
 """
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 
 class SmithEllsworthSkill(BaseSkill):
@@ -85,7 +85,7 @@ class SmithEllsworthSkill(BaseSkill):
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "appraisal_profile": "标准认知评价",

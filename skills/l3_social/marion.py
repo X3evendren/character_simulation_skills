@@ -1,5 +1,5 @@
 """马里翁情爱现象学 Skill — Layer 3"""
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 class MarionSkill(BaseSkill):
     meta = SkillMeta(
@@ -29,7 +29,7 @@ class MarionSkill(BaseSkill):
  "erotic_tension": "当前的爱欲张力描述（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "who_is_advancing": "neither",

@@ -1,5 +1,5 @@
 """Sternberg 爱情三角 Skill — Layer 3"""
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 class SternbergSkill(BaseSkill):
     meta = SkillMeta(
@@ -33,7 +33,7 @@ class SternbergSkill(BaseSkill):
  "triangle_description": "三角形状描述（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "love_type": "未定义",

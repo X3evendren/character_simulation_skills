@@ -1,5 +1,5 @@
 """Strogatz 爱情动力学 Skill — Layer 3"""
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 class StrogatzSkill(BaseSkill):
     meta = SkillMeta(
@@ -26,7 +26,7 @@ Strogatz Romeo-Juliet模型: dR/dt = aR + bJ
  "equilibrium_point": "如果有的话，系统将趋于什么状态"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "system_trend": "unknown",

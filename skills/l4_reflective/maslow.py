@@ -1,5 +1,5 @@
 """Maslow 需求层次 Skill — Layer 4"""
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 class MaslowSkill(BaseSkill):
     meta = SkillMeta(
@@ -29,7 +29,7 @@ class MaslowSkill(BaseSkill):
  "behavior_explanation": "当前行为由哪层需求驱动（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "current_dominant": 3,

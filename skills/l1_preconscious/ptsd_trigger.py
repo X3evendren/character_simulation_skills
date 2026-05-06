@@ -1,5 +1,5 @@
 """PTSD 触发检测 Skill — Layer 1"""
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 class PTSDTriggerSkill(BaseSkill):
     meta = SkillMeta(
@@ -24,7 +24,7 @@ class PTSDTriggerSkill(BaseSkill):
  "immediate_reaction": "角色的即刻创伤反应（一句话）"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "triggered": False,

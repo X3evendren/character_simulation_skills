@@ -4,7 +4,7 @@
 防御机制正是实现这种解耦的核心心理过程。
 
 """
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 
 class DefenseMechanismSkill(BaseSkill):
@@ -73,7 +73,7 @@ Level 4 (成熟): 幽默/升华/利他/预期——建设性应对
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "activated_defense": {"name": "未检测到", "level": 3},

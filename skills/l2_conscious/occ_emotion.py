@@ -1,7 +1,7 @@
 """OCC 情感计算 Skill — Layer 2 意识层情绪评估
 
 """
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 
 class OCCEmotionSkill(BaseSkill):
@@ -61,7 +61,7 @@ OCC 评估维度:
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "emotions": [],

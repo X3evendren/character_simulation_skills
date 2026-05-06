@@ -5,7 +5,7 @@
 - "Functional"情绪调节策略直接影响行为选择（如calm→道德行为，desperate→高风险行为）
 
 """
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 
 class GrossRegulationSkill(BaseSkill):
@@ -92,7 +92,7 @@ Gross 情绪调节过程模型（五策略，按时序排列）:
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "detected_strategy": "no_regulation",

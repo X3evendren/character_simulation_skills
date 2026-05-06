@@ -6,7 +6,7 @@ Big Five (OCEAN) 人格分析 Skill
 
 论文: P-React (2024), Orca (2024), CB-POCL (2013)
 """
-from .base import BaseSkill, SkillMeta, SkillResult
+from ...core.base import BaseSkill, SkillMeta, SkillResult
 
 
 class BigFiveSkill(BaseSkill):
@@ -47,7 +47,7 @@ class BigFiveSkill(BaseSkill):
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "behavioral_bias": "按基线人格做出反应",

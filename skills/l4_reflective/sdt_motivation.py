@@ -1,5 +1,5 @@
 """SDT 自我决定理论 Skill — Layer 4"""
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 class SDTSkill(BaseSkill):
     meta = SkillMeta(
@@ -30,7 +30,7 @@ class SDTSkill(BaseSkill):
  "intrinsic_motivation_level": "0.0-1.0 当前内在动机水平"}}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "intrinsic_motivation_level": 0.5,

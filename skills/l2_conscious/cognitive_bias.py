@@ -1,7 +1,7 @@
 """认知偏差检测 Skill — Layer 2
 
 """
-from .base import BaseSkill, SkillMeta
+from ...core.base import BaseSkill, SkillMeta
 
 
 class CognitiveBiasSkill(BaseSkill):
@@ -54,7 +54,7 @@ class CognitiveBiasSkill(BaseSkill):
 }}"""
 
     def parse_output(self, raw_output: str) -> dict:
-        from .base import extract_json
+        from ...core.base import extract_json
         result = extract_json(raw_output)
         defaults = {
             "activated_biases": [],
