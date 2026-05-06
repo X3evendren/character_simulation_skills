@@ -6,8 +6,12 @@
 
 这是唯一应该接收反RLHF偏差提示的Skill——分析层不需要角色行为约束，
 只有生成角色实际回应时才需要。
+
+使用 FUNCTIONAL_TO_BEHAVIOR 映射 (emotion_vocabulary.py) 来预测
+功能情感驱动的行为后果。
 """
 from ...core.base import BaseSkill, SkillMeta, SkillResult
+from ...core.emotion_vocabulary import FUNCTIONAL_TO_BEHAVIOR
 
 
 class ResponseGeneratorSkill(BaseSkill):
@@ -101,7 +105,19 @@ class ResponseGeneratorSkill(BaseSkill):
             prompt += f"活跃防御机制: {active_defense.get('name', '')}\n"
 
         if triggered:
-            prompt += "⚠️ PTSD触发——角色可能出现创伤相关反应\n"
+            prompt += "PTSD触发——角色可能出现创伤相关反应\n"
+
+        # 功能情感 → 行为预测
+        emotion_probe = context.get("l1", [{}])[2] if len(context.get("l1", [])) > 2 else {}
+        functional_emotions = emotion_probe.get("functional", [])
+        if functional_emotions:
+            prompt += "\n【功能情感 → 行为倾向】\n"
+            for fe in functional_emotions:
+                name = fe.get("emotion", "")
+                intensity = fe.get("intensity", 0.5)
+                consequence = FUNCTIONAL_TO_BEHAVIOR.get(name, "")
+                if consequence:
+                    prompt += f"- {name} (强度{intensity:.1f}): {consequence}\n"
 
         prompt += f"""
 事件: {event.get('description', '')}

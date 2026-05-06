@@ -20,37 +20,45 @@
 - **同层并行** (`asyncio.gather`)，**跨层串行**
 - Layer 0 始终在线，Layer 3 按触发条件选择，Layer 4-5 仅在关键场景激活
 
-## 核心模块 (按阅读顺序)
+## 项目结构
 
-| 文件 | 角色 |
-|------|------|
-| `base.py` | `BaseSkill` 抽象基类, `SkillMeta`, `SkillResult` — 所有 Skill 的父类 |
-| `registry.py` | `SkillRegistry` — 全局 Skill 注册/发现/触发匹配, `get_registry()` 单例 |
-| `orchestrator.py` | `CognitiveOrchestrator` — 五层编排器, 主入口 `process_event()`, `get_orchestrator()` 单例 |
-| `emotion_decay.py` | `EmotionDecayModel` — PAD双速情感衰减 (快速层2事件半衰/慢速层50事件半衰) |
-| `episodic_memory.py` | `EpisodicMemory` + `EpisodicMemoryStore` — 带情感签名的事件记忆 |
-| `personality_state_machine.py` | `PersonalityStateMachine` — 情境化OCEAN, 8种人格状态转移, `micro_update()` |
-| `emotion_vocabulary.py` | 40+细粒度情感标签, 16种复合情感, 8种功能性情感 — 纯数据模块 |
-| `diri_gent.py` | DiriGent 理想世界张力分析 |
-| `__init__.py` | 全部公共 API 导出 |
+```
+core/               — 基础设施
+  base.py           BaseSkill, SkillMeta, SkillResult, extract_json
+  registry.py       SkillRegistry
+  orchestrator.py   CognitiveOrchestrator
+  emotion_decay.py  EmotionDecayModel (PAD双速衰减)
+  episodic_memory.py EpisodicMemoryStore (时序关系+优先级淘汰+冻结快照)
+  personality_state_machine.py 8种人格状态转移
+  emotion_vocabulary.py 80+细粒度情感, 16复合, 16功能情感
+  conversation_history.py ConversationHistoryStore
+
+skills/
+  l0_personality/   big_five, attachment
+  l1_preconscious/  plutchik, ptsd_trigger, emotion_probe
+  l2_conscious/     occ_emotion, cognitive_bias, defense_mechanism, smith_ellsworth
+  l3_social/        gottman, marion, foucault, sternberg, strogatz, fisher_love, diri_gent
+  l4_reflective/    gross_regulation, kohlberg, maslow, sdt_motivation
+  l5_state_update/  young_schema, ace_trauma, response_generator
+```
 
 ## 关键概念
 
-- **情感衰减**: PAD (Pleasure-Arousal-Dominance) 连续情感表示，双速半衰期衰减。事件结束后情感不归零
-- **事件记忆**: 情感标签 + 显著性阈值的 episodic memory，按时间/情感相似度/标签检索
-- **人格状态机**: 静态OCEAN基线 + 8种情境状态 (baseline/social_public/conflict/romantic_intimate/threat_fear/triumph_success/loss_defeat/authority_submission/moral_dilemma)，由事件类型+情绪驱动转移
-- **反RLHF偏差**: Silence Rule — 永远不说"不要X"，用正面定义行为范围。通过 `_build_anti_alignment_hint()` 注入
-- **SPASM 自我中心投射**: 将共享事件历史从角色的第一人称视角重新解释
-- **多Agent对话**: `process_multi_agent_turn()` — 发言者运行完整管道，倾听者接收 `micro_update()`
+- **情感衰减**: PAD 连续情感，双速半衰期衰减
+- **事件记忆**: 时序关系边 + 优先级淘汰 + 冻结快照
+- **人格状态机**: OCEAN基线 + 8种情境状态
+- **反RLHF偏差**: Silence Rule，仅注入 L5 回应生成层
+- **回应生成**: L5 response_generator 综合所有层分析 → 角色对话/行为
+- **功能情感**: 16种功能情感 → 行为后果映射 (FUNCTIONAL_TO_BEHAVIOR)
 
 ## Skill 分层清单
 
-**L0 人格层**: `big_five_analysis`, `attachment_style_analysis`
-**L1 前意识**: `plutchik_emotion`, `ptsd_trigger_check`
-**L2 意识层**: `occ_emotion_appraisal`, `cognitive_bias_detect`, `defense_mechanism_analysis`, `smith_ellsworth_appraisal`
-**L3 关系/社会**: `gottman_conflict`, `marion_romantic`, `foucauldian_power_analysis`, `sternberg_love`, `strogatz_sync`, `fisher_love_stages`, `dirigent_world_tension`
-**L4 反思**: `gross_emotion_regulation`, `kohlberg_moral_reasoning`, `maslow_need_stack`, `sdt_motivation`
-**L5 状态更新**: `young_schema_update`, `ace_trauma_processing`, `state_diff_generator`
+**L0**: `big_five_analysis`, `attachment_style_analysis`
+**L1**: `plutchik_emotion`, `ptsd_trigger_check`, `emotion_probe`
+**L2**: `occ_emotion_appraisal`, `cognitive_bias_detect`, `defense_mechanism_analysis`, `smith_ellsworth_appraisal`
+**L3**: `gottman_interaction`, `marion_erotic_phenomenology`, `foucauldian_power_analysis`, `sternberg_triangle`, `strogatz_love_dynamics`, `fisher_love_stages`, `dirigent_world_tension`
+**L4**: `gross_emotion_regulation`, `kohlberg_moral_reasoning`, `maslow_need_stack`, `sdt_motivation_analysis`
+**L5**: `young_schema_update`, `ace_trauma_processing`, `response_generator`
 
 ## 触发条件
 
