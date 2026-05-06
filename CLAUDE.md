@@ -71,13 +71,8 @@ orchestrator = get_orchestrator()
 result = await orchestrator.process_event(provider, character_state, event)
 ```
 
-## 素材目录
-
-`素材/` 包含参考小说全文 (~40MB), 场景片段, 世界观设定 (修真/场论/炼器/算经), 女性角色设计参考等。这些是角色设定的原材料，不直接参与代码执行。
-
 ## 注意事项
 
 - 所有 Skill 通过 `build_prompt()` 构建分析 prompt → LLM 调用 → `parse_output()` 解析 JSON 结果
 - temperature=0.3 (分析任务用低温)
 - prompt 中注入角色语境豁免声明，防止安全对齐干扰角色模拟
-- `素材/` 目录下的大文件 (~40MB 小说全文) 不应被加载到上下文
