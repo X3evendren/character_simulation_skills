@@ -99,7 +99,8 @@ class TocaRunner:
             await asyncio.sleep(interval)
 
     async def _run_instance(self):
-        """运行一次管道实例。"""
+        """运行一次管道实例。
+        每次实例读取 Blackboard 最新状态 + 感知窗口 → 管道分析 → 写回。"""
         instance_id = self._next_id
         self._next_id += 1
 
@@ -111,26 +112,24 @@ class TocaRunner:
             snap = self.bb.read_with_versions()
             perception_window = self.ps.get_window(self.config.window_s)
 
-            # 2. 构建事件（从感知窗口 + 当前心理状态）
+            # 2. 构建事件（感知 + 当前心理状态）
             event = self._build_event(perception_window, snap)
             if event is None:
                 meta.status = "idle"
                 return
 
-            # 3. 将 Blackboard 上的连续心理状态注入 character_state
-            cs = dict(self.character_state)
-            self._inject_blackboard_state(cs, snap)
+            # 3. 注入 Blackboard 累积状态到 character_state
+            #    这是连续性的核心：每次管道看到的是"此刻"的角色
+            cs = self._build_continuous_state(snap)
 
-            # 4. 运行管道
-            from .orchestrator import get_orchestrator
-            import character_simulation_skills.core.orchestrator as orch
-            orch._orchestrator = None
-            orch_or = get_orchestrator(anti_alignment_enabled=True)
+            # 4. 运行管道（复用 orchestrator，不重建）
+            from character_simulation_skills.core import orchestrator as orch
+            orch._orchestrator = self.orchestrator
 
-            result = await orch_or.process_event(self.provider, cs, event)
+            result = await self.orchestrator.process_event(self.provider, cs, event)
             meta.tokens_used = result.total_tokens
 
-            # 5. 写入 Blackboard（实时读版本号，不是用管道开始时的快照）
+            # 5. 写回 Blackboard（实时版本号）
             self._write_back(result, instance_id)
             meta.status = "completed"
             meta.completed_at = time.time()
@@ -138,19 +137,34 @@ class TocaRunner:
         except Exception as e:
             meta.status = "error"
             self._instances[-1] = meta
-            raise
 
-    def _inject_blackboard_state(self, cs: dict, snap: dict):
-        """将 Blackboard 上的连续心理状态注入 character_state。
-        这是连续性的关键：每次管道调用看到的不是初始角色，而是'此刻'的角色。"""
-        state_map = {
-            "pad": "emotion_decay",
-            "active_defense": "current_defense",
-            "dominant_emotion": "current_emotion",
-        }
-        for bb_key, cs_key in state_map.items():
-            if bb_key in snap and snap[bb_key][0] is not None:
-                cs[cs_key] = snap[bb_key][0]
+    def _build_continuous_state(self, snap: dict) -> dict:
+        """从 Blackboard 快照构建当前角色状态。
+        合并基线人格与累积的心理状态——这是连续性的关键。"""
+        cs = dict(self.character_state)
+
+        # 注入累积情感状态
+        pad = snap.get("pad", (None,))[0]
+        if pad:
+            cs["emotion_decay"] = {
+                "fast": {"pleasure": pad.get("pleasure", 0), "arousal": pad.get("arousal", 0.5), "dominance": pad.get("dominance", 0)},
+                "slow": {"pleasure": pad.get("pleasure", 0) * 0.8, "arousal": pad.get("arousal", 0.5) * 0.8, "dominance": pad.get("dominance", 0) * 0.8},
+            }
+            cs["current_emotion"] = snap.get("dominant_emotion", (None,))[0] or "neutral"
+
+        # 注入防御状态
+        defense = snap.get("active_defense", (None,))[0]
+        if defense and isinstance(defense, dict) and defense.get("name"):
+            current_defenses = cs.get("personality", {}).get("defense_style", [])
+            if defense["name"] not in current_defenses:
+                cs.setdefault("current_defense", defense)
+
+        # 注入 PTSD 触发状态
+        triggered = snap.get("ptsd_triggered", (None,))[0]
+        if triggered is not None:
+            cs["current_ptsd_triggered"] = triggered
+
+        return cs
 
     def _build_event(self, perception_window: list[dict], snap: dict | None = None) -> dict | None:
         """从感知窗口 + 当前心理状态构建管道事件。"""

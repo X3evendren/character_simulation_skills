@@ -35,8 +35,9 @@ async def main():
         "emotion_decay": {},
     }
 
+    orch = get_orchestrator(anti_alignment_enabled=True)
     config = TocaConfig(pipeline_time_s=12.0, instance_count=2, window_s=8.0)
-    runner = TocaRunner(bb, ps, None, provider, cs, config)
+    runner = TocaRunner(bb, ps, orch, provider, cs, config)
 
     print("TOCA Demo: 连续状态流\n")
     print(f"Config: {config.instance_count} instances, {config.interval:.1f}s interval, {config.window_s}s window\n")

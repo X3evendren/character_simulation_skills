@@ -249,7 +249,7 @@ docs/superpowers/specs/ — 设计文档
 - **不是 AGI**。这个系统模拟心理过程，但不具备真正的意识或感受
 - **LLM 依赖**。心理分析的准确性受限于底层 LLM 的能力。不同 LLM 对同一心理维度的判断可能有显著差异
 - **Token 成本**。每次事件处理调用 15-22 次 LLM（每个 Skill 一次），约消耗 15K-20K tokens
-- **TOCA 集成中**。核心引擎已实现（Blackboard + PerceptionStream + TocaRunner），正在与现有 Skill 管线完全集成
+- **TOCA 实验性**。核心引擎与 Skill 管线已集成（写入成功率 100%），但仍在早期阶段
 - **评估天花板**。Mock 验证已达满分（JSON 解析/字段覆盖），但真实 LLM 的心理准确性验证是开放问题——我们是在用心理学理论作为 ground truth，理论本身有局限性
 - **英文情感标签偏差**。Plutchik/OCC 的英文情感术语在中文 LLM 上存在翻译歧义
 
