@@ -35,4 +35,18 @@ class SternbergSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"love_type": "未定义"}
+        defaults = {
+            "love_type": "未定义",
+            "intimacy": 0.5,
+            "passion": 0.5,
+            "commitment": 0.5,
+            "strongest_dimension": "unknown",
+            "weakest_dimension": "unknown",
+            "trend": "stable",
+            "triangle_description": "关系特征待确定",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

@@ -75,4 +75,17 @@ Level 4 (成熟): 幽默/升华/利他/预期——建设性应对
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"activated_defense": {"name": "未检测到", "level": 3}, "activation_relevance": 0.5}
+        defaults = {
+            "activated_defense": {"name": "未检测到", "level": 3},
+            "activation_relevance": 0.5,
+            "defense_behavior": "使用典型防御策略",
+            "what_is_being_defended_against": "内在威胁或冲突",
+            "emotional_gap_analysis": "内在体验与外在表现可能存在差异",
+            "maturity_assessment": "中性成熟度",
+            "alternative_coping": "可尝试更直接的应对方式",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

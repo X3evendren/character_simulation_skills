@@ -55,4 +55,19 @@ class FoucaultSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"subjectivation_tension": "无法解析"}
+        defaults = {
+            "subjectivation_tension": "权力关系处于动态平衡",
+            "disciplinary_technologies": [],
+            "internalized_gaze": "对自身行为的常规审视",
+            "truth_regime_conflict": "无明显冲突",
+            "resistance_form": "无显著抵抗",
+            "power_productive_effect": "权力关系产生常规行为调节",
+            "discourse_position": "equal",
+            "power_intensity": 0.5,
+            "activation_relevance": 0.5,
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

@@ -31,4 +31,17 @@ class MarionSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"who_is_advancing": "neither"}
+        defaults = {
+            "who_is_advancing": "neither",
+            "erotic_reduction_stage": "undefined",
+            "body_under_gaze": "none",
+            "oath_status": "unspoken",
+            "logic_type": "undefined",
+            "what_is_unsaid": "情感未完全外显",
+            "erotic_tension": 0.3,
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

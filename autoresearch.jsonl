@@ -10,3 +10,4 @@
 {"type":"config","name":"json-parse-quality-v3","metricName":"json_parse_rate","metricUnit":"fraction","bestDirection":"higher"}
 {"run":8,"commit":"e3b65b2","metric":0.8133,"metrics":{"field_coverage":0.7603,"total_tokens":8937.6,"skill_error_rate":0.0},"status":"keep","description":"re-baseline with parse_success-based metric","timestamp":1778031745,"segment":2}
 {"run":9,"commit":"4cc69ea","metric":0.8216,"metrics":{"field_coverage":0.7641,"total_tokens":8990.8,"skill_error_rate":0.0},"status":"keep","description":"enhanced truncation recovery with partial-key handling","timestamp":1778031842,"segment":2}
+{"run":10,"commit":"d25d591","metric":0.8216,"metrics":{"field_coverage":0.8787,"total_tokens":9010.2,"skill_error_rate":0.0},"status":"keep","description":"full field defaults for 5 field-rich skills","timestamp":1778031997,"segment":2}

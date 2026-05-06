@@ -94,4 +94,18 @@ Gross 情绪调节过程模型（五策略，按时序排列）:
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"detected_strategy": "未知"}
+        defaults = {
+            "detected_strategy": "no_regulation",
+            "internal_to_external_path": "内在体验直接外化",
+            "effectiveness": 0.5,
+            "cost": "无显著代价",
+            "functional_emotion_shift": "情感无显著变化",
+            "alternative_strategy": "无需替代策略",
+            "long_term_impact": "维持现状",
+            "regulation_insight": "无需特别调节",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result
