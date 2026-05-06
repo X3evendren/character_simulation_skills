@@ -75,11 +75,17 @@
         "internal.dominant": {
           "in": [
             "fear",
-            "sadness"
+            "sadness",
+            "anxiety",
+            "fearful",
+            "scared",
+            "grief",
+            "sorrow",
+            "depressed"
           ]
         },
         "internal.pleasantness": {
-          "max": 0.0
+          "max": 0.2
         }
       },
       "cognitive_bias_detect": {

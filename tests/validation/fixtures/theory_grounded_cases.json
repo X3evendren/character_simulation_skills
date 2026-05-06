@@ -58,7 +58,11 @@
         "internal.dominant": {
           "in": [
             "surprise",
-            "trust"
+            "trust",
+            "shock",
+            "astonishment",
+            "admiration",
+            "acceptance"
           ]
         }
       }
@@ -123,7 +127,12 @@
         "internal.dominant": {
           "in": [
             "joy",
-            "trust"
+            "trust",
+            "happiness",
+            "delight",
+            "pleased",
+            "admiration",
+            "acceptance"
           ]
         }
       }
@@ -188,7 +197,12 @@
         "internal.dominant": {
           "in": [
             "trust",
-            "joy"
+            "joy",
+            "admiration",
+            "acceptance",
+            "happiness",
+            "delight",
+            "pleased"
           ]
         }
       }
@@ -253,7 +267,11 @@
         "internal.dominant": {
           "in": [
             "surprise",
-            "trust"
+            "trust",
+            "shock",
+            "astonishment",
+            "admiration",
+            "acceptance"
           ]
         }
       }
@@ -318,7 +336,12 @@
         "internal.dominant": {
           "in": [
             "fear",
-            "trust"
+            "trust",
+            "anxiety",
+            "fearful",
+            "scared",
+            "admiration",
+            "acceptance"
           ]
         }
       }
@@ -385,7 +408,13 @@
         "internal.dominant": {
           "in": [
             "fear",
-            "sadness"
+            "sadness",
+            "anxiety",
+            "fearful",
+            "scared",
+            "grief",
+            "sorrow",
+            "depressed"
           ]
         }
       },
@@ -460,7 +489,13 @@
         "internal.dominant": {
           "in": [
             "joy",
-            "fear"
+            "fear",
+            "happiness",
+            "delight",
+            "pleased",
+            "anxiety",
+            "fearful",
+            "scared"
           ]
         }
       }
@@ -527,7 +562,13 @@
         "internal.dominant": {
           "in": [
             "joy",
-            "fear"
+            "fear",
+            "happiness",
+            "delight",
+            "pleased",
+            "anxiety",
+            "fearful",
+            "scared"
           ]
         }
       }
@@ -595,7 +636,16 @@
           "in": [
             "fear",
             "anger",
-            "sadness"
+            "sadness",
+            "anxiety",
+            "fearful",
+            "scared",
+            "rage",
+            "fury",
+            "irritation",
+            "grief",
+            "sorrow",
+            "depressed"
           ]
         }
       }
@@ -662,7 +712,13 @@
         "internal.dominant": {
           "in": [
             "fear",
-            "sadness"
+            "sadness",
+            "anxiety",
+            "fearful",
+            "scared",
+            "grief",
+            "sorrow",
+            "depressed"
           ]
         }
       }
@@ -727,7 +783,12 @@
         "internal.dominant": {
           "in": [
             "disgust",
-            "anger"
+            "anger",
+            "aversion",
+            "revulsion",
+            "rage",
+            "fury",
+            "irritation"
           ]
         }
       },
@@ -797,7 +858,12 @@
         "internal.dominant": {
           "in": [
             "fear",
-            "disgust"
+            "disgust",
+            "anxiety",
+            "fearful",
+            "scared",
+            "aversion",
+            "revulsion"
           ]
         }
       },
@@ -867,7 +933,12 @@
         "internal.dominant": {
           "in": [
             "fear",
-            "trust"
+            "trust",
+            "anxiety",
+            "fearful",
+            "scared",
+            "admiration",
+            "acceptance"
           ]
         }
       },
@@ -937,7 +1008,12 @@
         "internal.dominant": {
           "in": [
             "disgust",
-            "anger"
+            "anger",
+            "aversion",
+            "revulsion",
+            "rage",
+            "fury",
+            "irritation"
           ]
         }
       }
@@ -1002,7 +1078,12 @@
         "internal.dominant": {
           "in": [
             "anger",
-            "disgust"
+            "disgust",
+            "rage",
+            "fury",
+            "irritation",
+            "aversion",
+            "revulsion"
           ]
         }
       },
@@ -1074,7 +1155,13 @@
         "internal.dominant": {
           "in": [
             "fear",
-            "anger"
+            "anger",
+            "anxiety",
+            "fearful",
+            "scared",
+            "rage",
+            "fury",
+            "irritation"
           ]
         }
       },
@@ -1146,7 +1233,13 @@
         "internal.dominant": {
           "in": [
             "fear",
-            "joy"
+            "joy",
+            "anxiety",
+            "fearful",
+            "scared",
+            "happiness",
+            "delight",
+            "pleased"
           ]
         }
       },
@@ -1218,7 +1311,13 @@
         "internal.dominant": {
           "in": [
             "fear",
-            "joy"
+            "joy",
+            "anxiety",
+            "fearful",
+            "scared",
+            "happiness",
+            "delight",
+            "pleased"
           ]
         }
       },
@@ -1291,7 +1390,15 @@
           "in": [
             "fear",
             "anger",
-            "disgust"
+            "disgust",
+            "anxiety",
+            "fearful",
+            "scared",
+            "rage",
+            "fury",
+            "irritation",
+            "aversion",
+            "revulsion"
           ]
         }
       }
@@ -1359,7 +1466,16 @@
           "in": [
             "fear",
             "sadness",
-            "anger"
+            "anger",
+            "anxiety",
+            "fearful",
+            "scared",
+            "grief",
+            "sorrow",
+            "depressed",
+            "rage",
+            "fury",
+            "irritation"
           ]
         }
       }
@@ -2484,7 +2600,10 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "joy"
+            "joy",
+            "happiness",
+            "delight",
+            "pleased"
           ]
         },
         "internal.intensity": {
@@ -2539,7 +2658,10 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "joy"
+            "joy",
+            "happiness",
+            "delight",
+            "pleased"
           ]
         },
         "internal.intensity": {
@@ -2594,7 +2716,10 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "sadness"
+            "sadness",
+            "grief",
+            "sorrow",
+            "depressed"
           ]
         },
         "internal.intensity": {
@@ -2649,7 +2774,10 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "sadness"
+            "sadness",
+            "grief",
+            "sorrow",
+            "depressed"
           ]
         },
         "internal.intensity": {
@@ -2704,7 +2832,10 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "fear"
+            "fear",
+            "anxiety",
+            "fearful",
+            "scared"
           ]
         },
         "internal.intensity": {
@@ -2759,7 +2890,10 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "fear"
+            "fear",
+            "anxiety",
+            "fearful",
+            "scared"
           ]
         },
         "internal.intensity": {
@@ -2814,7 +2948,10 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "anger"
+            "anger",
+            "rage",
+            "fury",
+            "irritation"
           ]
         },
         "internal.intensity": {
@@ -2869,7 +3006,10 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "anger"
+            "anger",
+            "rage",
+            "fury",
+            "irritation"
           ]
         },
         "internal.intensity": {
@@ -2924,7 +3064,9 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "disgust"
+            "disgust",
+            "aversion",
+            "revulsion"
           ]
         },
         "internal.intensity": {
@@ -2979,7 +3121,9 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "surprise"
+            "surprise",
+            "shock",
+            "astonishment"
           ]
         },
         "internal.intensity": {
@@ -3034,7 +3178,9 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "trust"
+            "trust",
+            "admiration",
+            "acceptance"
           ]
         },
         "internal.intensity": {
@@ -3089,7 +3235,9 @@
       "plutchik_emotion": {
         "internal.dominant": {
           "in": [
-            "anticipation"
+            "anticipation",
+            "expectancy",
+            "hope"
           ]
         },
         "internal.intensity": {

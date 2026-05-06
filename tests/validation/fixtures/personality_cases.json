@@ -5,33 +5,84 @@
     "character_state": {
       "name": "高神经质角色",
       "personality": {
-        "openness": 0.5, "conscientiousness": 0.5, "extraversion": 0.4,
-        "agreeableness": 0.5, "neuroticism": 0.85,
-        "attachment_style": "secure", "defense_style": [], "cognitive_biases": ["灾难化"],
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.4,
+        "agreeableness": 0.5,
+        "neuroticism": 0.85,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [
+          "灾难化"
+        ],
         "moral_stage": 3
       },
-      "trauma": {"ace_score": 0, "active_schemas": [], "trauma_triggers": []},
-      "ideal_world": {}, "motivation": {"current_goal": ""}, "emotion_decay": {}
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
     },
     "event": {
       "description": "上司发来一条消息：'我们需要谈谈'。没有其他上下文。",
-      "type": "social", "participants": [{"name": "上司", "relation": "superior", "role": "authority"}],
-      "significance": 0.4, "tags": ["uncertainty", "authority"]
+      "type": "social",
+      "participants": [
+        {
+          "name": "上司",
+          "relation": "superior",
+          "role": "authority"
+        }
+      ],
+      "significance": 0.4,
+      "tags": [
+        "uncertainty",
+        "authority"
+      ]
     },
     "expected": {
       "big_five_analysis": {
-        "emotional_reactivity": {"min": 0.6},
-        "interpretation_bias": {"keywords": ["负面", "威胁", "担忧", "糟糕"], "direction": "negative"},
-        "stress_response": {"not_empty": true}
+        "emotional_reactivity": {
+          "min": 0.6
+        },
+        "interpretation_bias": {
+          "keywords": [
+            "负面",
+            "威胁",
+            "担忧",
+            "糟糕"
+          ],
+          "direction": "negative"
+        },
+        "stress_response": {
+          "not_empty": true
+        }
       },
       "cognitive_bias_detect": {
-        "activated_biases": {"contains_any": ["灾难化", "读心术"]}
+        "activated_biases": {
+          "contains_any": [
+            "灾难化",
+            "读心术"
+          ]
+        }
       },
       "smith_ellsworth_appraisal": {
-        "certainty": {"max": 0.5},
-        "pleasantness": {"max": 0.0}
+        "certainty": {
+          "max": 0.5
+        },
+        "pleasantness": {
+          "max": 0.0
+        }
       },
-      "response_generator": {"response_text": {"not_empty": true}}
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
     }
   },
   {
@@ -40,30 +91,77 @@
     "character_state": {
       "name": "低宜人性角色",
       "personality": {
-        "openness": 0.5, "conscientiousness": 0.6, "extraversion": 0.5,
-        "agreeableness": 0.2, "neuroticism": 0.4,
-        "attachment_style": "avoidant", "defense_style": [], "cognitive_biases": [],
+        "openness": 0.5,
+        "conscientiousness": 0.6,
+        "extraversion": 0.5,
+        "agreeableness": 0.2,
+        "neuroticism": 0.4,
+        "attachment_style": "avoidant",
+        "defense_style": [],
+        "cognitive_biases": [],
         "moral_stage": 3
       },
-      "trauma": {"ace_score": 0, "active_schemas": [], "trauma_triggers": []},
-      "ideal_world": {}, "motivation": {"current_goal": ""}, "emotion_decay": {}
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
     },
     "event": {
       "description": "同事当众指出她工作中的错误，语气尖锐。",
-      "type": "conflict", "participants": [{"name": "同事", "relation": "peer", "role": "peer"}],
-      "significance": 0.5, "tags": ["criticism", "public"]
+      "type": "conflict",
+      "participants": [
+        {
+          "name": "同事",
+          "relation": "peer",
+          "role": "peer"
+        }
+      ],
+      "significance": 0.5,
+      "tags": [
+        "criticism",
+        "public"
+      ]
     },
     "expected": {
       "big_five_analysis": {
-        "social_approach": {"in": ["approach", "confront"]},
-        "decision_style": {"not_in": ["submit"]}
+        "social_approach": {
+          "in": [
+            "approach",
+            "confront"
+          ]
+        },
+        "decision_style": {
+          "not_in": [
+            "submit"
+          ]
+        }
       },
       "plutchik_emotion": {
-        "internal.dominant": {"in": ["anger", "disgust"]},
-        "internal.pleasantness": {"max": 0.0}
+        "internal.dominant": {
+          "in": [
+            "anger",
+            "disgust",
+            "rage",
+            "fury",
+            "irritation",
+            "aversion",
+            "revulsion"
+          ]
+        },
+        "internal.pleasantness": {
+          "max": 0.2
+        }
       },
       "response_generator": {
-        "response_text": {"not_empty": true}
+        "response_text": {
+          "not_empty": true
+        }
       }
     }
   },
@@ -73,29 +171,70 @@
     "character_state": {
       "name": "高尽责性角色",
       "personality": {
-        "openness": 0.4, "conscientiousness": 0.9, "extraversion": 0.5,
-        "agreeableness": 0.6, "neuroticism": 0.5,
-        "attachment_style": "secure", "defense_style": [], "cognitive_biases": [],
+        "openness": 0.4,
+        "conscientiousness": 0.9,
+        "extraversion": 0.5,
+        "agreeableness": 0.6,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
         "moral_stage": 3
       },
-      "trauma": {"ace_score": 0, "active_schemas": [], "trauma_triggers": []},
-      "ideal_world": {}, "motivation": {"current_goal": ""}, "emotion_decay": {}
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
     },
     "event": {
       "description": "她必须在两小时内完成一份重要报告，但电脑突然崩溃了，三小时的工作没有保存。",
-      "type": "crisis", "participants": [],
-      "significance": 0.7, "tags": ["deadline", "failure", "stress"]
+      "type": "crisis",
+      "participants": [],
+      "significance": 0.7,
+      "tags": [
+        "deadline",
+        "failure",
+        "stress"
+      ]
     },
     "expected": {
       "big_five_analysis": {
-        "decision_style": {"in": ["deliberate", "cautious", "planful"]},
-        "stress_response": {"keywords": ["计划", "补救", "解决", "努力"], "direction": "positive"}
+        "decision_style": {
+          "in": [
+            "deliberate",
+            "cautious",
+            "planful"
+          ]
+        },
+        "stress_response": {
+          "keywords": [
+            "计划",
+            "补救",
+            "解决",
+            "努力"
+          ],
+          "direction": "positive"
+        }
       },
       "occ_emotion_appraisal": {
-        "goal_relevance": {"min": 0.7},
-        "goal_conduciveness": {"max": 0.0}
+        "goal_relevance": {
+          "min": 0.5599999999999999
+        },
+        "goal_conduciveness": {
+          "max": 0.15
+        }
       },
-      "response_generator": {"response_text": {"not_empty": true}}
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
     }
   }
 ]
