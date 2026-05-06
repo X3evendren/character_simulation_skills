@@ -49,6 +49,7 @@ from .skills.l3_social.sternberg import SternbergSkill
 from .skills.l3_social.strogatz import StrogatzSkill
 from .skills.l3_social.fisher_love import FisherLoveSkill
 from .skills.l3_social.diri_gent import DiriGentSkill
+from .skills.l3_social.theory_of_mind import TheoryOfMindSkill
 
 # L4
 from .skills.l4_reflective.gross_regulation import GrossRegulationSkill

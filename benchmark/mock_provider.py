@@ -149,6 +149,17 @@ SKILL_SCHEMAS: dict[str, dict[str, tuple[Any, bool]]] = {
         "delay_effect": ("回应延迟导致振荡", False),
         "equilibrium_point": (0.55, False),
     },
+    
+    "theory_of_mind": {
+        "perceived_thoughts": (["对方可能正在疏远我"], True),
+        "perceived_intentions": (["对方可能想保持距离"], False),
+        "perceived_feelings_toward_self": ("对方对自己感到不耐烦", False),
+        "evidence_basis": ("weak", False),
+        "alternative_interpretations": (["对方可能只是忙碌"], False),
+        "distortion_factors": (["焦虑依恋导致过度解读"], False),
+        "behavioral_influence": ("角色将更频繁地寻求确认", False),
+        "ToM_accuracy_estimate": (0.3, False),
+    },
     "fisher_love_stages": {
         "current_stage": ("attraction", True),
         "stage_markers": (["intense_focus", "emotional_dependency"], False),
@@ -309,6 +320,8 @@ class MockProvider:
         ("strogatz_love_dynamics", "Romeo-Juliet"),
         ("fisher_love_stages", "Fisher"),
         ("fisher_love_stages", "恋爱阶段专家"),
+        ("theory_of_mind", "ToM Agent"),
+        ("theory_of_mind", "心理状态推理"),
         ("dirigent_world_tension", "角色动机分析专家"),
         ("dirigent_world_tension", "内心张力"),
         ("gross_emotion_regulation", "Gross"),

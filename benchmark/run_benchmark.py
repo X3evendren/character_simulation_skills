@@ -23,7 +23,7 @@ from character_simulation_skills import (
     BigFiveSkill, AttachmentSkill,
     PlutchikEmotionSkill, PTSDTriggerSkill, EmotionProbeSkill,
     OCCEmotionSkill, CognitiveBiasSkill, DefenseMechanismSkill, SmithEllsworthSkill,
-    GottmanSkill, MarionSkill, FoucaultSkill, SternbergSkill, StrogatzSkill, FisherLoveSkill, DiriGentSkill,
+    GottmanSkill, MarionSkill, FoucaultSkill, SternbergSkill, StrogatzSkill, FisherLoveSkill, DiriGentSkill, TheoryOfMindSkill,
     GrossRegulationSkill, KohlbergSkill, MaslowSkill, SDTSkill,
     YoungSchemaSkill, ACETraumaSkill, ResponseGeneratorSkill,
     CognitiveResult, SkillResult,
@@ -59,7 +59,7 @@ def register_all_skills():
         OCCEmotionSkill(), CognitiveBiasSkill(), DefenseMechanismSkill(), SmithEllsworthSkill(),
         # L3
         GottmanSkill(), MarionSkill(), FoucaultSkill(), SternbergSkill(),
-        StrogatzSkill(), FisherLoveSkill(), DiriGentSkill(),
+        StrogatzSkill(), FisherLoveSkill(), DiriGentSkill(), TheoryOfMindSkill(),
         # L4
         GrossRegulationSkill(), KohlbergSkill(), MaslowSkill(), SDTSkill(),
         # L5
