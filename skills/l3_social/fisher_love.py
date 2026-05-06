@@ -10,19 +10,9 @@ class FisherLoveSkill(BaseSkill):
     )
 
     def build_prompt(self, character_state: dict, event: dict, context: dict) -> str:
-        return f"""你是Fisher恋爱阶段专家。互动: {event.get('description', '')}
-
-三阶段(可重叠):
-1. 欲望(Lust) — 睾酮/雌激素驱动，寻找潜在伴侣
-2. 吸引(Attraction) — 多巴胺/去甲肾上腺素，强迫性专注
-3. 依恋(Attachment) — 催产素/加压素，长期平静
-
-输出 JSON:
-{{"current_stage": "lust/attraction/attachment/transition",
- "stage_markers": ["当前阶段的标志性表现"],
- "neurochemical_profile": "主导神经化学物质及其效应",
- "transition_readiness": "0.0-1.0 向下一阶段过渡的准备度",
- "stuck_risk": "是否卡在当前阶段? 风险描述"}}"""
+        return f"""Fisher恋爱阶段。互动: {event.get('description','')}
+三阶段: lust(睾酮/雌激素)→attraction(多巴胺/去甲肾上腺素)→attachment(催产素/加压素)
+JSON: {{"current_stage":"","stage_markers":[],"neurochemical_profile":"","transition_readiness":0.5,"stuck_risk":0.3}}"""
 
     def parse_output(self, raw_output: str) -> dict:
         from ...core.base import extract_json

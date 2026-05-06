@@ -11,23 +11,9 @@ class SDTSkill(BaseSkill):
 
     def build_prompt(self, character_state: dict, event: dict, context: dict) -> str:
         m = character_state.get("motivation", {})
-        return f"""你是SDT专家。事件: {event.get('description', '')}
-
-三种内在需求:
-- 自主性(Autonomy): 我感觉我的行为是我自己选择的 (当前: {m.get('autonomy_satisfaction',0.5):.1f})
-- 胜任感(Competence): 我感觉我有能力做好 (当前: {m.get('competence_satisfaction',0.5):.1f})
-- 归属感(Relatedness): 我感觉我和他人有连接 (当前: {m.get('relatedness_satisfaction',0.5):.1f})
-
-三需求满足→内在动机→创造力+坚持+幸福
-某种需求受阻→防御或补偿行为
-
-输出 JSON:
-{{"autonomy_impact": "事件如何影响自主性(-1.0-1.0)",
- "competence_impact": "事件如何影响胜任感(-1.0-1.0)",
- "relatedness_impact": "事件如何影响归属感(-1.0-1.0)",
- "most_threatened": "受威胁最大的需求",
- "compensation_behavior": "如果需求受阻，角色可能的补偿行为",
- "intrinsic_motivation_level": "0.0-1.0 当前内在动机水平"}}"""
+        return f"""SDT自我决定。事件: {event.get('description','')}
+三需求: 自主性({m.get('autonomy_satisfaction',0.5):.1f}) 胜任感({m.get('competence_satisfaction',0.5):.1f}) 关系感({m.get('relatedness_satisfaction',0.5):.1f})
+JSON: {{"autonomy_impact":0,"competence_impact":0,"relatedness_impact":0,"most_threatened":"","compensation_behavior":"","intrinsic_motivation_level":0.5}}"""
 
     def parse_output(self, raw_output: str) -> dict:
         from ...core.base import extract_json

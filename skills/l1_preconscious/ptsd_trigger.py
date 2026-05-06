@@ -12,16 +12,9 @@ class PTSDTriggerSkill(BaseSkill):
     def build_prompt(self, character_state: dict, event: dict, context: dict) -> str:
         trauma = character_state.get("trauma", {})
         triggers = trauma.get("trauma_triggers", [])
-        return f"""你是创伤心理学专家。角色已知创伤触发: {triggers}
-当前事件: {event.get('description', '')}
-
-分析是否触发创伤。输出 JSON:
-{{"triggered": true/false,
- "matched_triggers": ["匹配到的触发点"],
- "intrusion_risk": "0.0-1.0 侵入症状风险",
- "avoidance_risk": "0.0-1.0 回避行为风险",
- "hyperarousal_risk": "0.0-1.0 过度警觉风险",
- "immediate_reaction": "角色的即刻创伤反应（一句话）"}}"""
+        return f"""PTSD创伤触发检测。触发词: {triggers}
+事件: {event.get('description','')}
+JSON: {{"triggered":false,"matched_triggers":[],"intrusion_risk":0.2,"avoidance_risk":0.3,"hyperarousal_risk":0.3,"immediate_reaction":""}}"""
 
     def parse_output(self, raw_output: str) -> dict:
         from ...core.base import extract_json

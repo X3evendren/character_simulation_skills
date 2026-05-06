@@ -10,20 +10,9 @@ class StrogatzSkill(BaseSkill):
     )
 
     def build_prompt(self, character_state: dict, event: dict, context: dict) -> str:
-        return f"""你是爱情动力学专家。互动: {event.get('description', '')}
-
-Strogatz Romeo-Juliet模型: dR/dt = aR + bJ
-- a>0: 越爱自己越爱对方(安全型) / a<0: 需要对方确认(焦虑型)
-- b>0: 被对方激励 / b<0: 被对方窒息(回避型)
-- 2023新发现: 适当延迟可稳定爱情动力学
-
-输出 JSON:
-{{"a_parameter": "角色A的自我反馈系数(正/负)及解释",
- "b_parameter": "角色A对B的响应系数(正/负)及解释",
- "system_trend": "converging/diverging/oscillating 系统趋势",
- "stability_assessment": "stable/unstable/metastable",
- "delay_effect": "延迟对系统的影响(稳定化/去稳定化)",
- "equilibrium_point": "如果有的话，系统将趋于什么状态"}}"""
+        return f"""Strogatz爱情动力学。互动: {event.get('description','')}
+Romeo-Juliet模型: dR/dt=aR+bJ a>0安全型/a<0焦虑型 b>0被激励/b<0回避型
+JSON: {{"a_parameter":0.5,"b_parameter":0.5,"system_trend":"","stability_assessment":"","delay_effect":"","equilibrium_point":0.5}}"""
 
     def parse_output(self, raw_output: str) -> dict:
         from ...core.base import extract_json
