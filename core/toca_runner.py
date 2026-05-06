@@ -111,17 +111,15 @@ class TocaRunner:
             snap = self.bb.read_with_versions()
             perception_window = self.ps.get_window(self.config.window_s)
 
-            # 2. 构建事件（从感知窗口生成事件描述）
-            event = self._build_event(perception_window)
+            # 2. 构建事件（从感知窗口 + 当前心理状态）
+            event = self._build_event(perception_window, snap)
             if event is None:
-                meta.status = "idle"  # 无感知输入，跳过
+                meta.status = "idle"
                 return
 
-            # 3. 更新 character_state 中的持久字段
+            # 3. 将 Blackboard 上的连续心理状态注入 character_state
             cs = dict(self.character_state)
-            for k in ("emotion_decay", "personality_state_machine"):
-                if k in snap and snap[k][0] is not None:
-                    cs[k] = snap[k][0]
+            self._inject_blackboard_state(cs, snap)
 
             # 4. 运行管道
             from .orchestrator import get_orchestrator
@@ -132,8 +130,8 @@ class TocaRunner:
             result = await orch_or.process_event(self.provider, cs, event)
             meta.tokens_used = result.total_tokens
 
-            # 5. 将管道输出的心理状态写回 Blackboard（乐观锁）
-            self._write_back(result, snap, instance_id)
+            # 5. 写入 Blackboard（实时读版本号，不是用管道开始时的快照）
+            self._write_back(result, instance_id)
             meta.status = "completed"
             meta.completed_at = time.time()
 
@@ -142,12 +140,23 @@ class TocaRunner:
             self._instances[-1] = meta
             raise
 
-    def _build_event(self, perception_window: list[dict]) -> dict | None:
-        """从感知窗口构建管道事件。"""
+    def _inject_blackboard_state(self, cs: dict, snap: dict):
+        """将 Blackboard 上的连续心理状态注入 character_state。
+        这是连续性的关键：每次管道调用看到的不是初始角色，而是'此刻'的角色。"""
+        state_map = {
+            "pad": "emotion_decay",
+            "active_defense": "current_defense",
+            "dominant_emotion": "current_emotion",
+        }
+        for bb_key, cs_key in state_map.items():
+            if bb_key in snap and snap[bb_key][0] is not None:
+                cs[cs_key] = snap[bb_key][0]
+
+    def _build_event(self, perception_window: list[dict], snap: dict | None = None) -> dict | None:
+        """从感知窗口 + 当前心理状态构建管道事件。"""
         if not perception_window:
             return None
 
-        # 用最近感知构建事件描述
         descriptions = []
         tags = set()
         for p in perception_window:
@@ -157,27 +166,34 @@ class TocaRunner:
             descriptions.append(desc)
             tags.add(p.get("modality", ""))
 
+        # 注入当前心理状态作为事件上下文
+        context = ""
+        if snap:
+            dom = snap.get("dominant_emotion", (None,))[0]
+            if dom:
+                context = f"（当前角色情绪基调: {dom}）"
+
         return {
-            "description": " ".join(descriptions[-6:]),  # 最近6条
+            "description": context + " " + " ".join(descriptions[-6:]),
             "type": "continuous",
             "participants": [],
-            "significance": 0.4,  # 连续流中大部分事件是低显著性的
+            "significance": 0.4,
             "tags": list(tags),
             "_toca_instance": True,
-            "_perception_count": len(perception_window),
         }
 
-    def _write_back(self, result, snap: dict, instance_id: int):
-        """将管道产出写回 Blackboard（乐观并发）。"""
+    def _write_back(self, result, instance_id: int):
+        """将管道产出写回 Blackboard。
+        注意：版本号在写入时实时读取（不是管道开始时的快照）。"""
         writes = 0
         conflicts = 0
 
-        # 提取需要持久化的字段
         l1 = result.layer_results.get(1, [])
         l2 = result.layer_results.get(2, [])
-        l3 = result.layer_results.get(3, [])
-        l4 = result.layer_results.get(4, [])
         l5 = result.layer_results.get(5, [])
+
+        # 实时读版本号（不是管道开始时的快照）
+        now_versions = self.bb.read_with_versions()
 
         # L1: 情感
         for sr in l1:
@@ -186,27 +202,25 @@ class TocaRunner:
                 pad = {
                     "pleasure": internal.get("pleasantness", 0.0),
                     "arousal": internal.get("intensity", 0.5),
-                    "dominance": 0.0,  # Plutchik 不含 dominance，后续可从 L2 补充
+                    "dominance": 0.0,
                 }
-                ev = snap.get("pad", (None, 0))[1] if "pad" in snap else 0
+                ev = now_versions.get("pad", (None, 0))[1]
                 if self.bb.try_write("pad", pad, ev, instance_id):
                     writes += 1
                 else:
                     conflicts += 1
-
-                if self.bb.try_write("dominant_emotion",
-                                     internal.get("dominant", "neutral"),
-                                     snap.get("dominant_emotion", (None, 0))[1],
-                                     instance_id):
+                ev2 = now_versions.get("dominant_emotion", (None, 0))[1]
+                if self.bb.try_write("dominant_emotion", internal.get("dominant", "neutral"),
+                                     ev2, instance_id):
                     writes += 1
                 else:
                     conflicts += 1
                 break
 
-        # L1: PTSD 触发状态
+        # L1: PTSD
         for sr in l1:
             if sr.skill_name == "ptsd_trigger_check" and sr.success:
-                ev = snap.get("ptsd_triggered", (None, 0))[1]
+                ev = now_versions.get("ptsd_triggered", (None, 0))[1]
                 if self.bb.try_write("ptsd_triggered", sr.output.get("triggered", False),
                                      ev, instance_id):
                     writes += 1
@@ -214,10 +228,10 @@ class TocaRunner:
                     conflicts += 1
                 break
 
-        # L2: 防御机制
+        # L2: 防御
         for sr in l2:
             if sr.skill_name == "defense_mechanism_analysis" and sr.success:
-                ev = snap.get("active_defense", (None, 0))[1]
+                ev = now_versions.get("active_defense", (None, 0))[1]
                 if self.bb.try_write("active_defense", sr.output.get("activated_defense", {}),
                                      ev, instance_id):
                     writes += 1
@@ -230,9 +244,10 @@ class TocaRunner:
             if sr.skill_name == "response_generator" and sr.success:
                 rt = sr.output.get("response_text", "")
                 if rt:
-                    ev = snap.get("pending_response", (None, 0))[1]
-                    resp = {"text": rt, "confidence": 0.8, "t": time.time()}
-                    if self.bb.try_write("pending_response", resp, ev, instance_id):
+                    ev = now_versions.get("pending_response", (None, 0))[1]
+                    if self.bb.try_write("pending_response",
+                                         {"text": rt, "confidence": 0.8, "t": time.time()},
+                                         ev, instance_id):
                         writes += 1
                     else:
                         conflicts += 1

@@ -35,7 +35,7 @@ async def main():
         "emotion_decay": {},
     }
 
-    config = TocaConfig(pipeline_time_s=3.0, instance_count=2, window_s=8.0)
+    config = TocaConfig(pipeline_time_s=12.0, instance_count=2, window_s=8.0)
     runner = TocaRunner(bb, ps, None, provider, cs, config)
 
     print("TOCA Demo: 连续状态流\n")
