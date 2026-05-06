@@ -249,7 +249,7 @@ docs/superpowers/specs/ — 设计文档
 - **不是 AGI**。这个系统模拟心理过程，但不具备真正的意识或感受
 - **LLM 依赖**。心理分析的准确性受限于底层 LLM 的能力。不同 LLM 对同一心理维度的判断可能有显著差异
 - **Token 成本**。每次事件处理调用 15-22 次 LLM（每个 Skill 一次），约消耗 15K-20K tokens
-- **连续流未完成**。TOCA 已实现核心引擎但尚未与现有 Skill 管线完全集成
+- **TOCA 集成中**。核心引擎已实现（Blackboard + PerceptionStream + TocaRunner），正在与现有 Skill 管线完全集成
 - **评估天花板**。Mock 验证已达满分（JSON 解析/字段覆盖），但真实 LLM 的心理准确性验证是开放问题——我们是在用心理学理论作为 ground truth，理论本身有局限性
 - **英文情感标签偏差**。Plutchik/OCC 的英文情感术语在中文 LLM 上存在翻译歧义
 
@@ -260,14 +260,3 @@ docs/superpowers/specs/ — 设计文档
 MIT
 
 ---
-
-## 📚 参考文献
-
-- Sun, R. (2025). *Enhancing Computational Cognitive Architectures with LLMs: A Case Study*. arXiv:2509.10972
-- Sun, R. (2006). *The CLARION Cognitive Architecture*. Cambridge University Press
-- Scherer, K. R. (2001). Appraisal Considered as a Process of Multilevel Sequential Checking
-- Marion, J-L. (2003). *Le phénomène érotique*
-- Costa & McCrae (1992). NEO PI-R Professional Manual
-- Plutchik, R. (1980). *Emotion: A Psychoevolutionary Synthesis*
-- Gottman, J. M. (1994). *What Predicts Divorce?*
-- Kohlberg, L. (1981). *The Philosophy of Moral Development*
