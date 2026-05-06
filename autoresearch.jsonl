@@ -1,3 +1,4 @@
 {"type":"config","name":"token-efficiency","metricName":"total_tokens","metricUnit":"count","bestDirection":"lower"}
 {"run":1,"commit":"be60c21","metric":9052.3,"metrics":{"toca_write_rate":1.00,"response_quality":1.00,"multi_agent_continuity":1.00},"status":"keep","description":"baseline","timestamp":1778070245,"segment":0}
 {"run":2,"commit":"e773b0f","metric":8772.0,"metrics":{"toca_write_rate":1.00,"response_quality":1.00,"multi_agent_continuity":1.00},"status":"keep","description":"shorten Smith-Ellsworth prompt: 16-dim verbose -> compact","timestamp":1778070339,"segment":0}
+{"run":3,"commit":"5548bca","metric":8465.7,"metrics":{"toca_write_rate":1.00,"response_quality":1.00,"multi_agent_continuity":1.00},"status":"keep","description":"shorten OCC emotion prompt: verbose steps -> compact","timestamp":1778070397,"segment":0}

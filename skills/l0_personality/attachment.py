@@ -23,31 +23,12 @@ class AttachmentSkill(BaseSkill):
     )
 
     def build_prompt(self, character_state: dict, event: dict, context: dict) -> str:
-        p = character_state.get("personality", {})
-        style = p.get("attachment_style", "secure")
-        return f"""你是一位依恋理论专家。角色依恋风格: {style}
+        style = character_state.get("personality", {}).get("attachment_style", "secure")
+        styles = {"secure":"信任+独立","anxious":"需要确认+怕被弃","avoidant":"拒绝亲密+用距离保护","fearful_avoidant":"渴望亲密又恐惧+推拉"}
+        return f"""依恋风格: {style} ({styles.get(style,'')})
+事件: {event.get('description','')}
 
-依恋风格行为特征:
-- secure: 信任他人，能坦然表达需求，接受亲密也接受独立
-- anxious: 极度需要确认，害怕被抛弃，过度关注对方的回应
-- avoidant: 拒绝亲密，强调独立，用距离保护自己
-- fearful_avoidant: 渴望亲密同时恐惧亲密，反复推拉
-
-当前事件: {event.get('description', '')}
-事件类型: {event.get('type', '')}
-涉及他人: {event.get('participants', [])}
-
-分析该依恋风格在当前情境中的激活。输出 JSON:
-{{
-  "activation_level": "0.0-1.0 依恋系统的激活强度",
-  "trigger": "什么触发了依恋反应（如'对方说会保护我→触发被控制感'）",
-  "internal_experience": "角色此刻内心真正感受到但不会说出口的是什么（1-2句）",
-  "defense_behavior": "角色会做什么来保护自己",
-  "what_they_say": "角色实际会说出口的话",
-  "what_they_need": "角色此刻最深的需求（但他们不会直接要求）",
-  "partner_perception_risk": "对方可能把这种行为误读为什么",
-  "next_prediction": "如果对方不做改变，角色下一步会怎么做"
-}}"""
+分析依恋激活。JSON: {{"activation_level":0.5,"trigger":"","internal_experience":"","defense_behavior":"","what_they_say":"","what_they_need":"","partner_perception_risk":"","next_prediction":""}}"""
 
     def parse_output(self, raw_output: str) -> dict:
         from ...core.base import extract_json
