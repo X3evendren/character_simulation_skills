@@ -82,6 +82,7 @@ class SkillResult:
     tokens_used: int = 0
     success: bool = True
     error: str | None = None
+    parse_success: bool = True  # extract_json() 是否成功解析了 LLM 输出
 
 
 @dataclass
@@ -133,11 +134,13 @@ class BaseSkill(ABC):
             )
             content = result.get("choices", [{}])[0].get("message", {}).get("content", "{}")
             parsed = self.parse_output(content)
+            raw_json = extract_json(content)
             return SkillResult(
                 skill_name=self.meta.name,
                 layer=self.meta.layer,
                 output=parsed,
                 tokens_used=result.get("usage", {}).get("total_tokens", 0),
+                parse_success=bool(raw_json),  # extract_json 成功则非空
             )
         except Exception as e:
             return SkillResult(

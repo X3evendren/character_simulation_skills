@@ -5,3 +5,5 @@
 {"run":4,"commit":"a1e8d08","metric":0.7120,"metrics":{"field_coverage":0.7397,"total_tokens":8983.0,"skill_error_rate":0.0},"status":"discard","description":"retry logic in BaseSkill.run (RNG perturbation causes regression)","timestamp":1778030175,"segment":0}
 {"run":5,"commit":"a1e8d08","metric":0.7203,"metrics":{"field_coverage":0.7592,"total_tokens":8976.9,"skill_error_rate":0.0},"status":"discard","description":"smarter truncated recovery with mid-string candidates (regression)","timestamp":1778030255,"segment":0}
 {"run":6,"commit":"5583fa5","metric":0.7755,"metrics":{"field_coverage":0.7624,"total_tokens":8932.8,"skill_error_rate":0.0},"status":"keep","description":"improved markdown fence extraction with variable backtick counts","timestamp":1778030307,"segment":0}
+{"type":"config","name":"json-parse-quality-v2","metricName":"json_parse_rate","metricUnit":"fraction","bestDirection":"higher"}
+{"run":7,"commit":"eb7bbcc","metric":0.7438,"metrics":{"field_coverage":0.7690,"total_tokens":8994.9,"skill_error_rate":0.0},"status":"keep","description":"re-baseline with sentinel-based metric","timestamp":1778031495,"segment":1}
