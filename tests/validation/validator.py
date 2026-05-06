@@ -12,12 +12,12 @@ import time
 from pathlib import Path
 from typing import Any
 
-# 确保可以导入 character_simulation_skills (go 4 levels up to reach repo parent)
+# 确保可以导入 character_mind (go 4 levels up to reach repo parent)
 _pkg_parent = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 if _pkg_parent not in sys.path:
     sys.path.insert(0, _pkg_parent)
 
-from character_simulation_skills import (
+from character_mind import (
     get_registry, get_orchestrator,
     BigFiveSkill, AttachmentSkill,
     PlutchikEmotionSkill, PTSDTriggerSkill, EmotionProbeSkill,
@@ -27,11 +27,11 @@ from character_simulation_skills import (
     GrossRegulationSkill, KohlbergSkill, MaslowSkill, SDTSkill,
     YoungSchemaSkill, ACETraumaSkill, ResponseGeneratorSkill,
 )
-from character_simulation_skills.benchmark.mock_provider import MockProvider
-from character_simulation_skills.core import orchestrator as orch
-from character_simulation_skills.core.base import extract_json
+from character_mind.benchmark.mock_provider import MockProvider
+from character_mind.core import orchestrator as orch
+from character_mind.core.base import extract_json
 
-from character_simulation_skills.tests.validation.metrics import score_case, aggregate_scores
+from character_mind.tests.validation.metrics import score_case, aggregate_scores
 
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures"

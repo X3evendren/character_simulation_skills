@@ -67,7 +67,7 @@ skills/
 ## 使用模式
 
 ```python
-from character_simulation_skills import get_orchestrator, get_registry
+from character_mind import get_orchestrator, get_registry
 
 # 注册所有 Skill (通常在启动时完成)
 registry = get_registry()

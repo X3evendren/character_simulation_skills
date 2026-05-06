@@ -7,13 +7,13 @@ exec python -c "
 import sys, os, asyncio, json, time
 sys.path.insert(0, os.path.dirname(os.getcwd()))
 
-from character_simulation_skills.benchmark.run_benchmark import register_all_skills
-from character_simulation_skills.benchmark.mock_provider import MockProvider
-from character_simulation_skills.benchmark.scenarios import get_scenarios
-from character_simulation_skills.core.blackboard import Blackboard
-from character_simulation_skills.core.perception_stream import PerceptionStream
-from character_simulation_skills.core.toca_runner import TocaRunner, TocaConfig
-from character_simulation_skills import get_orchestrator
+from character_mind.benchmark.run_benchmark import register_all_skills
+from character_mind.benchmark.mock_provider import MockProvider
+from character_mind.benchmark.scenarios import get_scenarios
+from character_mind.core.blackboard import Blackboard
+from character_mind.core.perception_stream import PerceptionStream
+from character_mind.core.toca_runner import TocaRunner, TocaConfig
+from character_mind import get_orchestrator
 
 async def run():
     register_all_skills()
@@ -25,7 +25,7 @@ async def run():
     total_tokens = 0
     total_responses = 0
     for s in scenarios[:3]:
-        from character_simulation_skills.core import orchestrator as orch_mod
+        from character_mind.core import orchestrator as orch_mod
         orch_mod._orchestrator = None
         o = get_orchestrator(anti_alignment_enabled=True)
         r = await o.process_event(provider, s['character'], s['event'])
@@ -54,7 +54,7 @@ async def run():
 
     # === Metric 3: Multi-agent continuity ===
     # Simulate 2-turn conversation
-    from character_simulation_skills.core import orchestrator as orch_mod2
+    from character_mind.core import orchestrator as orch_mod2
     characters = {
         'anxious': {'name': 'anxious', 'personality': {'openness':0.5,'conscientiousness':0.5,'extraversion':0.5,'agreeableness':0.7,'neuroticism':0.75,'attachment_style':'anxious','defense_style':['投射'],'cognitive_biases':['灾难化'],'moral_stage':3}, 'trauma':{'ace_score':2,'active_schemas':['遗弃'],'trauma_triggers':['被忽视']}, 'ideal_world':{}, 'motivation':{'current_goal':''}, 'relations':{'avoidant':'partner'}, 'emotion_decay':{}},
         'avoidant': {'name': 'avoidant', 'personality': {'openness':0.4,'conscientiousness':0.6,'extraversion':0.3,'agreeableness':0.35,'neuroticism':0.45,'attachment_style':'avoidant','defense_style':['情感隔离'],'cognitive_biases':[],'moral_stage':4}, 'trauma':{'ace_score':1,'active_schemas':[],'trauma_triggers':[]}, 'ideal_world':{}, 'motivation':{'current_goal':''}, 'relations':{'anxious':'partner'}, 'emotion_decay':{}}

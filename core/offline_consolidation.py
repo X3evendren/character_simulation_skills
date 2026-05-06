@@ -89,7 +89,7 @@ class OfflineConsolidation:
                 "tags": memory.tags + ["consolidation", "replay"],
             }
 
-            from character_simulation_skills.core import orchestrator as orch
+            from character_mind.core import orchestrator as orch
             orch._orchestrator = orchestrator
 
             cs = self._build_cs_for_consolidation()

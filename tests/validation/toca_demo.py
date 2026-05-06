@@ -4,12 +4,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirna
 os.environ['DEEPSEEK_API_KEY'] = 'REDACTED_API_KEY'
 os.environ['DEEPSEEK_API_KEY'] = os.environ.get('DEEPSEEK_API_KEY', '')
 
-from character_simulation_skills.core.blackboard import Blackboard
-from character_simulation_skills.core.perception_stream import PerceptionStream
-from character_simulation_skills.core.toca_runner import TocaRunner, TocaConfig
-from character_simulation_skills.tests.validation.llm_provider import RealLLMProvider
-from character_simulation_skills import get_orchestrator, get_registry
-from character_simulation_skills.benchmark.run_benchmark import register_all_skills
+from character_mind.core.blackboard import Blackboard
+from character_mind.core.perception_stream import PerceptionStream
+from character_mind.core.toca_runner import TocaRunner, TocaConfig
+from character_mind.tests.validation.llm_provider import RealLLMProvider
+from character_mind import get_orchestrator, get_registry
+from character_mind.benchmark.run_benchmark import register_all_skills
 
 
 async def main():

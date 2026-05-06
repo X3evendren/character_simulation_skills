@@ -50,14 +50,14 @@
 ## 快速开始
 
 ```bash
-git clone https://github.com/X3evendren/character_simulation_skills.git
-cd character_simulation_skills
+git clone https://github.com/X3evendren/character_mind.git
+cd character_mind
 pip install openai
 ```
 
 ```python
 import asyncio
-from character_simulation_skills import *
+from character_mind import *
 
 async def main():
     registry = get_registry()

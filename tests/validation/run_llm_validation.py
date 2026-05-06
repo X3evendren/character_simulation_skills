@@ -18,9 +18,9 @@ _parent = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.pat
 if _parent not in sys.path:
     sys.path.insert(0, _parent)
 
-from character_simulation_skills.tests.validation.llm_provider import RealLLMProvider
-from character_simulation_skills.tests.validation.validator import run_case
-from character_simulation_skills.tests.validation.metrics import aggregate_scores
+from character_mind.tests.validation.llm_provider import RealLLMProvider
+from character_mind.tests.validation.validator import run_case
+from character_mind.tests.validation.metrics import aggregate_scores
 
 
 async def main():

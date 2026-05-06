@@ -18,7 +18,7 @@ _pkg_parent = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__
 if _pkg_parent not in sys.path:
     sys.path.insert(0, _pkg_parent)
 
-from character_simulation_skills import (
+from character_mind import (
     get_registry, get_orchestrator,
     BigFiveSkill, AttachmentSkill,
     PlutchikEmotionSkill, PTSDTriggerSkill, EmotionProbeSkill,
@@ -29,8 +29,8 @@ from character_simulation_skills import (
     CognitiveResult, SkillResult,
 )
 
-from character_simulation_skills.benchmark.mock_provider import MockProvider, SKILL_SCHEMAS
-from character_simulation_skills.benchmark.scenarios import get_scenarios
+from character_mind.benchmark.mock_provider import MockProvider, SKILL_SCHEMAS
+from character_mind.benchmark.scenarios import get_scenarios
 
 
 # ── Expected field counts for field coverage metric ──
@@ -153,7 +153,7 @@ async def run_scenario(provider, character_state: dict, event: dict,
                        run_index: int = 0) -> dict[str, float]:
     """Run a single scenario through the pipeline and measure all metrics."""
     # Reset global singletons for clean state
-    from character_simulation_skills.core import orchestrator as orch
+    from character_mind.core import orchestrator as orch
     orch._orchestrator = None
 
     orchestrator = get_orchestrator(anti_alignment_enabled=True)

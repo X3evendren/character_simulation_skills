@@ -4,9 +4,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirna
 os.environ['DEEPSEEK_API_KEY'] = 'REDACTED_API_KEY'
 sys.stdout.reconfigure(line_buffering=True)
 
-from character_simulation_skills.tests.validation.llm_provider import RealLLMProvider
-from character_simulation_skills.tests.validation.validator import run_case
-from character_simulation_skills.tests.validation.metrics import aggregate_scores
+from character_mind.tests.validation.llm_provider import RealLLMProvider
+from character_mind.tests.validation.validator import run_case
+from character_mind.tests.validation.metrics import aggregate_scores
 
 from pathlib import Path
 fixture_dir = Path(__file__).parent / "fixtures"

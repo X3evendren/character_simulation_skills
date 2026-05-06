@@ -172,7 +172,7 @@ class TocaRunner:
             cs = self._build_continuous_state(snap)
 
             # 5. 运行管道（复用 orchestrator，不重建）
-            from character_simulation_skills.core import orchestrator as orch
+            from character_mind.core import orchestrator as orch
             orch._orchestrator = self.orchestrator
 
             result = await self.orchestrator.process_event(self.provider, cs, event)

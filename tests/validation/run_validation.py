@@ -18,7 +18,7 @@ _parent = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.pat
 if _parent not in sys.path:
     sys.path.insert(0, _parent)
 
-from character_simulation_skills.tests.validation.validator import run_all
+from character_mind.tests.validation.validator import run_all
 
 
 def main():
