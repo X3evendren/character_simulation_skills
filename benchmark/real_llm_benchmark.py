@@ -22,7 +22,7 @@ if _pkg_parent not in sys.path:
 from character_mind import (
     get_registry, get_orchestrator,
     BigFiveSkill, AttachmentSkill,
-    PlutchikEmotionSkill, PTSDTriggerSkill, EmotionProbeSkill,
+    PlutchikEmotionSkill, PTSDTriggerSkill,
     OCCEmotionSkill, CognitiveBiasSkill, DefenseMechanismSkill, SmithEllsworthSkill,
     GottmanSkill, MarionSkill, FoucaultSkill, SternbergSkill,
     StrogatzSkill, FisherLoveSkill, DiriGentSkill, TheoryOfMindSkill,
@@ -331,7 +331,7 @@ def register_all_skills():
     registry._by_trigger.clear()
     skills = [
         BigFiveSkill(), AttachmentSkill(),
-        PlutchikEmotionSkill(), PTSDTriggerSkill(), EmotionProbeSkill(),
+        PlutchikEmotionSkill(), PTSDTriggerSkill(),
         OCCEmotionSkill(), CognitiveBiasSkill(), DefenseMechanismSkill(), SmithEllsworthSkill(),
         GottmanSkill(), MarionSkill(), FoucaultSkill(), SternbergSkill(),
         StrogatzSkill(), FisherLoveSkill(), DiriGentSkill(), TheoryOfMindSkill(),
@@ -347,7 +347,8 @@ def register_all_skills():
 # Benchmark runner
 # ═══════════════════════════════════════════════════════════
 
-async def run_benchmark(provider, judge_provider, scenarios: list, label: str = ""):
+async def run_benchmark(provider, judge_provider, scenarios: list, label: str = "",
+                       use_bio: bool = False):
     """运行管道并用 LLM Judge 评估质量。"""
     judgments = []
     total_tokens = 0
@@ -356,7 +357,27 @@ async def run_benchmark(provider, judge_provider, scenarios: list, label: str = 
     for i, s in enumerate(scenarios):
         from character_mind.core import orchestrator as orch_mod
         orch_mod._orchestrator = None
-        o = get_orchestrator(anti_alignment_enabled=True)
+
+        # 生物基础层
+        bio = None
+        if use_bio:
+            from character_mind.core.biological import BiologicalBridge
+            cs = s['character']
+            p = cs.get('personality', {})
+            bio = BiologicalBridge()
+            bio.set_character_profile(
+                ocean={
+                    'extraversion': p.get('extraversion', 0.5),
+                    'neuroticism': p.get('neuroticism', 0.5),
+                    'openness': p.get('openness', 0.5),
+                    'conscientiousness': p.get('conscientiousness', 0.5),
+                    'agreeableness': p.get('agreeableness', 0.5),
+                },
+                attachment=p.get('attachment_style', 'secure'),
+                ace=cs.get('trauma', {}).get('ace_score', 0),
+            )
+
+        o = get_orchestrator(anti_alignment_enabled=True, biological_bridge=bio)
 
         # 运行管道
         start = time.perf_counter()
@@ -425,22 +446,25 @@ async def main():
     parser.add_argument("--provider", default="deepseek", choices=["deepseek", "ollama"])
     parser.add_argument("--scenarios", type=int, default=2)
     parser.add_argument("--think", type=int, default=1)
+    parser.add_argument("--bio", type=int, default=0, help="Enable biological layer (1=on)")
     args = parser.parse_args()
 
     register_all_skills()
     scenarios = get_scenarios()[:args.scenarios]
+    use_bio = bool(args.bio)
 
     # 管道 LLM
     provider = load_provider(args.provider, thinking=bool(args.think))
     # Judge LLM (也用同一个 provider)
     judge_provider = load_provider(args.provider, thinking=bool(args.think))
 
-    print(f"Provider: {args.provider}, Think: {args.think}, Scenarios: {len(scenarios)}")
+    print(f"Provider: {args.provider}, Think: {args.think}, Bio: {use_bio}, Scenarios: {len(scenarios)}")
     print(f"Model: {provider.model}")
     print()
 
     await run_benchmark(provider, judge_provider, scenarios,
-                        f"LLM-as-Judge ({args.provider}, think={args.think})")
+                        f"LLM-as-Judge ({args.provider}, think={args.think}, bio={use_bio})",
+                        use_bio=use_bio)
 
 
 if __name__ == "__main__":

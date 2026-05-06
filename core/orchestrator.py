@@ -58,11 +58,14 @@ class CognitiveOrchestrator:
 
     def __init__(self, episodic_store: EpisodicMemoryStore | None = None,
                  conversation_store: ConversationHistoryStore | None = None,
-                 anti_alignment_enabled: bool = True):
+                 anti_alignment_enabled: bool = True,
+                 biological_bridge=None):  # BiologicalBridge, 可选
         self.registry = get_registry()
         self.episodic_store = episodic_store or EpisodicMemoryStore()
         self.conversation_store = conversation_store  # 外置对话记忆
         self.anti_alignment_enabled = anti_alignment_enabled
+        self.bio_bridge = biological_bridge  # 生物基础层桥接器
+        self._last_event_time: float = 0.0
 
     # ═══════════════════════════════════════════════════════════
     # 主处理流程
@@ -78,6 +81,15 @@ class CognitiveOrchestrator:
         """处理一个事件 — 运行完整的五层认知流程"""
         result = CognitiveResult()
         ctx = context or {}
+
+        # ── 生物基础层更新 (L-3 → L-1) ──
+        import time as _time
+        now = _time.time()
+        dt = now - self._last_event_time if self._last_event_time > 0 else 60.0
+        self._last_event_time = now
+        if self.bio_bridge is not None:
+            bio_ctx = self.bio_bridge.before_event(event, dt_seconds=dt)
+            ctx["biological_context"] = bio_ctx
 
         # ── 情感衰减 + 记忆检索 + 状态更新 ──
         ctx = self._prepare_context(character_state, event, ctx)
@@ -165,6 +177,10 @@ class CognitiveOrchestrator:
             for s in layer_results
             if not s.success and s.error
         ]
+
+        # ── 生物基础层反馈 ──
+        if self.bio_bridge is not None:
+            self.bio_bridge.after_event(event, result)
 
         return result
 
@@ -760,6 +776,7 @@ def get_orchestrator(
     episodic_store: EpisodicMemoryStore | None = None,
     conversation_store: ConversationHistoryStore | None = None,
     anti_alignment_enabled: bool = True,
+    biological_bridge=None,
 ) -> CognitiveOrchestrator:
     global _orchestrator
     if _orchestrator is None:
@@ -767,5 +784,8 @@ def get_orchestrator(
             episodic_store=episodic_store,
             conversation_store=conversation_store,
             anti_alignment_enabled=anti_alignment_enabled,
+            biological_bridge=biological_bridge,
         )
+    elif biological_bridge is not None:
+        _orchestrator.bio_bridge = biological_bridge
     return _orchestrator
