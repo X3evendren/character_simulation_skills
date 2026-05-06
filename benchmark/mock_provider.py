@@ -499,6 +499,59 @@ class MockProvider:
                 }
                 result["reasoning"] = stage_reasoning.get(int(moral_stage), "基于常规道德判断")
 
+        elif skill_name == "response_generator":
+            # 注入事件相关的情感关键词，使 emotion_alignment 指标可测量
+            event_text = self._extract_str(prompt, r'当前事件[=:：]\s*(.+?)(?:\n|$)') or prompt[-500:]
+            # 检测事件中的情感信号并匹配响应内容
+            emotion_keywords = {
+                "joy": ["开心", "高兴", "太好了", "真的很快乐", "这让我感到幸福"],
+                "sadness": ["难过", "悲伤", "想哭", "心里空空的", "不知道该怎么办"],
+                "fear": ["害怕", "恐惧", "不安", "不敢想", "紧张得说不出话"],
+                "anger": ["生气", "愤怒", "不满", "凭什么这样", "太不公平了"],
+                "trust": ["相信你", "信任", "依赖你", "有你在我很放心"],
+                "disgust": ["反感", "厌恶", "受不了", "让人恶心", "不想靠近"],
+                "surprise": ["没想到", "惊讶", "震惊", "怎么会这样", "太突然了"],
+                "anticipation": ["期待", "盼望", "希望", "等不及了", "好想快点"],
+            }
+            # 从 Plutchik 输出提取主导情绪（prompt 中包含 L1 上下文）
+            dominant = "neutral"
+            for emo in emotion_keywords:
+                if emo in event_text.lower() or any(kw in event_text for kw in emotion_keywords[emo]):
+                    dominant = emo
+                    break
+            # 如果是中性或无匹配，随机选择匹配事件类型的情感
+            if dominant == "neutral":
+                if any(w in event_text for w in ["冲突", "争吵", "不满", "生气"]):
+                    dominant = "anger"
+                elif any(w in event_text for w in ["失去", "离开", "难过", "哭"]):
+                    dominant = "sadness"
+                elif any(w in event_text for w in ["害怕", "威胁", "危险", "不安"]):
+                    dominant = "fear"
+                elif any(w in event_text for w in ["开心", "成功", "好消息", "爱"]):
+                    dominant = "joy"
+                else:
+                    dominant = "trust"
+            # 生成包含情感关键词的自然响应
+            if dominant in emotion_keywords:
+                base = self.rng.choice(emotion_keywords[dominant])
+                extensions = {
+                    "joy": "已经很久没有这种感觉了，像是一直期待的事情终于发生了。",
+                    "sadness": "这种感觉一直压在心头，挥之不去。我想一个人待一会儿。",
+                    "fear": "我不知道接下来会发生什么，这种不确定让我很不安。",
+                    "anger": "为什么总是这样？我已经厌倦了不断地退让和妥协。",
+                    "trust": "我知道可以依靠你。这是我为数不多感到安心的时刻。",
+                    "disgust": "光是想到这个就让我浑身不舒服。我没办法接受。",
+                    "surprise": "完全出乎我的意料，我需要一点时间来消化这件事。",
+                    "anticipation": "我在等那个时刻的到来，虽然不确定但充满了希望。",
+                }
+                ext = extensions.get(dominant, "。")
+                result["response_text"] = base + "。" + ext
+                result["emotional_expression"] = dominant
+            if neuroticism is not None and neuroticism >= 0.7:
+                result["authenticity_note"] = "高神经质角色对威胁信号的敏感反应"
+            elif attachment == "avoidant":
+                result["subtext"] = "用距离保护自己的真实情感"
+
         elif skill_name == "emotion_probe":
             if neuroticism is not None and neuroticism >= 0.7:
                 result["fine_grained"] = [

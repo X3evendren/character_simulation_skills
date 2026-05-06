@@ -1,0 +1,8692 @@
+[
+  {
+    "id": "scd_0000",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "同事今天在会上说错了一个数据。哼，他就是一个不学无术的混子。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "贴标签"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0001",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "相亲对象吃饭时一直在玩手机。标准的渣男/渣女, 没跑了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "贴标签"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0002",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "前面那辆车变道不打灯。典型的女司机/菜鸟, 路上最烦这种人。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "贴标签"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0003",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "新来的实习生交的报告有好几处格式问题。一看就是个做事马虎粗心的人。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0004",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "邻居在楼道里放了很多杂物。素质低下的底层人就是这样。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0005",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "他刚才说话的语气好冲。这人一定脾气暴躁不好相处。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0006",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "面试时我紧张得说错了好几句话。我果然是个没用的废物。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0007",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "有个路人盯着我看了几秒。肯定是在心里嘲笑我的穿着打扮。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0008",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "她把咖啡洒在文件上了。这么点事都做不好, 就是个不靠谱的人。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0009",
+    "source": "SocialCD-3K — 贴标签 (Labeling)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.3,
+        "neuroticism": 0.7,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "贴标签",
+          "非黑即白"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "领导刚才没回我的消息。他肯定是对我有意见, 在故意冷落我。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "贴标签",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0010",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "下午就要做述职报告了, 我肯定会讲得一塌糊涂, 被全公司嘲笑。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "算命错误"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0011",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "体检报告明天出来。一定是得了什么绝症, 我的身体最近到处都不对劲。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "算命错误"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0012",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "下周一就要公布晋升名单了。肯定没有我, 我已经预感到会落选。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "算命错误"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0013",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "他三天没主动联系我了。这段感情马上就要完了, 他肯定在考虑分手。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0014",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "这次项目竞标对手那么强, 我们肯定输, 准备都白做了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0015",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "明天面试官一看我的简历就会直接淘汰我, 不会有任何机会。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0016",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "今天老婆脸色不太好。回家肯定要吵架, 我已经预见到这个结局了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0017",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "刚刚不小心 CC 错了人。完了, 这件事绝对会闹到总监那里去。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0018",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "月底绩效考核, 我肯定垫底, 然后被裁掉, 整个职业生涯就毁了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0019",
+    "source": "SocialCD-3K — 算命错误 (Fortune Teller Error)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "预期性焦虑"
+        ],
+        "cognitive_biases": [
+          "算命错误",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "晚上要见对方的父母。他们一定看不上我, 这顿饭注定是个灾难。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "算命错误",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0020",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "讲师今天讲课100分钟, 前99分钟都很精彩, 但最后一句说错了。什么专家, 满嘴跑火车。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0021",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "男朋友给我做了一桌子菜, 每道都好吃, 但汤咸了一点。他根本不用心, 连这点小事都做不好。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0022",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "年终总结写了8000字, 领导就指出了一处用词不当。呵, 全盘否定了我的付出。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0023",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "项目上线很顺利, 用户反馈99%都是好评, 但有一条差评说加载慢。彻底失败了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "选择性抽象"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0024",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "她记得我的生日, 请我吃了很贵的餐厅, 但送的礼物颜色我不喜欢。她根本不了解我。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "选择性抽象"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0025",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "今天演讲很成功, 观众鼓掌三次, 但有人在台下打了个哈欠。我在大家眼里就是个无聊的人。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "选择性抽象"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0026",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "相亲对象条件很好, 聊得也很愉快, 但他穿了一双我不喜欢的鞋。三观不合, 没有继续的必要了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "选择性抽象"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0027",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "考试得了98分, 扣了2分。我太差了, 为什么总是错在这种细节上。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "选择性抽象"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0028",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "整个聚会大家都很开心, 但有一个人中途离开了。一定是我的话题太无聊把人气走了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "选择性抽象"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0029",
+    "source": "SocialCD-3K — 心理过滤 (Mental Filter)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.55,
+        "extraversion": 0.3,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "心理过滤",
+          "选择性抽象"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "新工作各方面都很好, 就是通勤多了十分钟。这份工作根本不适合我, 太难受了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "心理过滤",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "选择性抽象"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0030",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "老板让明天交个方案。天哪, 时间根本不够, 这绝对是个不可能完成的任务！",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "夸大"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0031",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "今天在地铁上被人踩了一脚。整个脚背都疼死了, 肯定骨折了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "夸大"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0032",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "女朋友说想冷静几天。完了, 这意味着我们彻底结束了, 世界末日到了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "夸大"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0033",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "信用卡账单忘了还, 晚了三天。征信肯定完了, 以后再也贷不了款买不了房了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0034",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "脸上长了一颗痘痘。毁容了, 没法见人了, 今天绝对不能出门。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0035",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "方案里有一个小数据引用错了。这可是天大的错误, 客户会因此不再信任我们整个团队。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0036",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "同事聚餐没有叫我。我被整个团队孤立了, 以后在公司完全待不下去了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0037",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "线上服务宕机了五分钟。完了, 公司要损失几百万, 我会被开除还要赔钱。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0038",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "孩子这次数学考了70分。他这辈子都完了, 考不上好大学找不到好工作。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0039",
+    "source": "SocialCD-3K — 夸大 (Magnification)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.4,
+        "agreeableness": 0.45,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [
+          "灾难化"
+        ],
+        "cognitive_biases": [
+          "夸大",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "发布会上我停顿了三秒才回答出那个问题。所有人都看穿我有多不专业了, 职业生涯到此为止。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "夸大",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anticipation"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0040",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "部门业绩没达标。都是我的错, 如果我能多做一点, 大家就不会这么惨了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "自责"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0041",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "朋友失恋了。是我没有及时关心她, 如果那天我多陪陪她就不会这样了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "自责"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0042",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "弟弟高考没考好。是我平时没有做好榜样, 我毁了他的前途。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "自责"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0043",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "父母吵架了。一定是因为我不够孝顺, 让他们操心了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0044",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "小组作业分数不高。都怪我拖后腿, 如果不是我, 他们都能拿A。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0045",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "聚会气氛有点尴尬。肯定是我说错了什么话, 把大家的兴致搞没了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0046",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "下雨天她淋雨感冒了。我要是提醒她带伞就好了, 都怪我太粗心。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0047",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "公司的团建活动有人受伤了。我当时应该阻止的, 全都怪我反应太慢。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0048",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "前男友和我分手后过得很不好。是我毁了他的人生, 如果不是和我在一起他不会这样的。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0049",
+    "source": "SocialCD-3K — 自责 (Blaming Self)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.6,
+        "extraversion": 0.3,
+        "agreeableness": 0.55,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "反向形成",
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "自责",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "路上有老人摔倒了但没人扶。我是离得最近的人, 我却没去扶, 我真是太冷漠太差劲了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "自责",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0050",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "今天面试被拒了。我永远也找不到工作了, 全世界的公司都不会要我。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "过度概括"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0051",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "和相亲对象聊崩了。这就是我的命, 我这种人注定孤独终老。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "过度概括"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0052",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "新买的手机用了三天就卡了一次。这牌子太垃圾了, 以后再也不买了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "过度概括"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0053",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "今天被领导批评了一句。领导天天针对我, 在这里根本没有活路。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0054",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "第一次坐高铁就坐过站了。我什么事都做不好, 连坐车都不会。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0055",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "约会时餐厅踩雷了。和这家相关的餐厅就都是坑, 每次都这样。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0056",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "今天打篮球输了一局。我就是个废物, 从小到大什么事都赢不了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0057",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "刚刚打车被司机绕路了。这个城市的司机没一个好人, 全是骗子。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0058",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "申请奖学金被拒了。所有的申请都不会有结果的, 我永远都不够好。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0059",
+    "source": "SocialCD-3K — 过度概括 (Over-generalization)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.5,
+        "extraversion": 0.35,
+        "agreeableness": 0.45,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离"
+        ],
+        "cognitive_biases": [
+          "过度概括",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "刚才发消息她没回。每次都是这样, 所有的人到最后都会离我而去。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "过度概括",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0060",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "老板刚刚看了我一眼然后皱了下眉头。他觉得我最近的绩效很差, 在考虑要不要开除我。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "读心术"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0061",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "同事们在茶水间聊天, 我一进去他们就安静了。他们一定在背后说我的坏话。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "读心术"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0062",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "女朋友今天只回了一个'嗯'。她对我烦了, 觉得我太粘人了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "读心术"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0063",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "路上有人对我笑了一下。他肯定是在嘲笑我今天穿得土。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0064",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "朋友聚会没给我发照片。他们就是故意排挤我, 不想让我参加他们的圈子。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0065",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "领导在群里发了个全员邮件但没有单独@我。他对我有意见, 在故意冷处理我。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0066",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "她看手机时笑了一下。肯定是在和别的男生聊天, 我绿了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0067",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "面试官全程面无表情。他肯定觉得我是个能力不足的人, 不会给我通过的。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0068",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "邻居在电梯里没有主动打招呼。他一定觉得我是个没礼貌的人, 看不起我。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0069",
+    "source": "SocialCD-3K — 读心术 (Mind Reading)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.5,
+        "extraversion": 0.45,
+        "agreeableness": 0.35,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射"
+        ],
+        "cognitive_biases": [
+          "读心术",
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "导师在我的论文上批注了很多修改意见。他觉得我是个学术垃圾, 后悔收我做学生。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "读心术",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0070",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我一个月应该赚三万块才对。现在这点工资简直是在侮辱我, 太不公平了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "应该陈述"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0071",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "女朋友应该永远理解我的想法, 不需要我解释才对。她做不到就是不够爱我。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "应该陈述"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0072",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "服务员应该主动察觉到我需要加水, 还要我叫？这服务态度太差了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "应该陈述"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0073",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我都这么努力了, 世界应该给我回报才对。结果什么都没得到, 生活太不公平了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0074",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "她应该在我生日那天给我惊喜, 而不是问我要不要一起吃饭。太让人失望了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0075",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "父母应该无条件支持我的每一个决定, 他们提反对意见就是思想落后控制欲强。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0076",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "员工应该自觉加班到十点, 六点就走了？一点都不敬业。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0077",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "地铁应该永远准时准点, 晚两分钟就是不可原谅的系统性失败。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0078",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我应该在35岁之前当上总监, 现在已经34了还没实现, 我的人生彻底失败了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0079",
+    "source": "SocialCD-3K — 应该陈述 (Should Statements)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.75,
+        "extraversion": 0.4,
+        "agreeableness": 0.3,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化",
+          "反向形成"
+        ],
+        "cognitive_biases": [
+          "应该陈述",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我最好的朋友应该在我发消息的瞬间回复我, 拖这么久肯定是故意的。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "应该陈述",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0080",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "方案被否了。要么完全按照我的想法来, 要么我一个字都不改, 没有什么折中方案。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0081",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "他这次迟到了, 说明他就是一个不值得信任的人。信任只有100%和0%的区别。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0082",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "考试要么拿满分要么就是失败, 90分和0分没有本质区别。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "非黑即白"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0083",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "这段感情要么完美无缺, 要么就是彻底糟糕, 没有中间地带。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0084",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "她今天对我的态度不够热情, 说明我们已经完了。感情状态要么热恋要么分手。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0085",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "这次演讲要么全场掌声雷动, 要么就是彻头彻尾的失败, 没有'还不错'这个选项。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0086",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "他帮我一次忙是好人, 今天没帮我就是坏人。人只有好人和坏人两种。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0087",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我的工作成果要么震惊全行业, 要么就是毫无价值的垃圾。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0088",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "在一个问题上没能说服对方, 那我就是个失败者, 没有第三种可能。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0089",
+    "source": "SocialCD-3K — 非黑即白 (All-or-Nothing)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.3,
+        "conscientiousness": 0.55,
+        "extraversion": 0.4,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "分裂",
+          "理想化"
+        ],
+        "cognitive_biases": [
+          "非黑即白",
+          "完美主义"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "这次旅行要么完美无瑕, 要么就是一场灾难, 飞机晚点半小时就已经毁了全部。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "非黑即白",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "完美主义"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0090",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "领导表扬我了, 但那只是客气客气, 同事都被表扬了, 没什么值得高兴的。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "否定正面"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0091",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "这次考了全班第一, 但那是因为题目太简单了, 不是我真的厉害。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "否定正面"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0092",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "有人说我长得好看, 肯定是有求于我或者眼神不好。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "否定正面"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0093",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我成功完成了这个项目, 但主要是因为团队厉害, 和我没什么关系。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0094",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "虽然升职了, 但这只是运气好, 真正的能力测试还没开始呢, 到时候我就露馅了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0095",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "朋友说我人好, 那是他们还没看到真实的我, 等看到了就会离开的。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0096",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "今天被夸衣服好看, 那是因为这件衣服本来就好, 不是我会搭配。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0097",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "这段感情很顺利, 但他早晚会发现我有多差劲, 到时候一样会分手。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0098",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "虽然减了十斤, 但离我的目标体重还差很多, 这点进步根本不值一提。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0099",
+    "source": "SocialCD-3K — 否定正面 (Disqualifying Positive)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.4,
+        "conscientiousness": 0.5,
+        "extraversion": 0.25,
+        "agreeableness": 0.45,
+        "neuroticism": 0.78,
+        "attachment_style": "secure",
+        "defense_style": [
+          "情感隔离",
+          "贬低"
+        ],
+        "cognitive_biases": [
+          "否定正面",
+          "心理过滤"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "很多人评论说喜欢我的内容, 但这些人多半是在刷存在感, 不是真心喜欢的。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "否定正面",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "心理过滤"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0100",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我迟到了是因为闹钟没响, 都怪我妈买的闹钟质量太差。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0101",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "项目搞砸了全怪产品经理需求没写清楚, 不是我们开发的问题。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0102",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我吵架时说难听话是因为对方先惹我的, 责任全在对方。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0103",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "考试没过是因为老师出题太偏, 完全超出考纲了, 我才不背锅。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0104",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我工作没完成是因为同事不配合, 他总是拖沓, 不然我早做完了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "anger"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0105",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我和父母关系不好是因为他们思想太落后, 完全无法沟通, 不是我的问题。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0106",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我最近状态不好全怪公司加班文化太差, 把我身体搞垮了。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0107",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我脾气暴躁是因为社会环境太差, 每个人都很焦虑, 这不能怪我。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0108",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我们分手了全是对方的错, 她/他太自私了, 我在这段感情里没有犯过任何错。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0109",
+    "source": "SocialCD-3K — 责备他人 (Blaming Others)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.35,
+        "conscientiousness": 0.35,
+        "extraversion": 0.5,
+        "agreeableness": 0.25,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [
+          "投射",
+          "合理化"
+        ],
+        "cognitive_biases": [
+          "责备他人"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我开车出事故是因为前车急刹车, 后车追尾, 导航也导错了, 反正不是我的错。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "责备他人",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "责备他人"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "disgust"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0110",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我感到非常焦虑和不安。一定有什么不好的事情要发生了, 我能感觉到。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "情绪推理"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0111",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我对新同事有种莫名的厌恶感。这个人肯定有问题, 我的直觉从来不会错。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "情绪推理"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0112",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我今天心情特别低落。所以今天一定是糟糕的一天, 做任何事都会失败。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "情绪推理"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0113",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "和他在一起我总觉得不舒服。他肯定在隐瞒什么, 我的感觉不会骗我。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0114",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "一想到要出差我就心慌。这次出差一定会出大事的。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0115",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我觉得很愧疚, 没有任何理由, 但一定是我做错了什么。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0116",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我今天心情很好, 所以事情一定会顺利——你看, 果然喝咖啡都没烫到嘴。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0117",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我总感觉有人在监视我, 虽然看不到任何人。这种感觉太真实了, 一定有。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0118",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "这个投资让我觉得特别恐慌。不管数据怎么说, 感觉不好就是不能投。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "scd_0119",
+    "source": "SocialCD-3K — 情绪推理 (Emotional Reasoning)",
+    "domain": "cognitive_distortion",
+    "character_state": {
+      "name": "微博用户",
+      "personality": {
+        "openness": 0.45,
+        "conscientiousness": 0.45,
+        "extraversion": 0.35,
+        "agreeableness": 0.5,
+        "neuroticism": 0.82,
+        "attachment_style": "secure",
+        "defense_style": [
+          "理智化"
+        ],
+        "cognitive_biases": [
+          "情绪推理",
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": "在微博上表达不满或担忧"
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "我一碰到他就浑身难受。他肯定是个不好的能量场, 我得远离他。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.6,
+      "tags": [
+        "cognitive_bias",
+        "情绪推理",
+        "weibo"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        },
+        "activation_relevance": {
+          "min": 0.3
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  }
+]

@@ -91,6 +91,27 @@ def score_assertion(actual: Any, rule: dict) -> float:
             return 1.0
         return 1.0
 
+    if "contains" in rule:
+        if not isinstance(actual, str):
+            return 0.0
+        target = rule["contains"]
+        return 1.0 if target in actual else 0.0
+
+    if "fuzzy_match" in rule:
+        if not isinstance(actual, str):
+            return 0.0
+        keywords = rule["fuzzy_match"]
+        if isinstance(keywords, str):
+            keywords = [keywords]
+        actual_lower = actual.lower()
+        hits = sum(1 for kw in keywords if kw.lower() in actual_lower)
+        return hits / len(keywords) if keywords else 1.0
+
+    if "length_min" in rule:
+        if not isinstance(actual, (str, list)):
+            return 0.0
+        return 1.0 if len(actual) >= rule["length_min"] else 0.0
+
     if "equals" in rule:
         return 1.0 if actual == rule["equals"] else 0.0
 

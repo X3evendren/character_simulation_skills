@@ -77,7 +77,10 @@ def plutchik_to_pad(emotions: dict[str, float]) -> PADState:
     for emotion, intensity in emotions.items():
         if emotion in PLUTCHIK_TO_PAD:
             p, a, d = PLUTCHIK_TO_PAD[emotion]
-            w = max(0.0, intensity)
+            try:
+                w = max(0.0, float(intensity))
+            except (TypeError, ValueError):
+                w = 0.0
             total_p += p * w
             total_a += a * w
             total_d += d * w
