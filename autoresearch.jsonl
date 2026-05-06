@@ -1,0 +1,2 @@
+{"type":"config","name":"json-parse-quality","metricName":"json_parse_rate","metricUnit":"fraction","bestDirection":"higher"}
+{"run":1,"commit":"1beebe3","metric":0.5707,"metrics":{"field_coverage":0.7030,"total_tokens":9009.6,"skill_error_rate":0.0},"status":"keep","description":"baseline","timestamp":1778029837,"segment":0}
