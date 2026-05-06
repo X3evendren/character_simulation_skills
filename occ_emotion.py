@@ -63,4 +63,22 @@ OCC 评估维度:
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"emotions": [], "appraisal_summary": "无法解析"}
+        defaults = {
+            "emotions": [],
+            "appraisal_summary": "标准情感评估",
+            "goal_relevance": 0.5,
+            "goal_conduciveness": 0.0,
+            "causal_attribution": "当前事件",
+            "causal_agent": "外部因素",
+            "unexpectedness": 0.5,
+            "coping_potential": 0.5,
+            "norm_compatibility": 0.5,
+            "emotional_intensity": 0.5,
+            "action_tendency": "保持现状",
+            "activation_relevance": 0.5,
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

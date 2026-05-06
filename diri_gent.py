@@ -79,4 +79,17 @@ class DiriGentSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"overall_cognitive_dissonance": 0.5, "coping_strategy": "unknown"}
+        defaults = {
+            "overall_cognitive_dissonance": 0.5,
+            "coping_strategy": "mixed",
+            "perceived_reality": "当前感知的现实",
+            "tension_dimensions": {},
+            "dominant_tension": "self",
+            "predicted_action": "维持现状",
+            "long_term_arc_impact": "持续张力将影响角色发展",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

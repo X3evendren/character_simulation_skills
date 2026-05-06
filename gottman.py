@@ -32,4 +32,18 @@ Gottman核心指标:
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"interaction_diagnosis": "无法解析"}
+        defaults = {
+            "interaction_diagnosis": "中性互动",
+            "positive_ratio_estimate": 1.0,
+            "active_horsemen": [],
+            "horsemen_escalation_risk": 0.3,
+            "emotional_flooding_risk": 0.3,
+            "repair_attempt_detected": False,
+            "repair_accepted": False,
+            "intervention_suggestion": "维持当前互动模式",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

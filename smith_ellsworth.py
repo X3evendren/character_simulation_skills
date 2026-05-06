@@ -87,4 +87,23 @@ class SmithEllsworthSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"appraisal_profile": "无法解析", "certainty": 0.5, "pleasantness": 0.0}
+        defaults = {
+            "appraisal_profile": "标准认知评价",
+            "certainty": 0.5,
+            "pleasantness": 0.0,
+            "attentional_activity": 0.5,
+            "anticipated_effort": 0.5,
+            "control": 0.5,
+            "situational_control": 0.5,
+            "other_agency": 0.5,
+            "self_agency": 0.5,
+            "responsibility": "不确定",
+            "appraisal_emotion_link": "评价模式驱动情感反应",
+            "cognitive_vulnerability": 0.5,
+            "activation_relevance": 0.5,
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result

@@ -52,4 +52,18 @@ class AttachmentSkill(BaseSkill):
     def parse_output(self, raw_output: str) -> dict:
         from .base import extract_json
         result = extract_json(raw_output)
-        return result if result else {"activation_level": 0.5}
+        defaults = {
+            "activation_level": 0.5,
+            "trigger": "当前事件引发依恋系统",
+            "internal_experience": "依恋相关的内在体验",
+            "defense_behavior": "使用典型防御行为",
+            "what_they_say": "依恋驱动的言语表达",
+            "what_they_need": "依恋需求未明确",
+            "partner_perception_risk": "可能存在偏差解读",
+            "next_prediction": "维持当前依恋行为模式",
+        }
+        if not result:
+            return defaults
+        for k, v in defaults.items():
+            result.setdefault(k, v)
+        return result
