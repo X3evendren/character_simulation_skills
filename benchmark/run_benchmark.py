@@ -21,7 +21,7 @@ if _pkg_parent not in sys.path:
 from character_mind import (
     get_registry, get_orchestrator,
     BigFiveSkill, AttachmentSkill,
-    PlutchikEmotionSkill, PTSDTriggerSkill, EmotionProbeSkill,
+    PlutchikEmotionSkill, PTSDTriggerSkill,
     OCCEmotionSkill, CognitiveBiasSkill, DefenseMechanismSkill, SmithEllsworthSkill,
     GottmanSkill, MarionSkill, FoucaultSkill, SternbergSkill, StrogatzSkill, FisherLoveSkill, DiriGentSkill, TheoryOfMindSkill,
     GrossRegulationSkill, KohlbergSkill, MaslowSkill, SDTSkill,
@@ -51,18 +51,18 @@ def register_all_skills():
     registry._by_trigger.clear()
 
     skills = [
-        # L0
+        # L0 — 人格滤镜 (始终在线)
         BigFiveSkill(), AttachmentSkill(),
-        # L1
-        PlutchikEmotionSkill(), PTSDTriggerSkill(), EmotionProbeSkill(),
-        # L2
+        # L1 — 快速前意识 (并行)
+        PlutchikEmotionSkill(), PTSDTriggerSkill(),
+        # L2 — 意识层评估 (并行)
         OCCEmotionSkill(), CognitiveBiasSkill(), DefenseMechanismSkill(), SmithEllsworthSkill(),
-        # L3
+        # L3 — 关系/社会处理 (按触发条件选择)
         GottmanSkill(), MarionSkill(), FoucaultSkill(), SternbergSkill(),
         StrogatzSkill(), FisherLoveSkill(), DiriGentSkill(), TheoryOfMindSkill(),
-        # L4
+        # L4 — 反思处理 (仅关键场景)
         GrossRegulationSkill(), KohlbergSkill(), MaslowSkill(), SDTSkill(),
-        # L5
+        # L5 — 状态更新 + 回应生成 (串行)
         YoungSchemaSkill(), ACETraumaSkill(), ResponseGeneratorSkill(),
     ]
     for skill in skills:

@@ -11,7 +11,6 @@
 功能情感驱动的行为后果。
 """
 from ...core.base import BaseSkill, SkillMeta, SkillResult
-from ...core.emotion_vocabulary import FUNCTIONAL_TO_BEHAVIOR
 
 
 class ResponseGeneratorSkill(BaseSkill):
@@ -62,17 +61,11 @@ class ResponseGeneratorSkill(BaseSkill):
         emotions = occ.get("emotions", [])
         action_tendency = occ.get("action_tendency", "保持现状")
 
-        # L2: 认知偏差
-        biases = l2[1] if len(l2) > 1 else {}
-        activated_biases = biases.get("activated_biases", [])
+        # (cognitive_bias removed from pipeline, DefenseMechanism at index 1)
 
         # L2: 防御机制
-        defense = l2[2] if len(l2) > 2 else {}
+        defense = l2[1] if len(l2) > 1 else {}
         active_defense = defense.get("activated_defense", {})
-
-        # L2: Smith-Ellsworth
-        smith = l2[3] if len(l2) > 3 else {}
-        coping_potential = smith.get("control", 0.5)
 
         # 人格状态
         pstate = context.get("personality_state", {})
@@ -94,30 +87,13 @@ class ResponseGeneratorSkill(BaseSkill):
 【认知评估】
 情感: {emotions}
 行动倾向: {action_tendency}
-应对能力感知: {coping_potential:.1f}
 """
-
-        if activated_biases:
-            bias_names = [b.get("name", "") for b in activated_biases]
-            prompt += f"活跃认知偏差: {bias_names}\n"
 
         if active_defense and active_defense.get("name", "未检测到") != "未检测到":
             prompt += f"活跃防御机制: {active_defense.get('name', '')}\n"
 
         if triggered:
             prompt += "PTSD触发——角色可能出现创伤相关反应\n"
-
-        # 功能情感 → 行为预测
-        emotion_probe = context.get("l1", [{}])[2] if len(context.get("l1", [])) > 2 else {}
-        functional_emotions = emotion_probe.get("functional", [])
-        if functional_emotions:
-            prompt += "\n【功能情感 → 行为倾向】\n"
-            for fe in functional_emotions:
-                name = fe.get("emotion", "")
-                intensity = fe.get("intensity", 0.5)
-                consequence = FUNCTIONAL_TO_BEHAVIOR.get(name, "")
-                if consequence:
-                    prompt += f"- {name} (强度{intensity:.1f}): {consequence}\n"
 
         prompt += f"""
 事件: {event.get('description', '')}

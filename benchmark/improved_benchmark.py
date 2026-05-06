@@ -19,7 +19,7 @@ if _pkg_parent not in sys.path:
 from character_mind import (
     get_registry, get_orchestrator,
     BigFiveSkill, AttachmentSkill,
-    PlutchikEmotionSkill, PTSDTriggerSkill, EmotionProbeSkill,
+    PlutchikEmotionSkill, PTSDTriggerSkill,
     OCCEmotionSkill, CognitiveBiasSkill, DefenseMechanismSkill, SmithEllsworthSkill,
     GottmanSkill, MarionSkill, FoucaultSkill, SternbergSkill, StrogatzSkill, FisherLoveSkill, DiriGentSkill, TheoryOfMindSkill,
     GrossRegulationSkill, KohlbergSkill, MaslowSkill, SDTSkill,
@@ -57,7 +57,7 @@ def register_all_skills():
 
     skills = [
         BigFiveSkill(), AttachmentSkill(),
-        PlutchikEmotionSkill(), PTSDTriggerSkill(), EmotionProbeSkill(),
+        PlutchikEmotionSkill(), PTSDTriggerSkill(),
         OCCEmotionSkill(), CognitiveBiasSkill(), DefenseMechanismSkill(), SmithEllsworthSkill(),
         GottmanSkill(), MarionSkill(), FoucaultSkill(), SternbergSkill(),
         StrogatzSkill(), FisherLoveSkill(), DiriGentSkill(), TheoryOfMindSkill(),
