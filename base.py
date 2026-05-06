@@ -28,8 +28,8 @@ def extract_json(raw_output: str) -> dict:
     # 移除 BOM 和零宽字符
     text = text.lstrip("﻿​‌‍⁠")
 
-    # 优先匹配围栏代码块
-    match = re.search(r'```(?:json)?\s*\n?(.*?)\n?```', text, re.DOTALL)
+    # 优先匹配围栏代码块 (支持可变数量的反引号)
+    match = re.search(r'`{3,}\s*(?:json)?\s*\n(.*?)\n\s*`{3,}', text, re.DOTALL)
     if match:
         text = match.group(1).strip()
     else:
