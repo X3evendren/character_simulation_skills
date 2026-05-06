@@ -178,12 +178,13 @@ class CognitiveOrchestrator:
         ctx["mood_bias"] = decay_model.get_mood_bias()
         ctx["emotion_decay_model"] = decay_model  # 传递对象引用，process_event结尾持久化
 
-        # 2. 事件记忆检索
+        # 2. 事件记忆检索 + 冻结快照 (Hermes Frozen Snapshot 模式)
         event_type = event.get("type", "unknown")
         relevant_memories = self.episodic_store.get_context_for_event(event_type, n=5)
         if relevant_memories:
             ctx["episodic_memories"] = relevant_memories
         ctx["recent_events"] = self.episodic_store.get_recent_descriptions(5)
+        ctx["memory_snapshot"] = self.episodic_store.format_snapshot_for_prompt()
 
         # 3. 人格状态机: 根据事件类型更新状态
         psm_data = character_state.get("personality_state_machine")
