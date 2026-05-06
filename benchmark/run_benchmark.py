@@ -70,48 +70,75 @@ def register_all_skills():
     return len(skills)
 
 
-# Fallback output sentinel patterns for each skill.
-# If a skill's output only contains these fields (or a subset), extract_json() likely failed.
-_FALLBACK_FIELDS: dict[str, set[str]] = {
-    "big_five_analysis": {"behavioral_bias", "emotional_reactivity"},
-    "attachment_style_analysis": {"activation_level"},
-    "plutchik_emotion": {"internal", "expressed", "emotion_gap"},
-    "ptsd_trigger_check": {"triggered"},
-    "occ_emotion_appraisal": {"emotions", "appraisal_summary"},
-    "cognitive_bias_detect": {"activated_biases"},
-    "defense_mechanism_analysis": {"activated_defense", "activation_relevance"},
-    "smith_ellsworth_appraisal": {"appraisal_profile", "certainty", "pleasantness"},
-    "gottman_interaction": {"interaction_diagnosis"},
-    "marion_erotic_phenomenology": {"who_is_advancing"},
-    "foucauldian_power_analysis": {"subjectivation_tension"},
-    "sternberg_triangle": {"love_type"},
-    "strogatz_love_dynamics": {"system_trend"},
-    "fisher_love_stages": {"current_stage"},
-    "dirigent_world_tension": {"overall_cognitive_dissonance", "coping_strategy"},
-    "gross_emotion_regulation": {"detected_strategy"},
-    "kohlberg_moral_reasoning": {"stage_used"},
-    "maslow_need_stack": {"current_dominant"},
-    "sdt_motivation_analysis": {"intrinsic_motivation_level"},
-    "young_schema_update": {"affected_schemas"},
-    "ace_trauma_processing": {"ace_activation"},
+# Fallback sentinel VALUES for each skill.
+# These are the distinctive values that only appear when parse_output() used the fallback.
+_FALLBACK_SENTINELS: dict[str, dict] = {
+    "big_five_analysis": {"behavioral_bias": "无法解析"},
+    "attachment_style_analysis": {"activation_level": 0.5},  # lone field = fallback
+    "plutchik_emotion": {},  # detected via field subset check below
+    "ptsd_trigger_check": {},  # triggered=False alone is ambiguous
+    "occ_emotion_appraisal": {"appraisal_summary": "无法解析"},
+    "cognitive_bias_detect": {},  # activated_biases=[] is ambiguous
+    "defense_mechanism_analysis": {"activated_defense": {"name": "未检测到", "level": 3}},
+    "smith_ellsworth_appraisal": {"appraisal_profile": "无法解析"},
+    "gottman_interaction": {"interaction_diagnosis": "无法解析"},
+    "marion_erotic_phenomenology": {},  # who_is_advancing="neither" could be real
+    "foucauldian_power_analysis": {"subjectivation_tension": "无法解析"},
+    "sternberg_triangle": {"love_type": "未定义"},
+    "strogatz_love_dynamics": {"system_trend": "unknown"},
+    "fisher_love_stages": {"current_stage": "unknown"},
+    "dirigent_world_tension": {"coping_strategy": "unknown"},
+    "gross_emotion_regulation": {"detected_strategy": "未知"},
+    "kohlberg_moral_reasoning": {},  # stage_used=3 is ambiguous
+    "maslow_need_stack": {},  # current_dominant=3 is ambiguous
+    "sdt_motivation_analysis": {},  # intrinsic_motivation_level=0.5 is ambiguous
+    "young_schema_update": {},  # affected_schemas=[] is ambiguous
+    "ace_trauma_processing": {},  # ace_activation=0.0 is ambiguous
 }
+
+# Skills where we use field count heuristic (fallback has very few fields)
+_FALLBACK_MIN_FIELDS: dict[str, int] = {
+    "plutchik_emotion": 4,  # fallback has 3 top fields; real output has 4+
+    "ptsd_trigger_check": 2,  # fallback has 1 field
+    "cognitive_bias_detect": 2,  # fallback has 1 field
+    "kohlberg_moral_reasoning": 2,  # fallback has 1 field
+    "maslow_need_stack": 2,  # fallback has 1 field
+    "sdt_motivation_analysis": 2,  # fallback has 1 field
+    "young_schema_update": 2,  # fallback has 1 field
+    "ace_trauma_processing": 2,  # fallback has 1 field
+    "marion_erotic_phenomenology": 2,  # fallback has 1 field
+}
+
+
+def _is_fallback_output(skill_name: str, output: dict) -> bool:
+    """Check if the output appears to be the fallback (parse failed)."""
+    # Check sentinel values
+    sentinel = _FALLBACK_SENTINELS.get(skill_name, {})
+    if sentinel:
+        for key, sentinel_val in sentinel.items():
+            actual_val = output.get(key)
+            if actual_val == sentinel_val:
+                return True
+
+    # Check field count heuristic
+    min_fields = _FALLBACK_MIN_FIELDS.get(skill_name, 0)
+    if min_fields and len(output) < min_fields:
+        return True
+
+    return False
 
 
 def compute_json_parse_rate(layer_results: dict[int, list[SkillResult]]) -> float:
     """Fraction of skill executions where extract_json() successfully parsed LLM output.
 
-    A successful parse means the output has fields beyond the minimal fallback.
+    Detects fallback usage via sentinel values and field count heuristics.
     """
     total = 0
     successful = 0
     for results in layer_results.values():
         for sr in results:
             total += 1
-            fallback = _FALLBACK_FIELDS.get(sr.skill_name, set())
-            actual = set(sr.output.keys()) if sr.output else set()
-            # Success if actual fields are NOT a subset of fallback fields
-            # (meaning we got more than just the fallback)
-            if not actual.issubset(fallback):
+            if not _is_fallback_output(sr.skill_name, sr.output):
                 successful += 1
     return successful / max(total, 1)
 
