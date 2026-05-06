@@ -105,7 +105,23 @@ class EmotionDecayModel:
     slow: PADState = field(default_factory=PADState)   # 深层情感基调
     half_life_fast: float = 2.0    # 多少个事件后半衰
     half_life_slow: float = 50.0
+    half_life_fast_base: float = 2.0    # 基线快半衰期
+    half_life_slow_base: float = 50.0   # 基线慢半衰期
     events_since_update: int = 0
+
+    def set_cortisol_modulation(self, cortisol_level: float):
+        """CORT调节: 高CORT→情绪衰减变慢→负面情绪更持久。
+        cortisol_level: 0-1, 0.5为正常基线
+        正常: half_life不变
+        高CORT(0.8+): half_life延长2-4倍
+        低CORT(0.2-): half_life缩短50%
+        """
+        if cortisol_level > 0.5:
+            factor = 1.0 + (cortisol_level - 0.5) * 6.0  # max ~4x at CORT=1.0
+        else:
+            factor = 1.0 - (0.5 - cortisol_level) * 1.0  # min ~0.7x at CORT=0.2
+        self.half_life_fast = self.half_life_fast_base * factor
+        self.half_life_slow = self.half_life_slow_base * factor
 
     def decay(self, dt_events: float = 1.0) -> None:
         """应用半衰期衰减: value *= 2^(-dt/half_life)"""

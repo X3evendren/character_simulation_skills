@@ -201,6 +201,15 @@ class CognitiveOrchestrator:
         ctx["mood_bias"] = decay_model.get_mood_bias()
         ctx["emotion_decay_model"] = decay_model  # 传递对象引用，process_event结尾持久化
 
+        # 生物层调制: CORT调节情绪衰减半衰期, 驱力注入角色状态
+        bio = ctx.get("biological_context", {})
+        if bio:
+            cort = bio.get("hpa", {}).get("cortisol", bio.get("neurotransmitters", {}).get("CORT", 0.3))
+            decay_model.set_cortisol_modulation(cort)
+            # 将驱力状态注入character_state供后续使用
+            character_state["_biological_drives"] = bio.get("drives", {})
+            character_state["_biological_nt"] = bio.get("neurotransmitters", {})
+
         # 2. 事件记忆检索 + 冻结快照 (Hermes Frozen Snapshot 模式)
         event_type = event.get("type", "unknown")
         relevant_memories = self.episodic_store.get_context_for_event(event_type, n=5)
@@ -348,6 +357,16 @@ class CognitiveOrchestrator:
                 "潜台词留给情境传达——不把弦外之音翻译成明台词。"
                 "呈现角色的本来面目，情绪失控、自欺欺人、边界模糊等都在行为范围内。"
             )
+
+        # 生物层驱力调制
+        drives = cs.get("_biological_drives", {})
+        if drives:
+            urgent = [k for k, v in drives.items() if v > 0.7]
+            if urgent:
+                parts.append(f"【驱力状态】当前最紧迫的内在需求: {', '.join(urgent)}。这会影响行为优先级。")
+            dominant = max(drives, key=drives.get) if drives else None
+            if dominant and drives.get(dominant, 0) > 0.5:
+                parts.append(f"主导驱力: {dominant}({drives[dominant]:.0%})——影响回应的动机倾向。")
 
         return "\n".join(parts)
 
