@@ -41,6 +41,12 @@ SKILL_SCHEMAS: dict[str, dict[str, tuple[Any, bool]]] = {
         "emotion_gap": ({"exists": True, "type": "masking", "description": "内心恐惧但表面表现平静"}, False),
         "novelty": ({"is_novel": False, "similar_to_past": True}, False),
     },
+    "emotion_probe": {
+        "fine_grained": ([{"emotion": "焦虑", "intensity": 0.7, "evidence": "反复查看手机"}, {"emotion": "失落", "intensity": 0.5, "evidence": "等待未果"}], True),
+        "functional": ([{"emotion": "yearning", "intensity": 0.6, "behavioral_consequence": "反复查看对方状态"}], False),
+        "primary_undisclosed_emotion": ("对被抛弃的深层恐惧", False),
+        "emotional_complexity": ("moderate", False),
+    },
     "ptsd_trigger_check": {
         "triggered": (False, True),
         "matched_triggers": ([], False),
@@ -279,6 +285,8 @@ class MockProvider:
         ("attachment_style_analysis", "Bowlby"),
         ("plutchik_emotion", "Plutchik"),
         ("plutchik_emotion", "情感轮理论"),
+        ("emotion_probe", "情感信号检测"),
+        ("emotion_probe", "功能情感"),
         ("ptsd_trigger_check", "创伤心理学专家"),
         ("ptsd_trigger_check", "PTSD"),
         ("occ_emotion_appraisal", "OCC 模型"),

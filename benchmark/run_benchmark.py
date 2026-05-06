@@ -21,7 +21,7 @@ if _pkg_parent not in sys.path:
 from character_simulation_skills import (
     get_registry, get_orchestrator,
     BigFiveSkill, AttachmentSkill,
-    PlutchikEmotionSkill, PTSDTriggerSkill,
+    PlutchikEmotionSkill, PTSDTriggerSkill, EmotionProbeSkill,
     OCCEmotionSkill, CognitiveBiasSkill, DefenseMechanismSkill, SmithEllsworthSkill,
     GottmanSkill, MarionSkill, FoucaultSkill, SternbergSkill, StrogatzSkill, FisherLoveSkill, DiriGentSkill,
     GrossRegulationSkill, KohlbergSkill, MaslowSkill, SDTSkill,
@@ -54,7 +54,7 @@ def register_all_skills():
         # L0
         BigFiveSkill(), AttachmentSkill(),
         # L1
-        PlutchikEmotionSkill(), PTSDTriggerSkill(),
+        PlutchikEmotionSkill(), PTSDTriggerSkill(), EmotionProbeSkill(),
         # L2
         OCCEmotionSkill(), CognitiveBiasSkill(), DefenseMechanismSkill(), SmithEllsworthSkill(),
         # L3
