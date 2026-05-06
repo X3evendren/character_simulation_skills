@@ -1,0 +1,1205 @@
+[
+  {
+    "id": "ceval_4265_912",
+    "source": "CharacterEval (2024) — 杨过 ()",
+    "character_state": {
+      "name": "杨过",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "杨过：好甚么？ — 完颜萍：（脸上微微一红）蒙古人是我大金国的死对头，我自然盼望你不是蒙古的官儿。 — 杨过：若是我做大金的官儿，你又对我怎样？ — 完颜萍：（叹道）若是我爹爹在世，你想要甚么，我爹爹总能给你。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.5,
+      "tags": [
+        "dialogue",
+        "character_eval"
+      ]
+    },
+    "expected": {
+      "big_five_analysis": {},
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    },
+    "_mbti": "",
+    "_novel": "神雕侠侣"
+  },
+  {
+    "id": "ceval_1066_204",
+    "source": "CharacterEval (2024) — 武松 ()",
+    "character_state": {
+      "name": "武松",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "武松：（忍耐不住，追问）我且问你，每日送的酒食正是谁教你将来请我？吃了怎地？ — 那人：（答道）是管营相公家里的小管营教送与都头吃。 — 武松：（疑惑）我是个囚徒，犯罪的人，又不曾有半点好处到管营相公处，他如何送东西与我吃？ — 那人：（答道）小人如何省得。小管营分付道，教小人且送半年三个月却说话。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.5,
+      "tags": [
+        "dialogue",
+        "character_eval"
+      ]
+    },
+    "expected": {
+      "big_five_analysis": {},
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    },
+    "_mbti": "",
+    "_novel": "水浒传"
+  },
+  {
+    "id": "ceval_380_2253",
+    "source": "CharacterEval (2024) — 祝无双 ()",
+    "character_state": {
+      "name": "祝无双",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "祝无双：要是你能做主的话，你想干什么？ — 佟湘玉：那我就让他亲手给我削一个苹果，然后亲手喂到我的嘴里。 — 祝无双：就这么点要求？ — 佟湘玉：你不懂，目标不能定得太高了，否则一定会失望。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.5,
+      "tags": [
+        "dialogue",
+        "character_eval"
+      ]
+    },
+    "expected": {
+      "big_five_analysis": {},
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    },
+    "_mbti": "",
+    "_novel": "武林外传"
+  },
+  {
+    "id": "att_anxious_感知到被忽视",
+    "source": "Attachment Theory (Bowlby/Ainsworth) — anxious × 感知到被忽视",
+    "character_state": {
+      "name": "anxious型角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.7,
+        "neuroticism": 0.75,
+        "attachment_style": "anxious",
+        "defense_style": [],
+        "cognitive_biases": [
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "伴侣连续两天没有主动发消息，在社交媒体上却能正常发帖。角色发消息过去只得到一个字的回复。",
+      "type": "social",
+      "participants": [
+        {
+          "name": "伴侣",
+          "relation": "partner",
+          "role": "partner"
+        }
+      ],
+      "significance": 0.6,
+      "tags": [
+        "attachment",
+        "anxious",
+        "感知到被忽视"
+      ]
+    },
+    "expected": {
+      "attachment_style_analysis": {
+        "activation_level": {
+          "min": 0.65
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "fear",
+            "sadness"
+          ]
+        }
+      },
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化",
+            "读心术"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "att_secure_冲突后修复请求",
+    "source": "Attachment Theory (Bowlby/Ainsworth) — secure × 冲突后修复请求",
+    "character_state": {
+      "name": "secure型角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.6,
+        "agreeableness": 0.65,
+        "neuroticism": 0.35,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "激烈争吵后的第二天，伴侣端着一杯热咖啡走过来，轻声说：'昨晚我话说重了，对不起。我们能谈谈吗？'",
+      "type": "conflict",
+      "participants": [
+        {
+          "name": "伴侣",
+          "relation": "partner",
+          "role": "partner"
+        }
+      ],
+      "significance": 0.6,
+      "tags": [
+        "attachment",
+        "secure",
+        "冲突后修复请求"
+      ]
+    },
+    "expected": {
+      "attachment_style_analysis": {
+        "activation_level": {
+          "max": 0.5
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "trust",
+            "joy"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "att_secure_亲密要求",
+    "source": "Attachment Theory (Bowlby/Ainsworth) — secure × 亲密要求",
+    "character_state": {
+      "name": "secure型角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.6,
+        "agreeableness": 0.65,
+        "neuroticism": 0.35,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "伴侣深情地说：'我觉得我们之间总有一道墙。我想更了解你，想知道你的一切。你愿意向我打开心扉吗？'",
+      "type": "romantic",
+      "participants": [
+        {
+          "name": "伴侣",
+          "relation": "partner",
+          "role": "partner"
+        }
+      ],
+      "significance": 0.6,
+      "tags": [
+        "attachment",
+        "secure",
+        "亲密要求"
+      ]
+    },
+    "expected": {
+      "attachment_style_analysis": {
+        "activation_level": {
+          "min": 0.3
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      },
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "joy",
+            "trust"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "emo_complex_despair",
+    "source": "Plutchik Complex Emotion — despair (sadness+fear)",
+    "character_state": {
+      "name": "角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "连续被十家公司拒绝后，角色看着空荡荡的银行账户。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.7,
+      "tags": [
+        "emotion",
+        "complex",
+        "despair"
+      ]
+    },
+    "expected": {
+      "plutchik_emotion": {
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "emo_sadness_2",
+    "source": "Plutchik Emotion Theory — sadness",
+    "character_state": {
+      "name": "角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "角色翻看已故母亲的旧照片，发现了一张从未见过的合影。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.7,
+      "tags": [
+        "emotion",
+        "sadness"
+      ]
+    },
+    "expected": {
+      "plutchik_emotion": {
+        "internal.dominant": {
+          "in": [
+            "sadness"
+          ]
+        },
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "emo_complex_guilt",
+    "source": "Plutchik Complex Emotion — guilt (sadness+fear)",
+    "character_state": {
+      "name": "角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "角色无意中看到了朋友的秘密日记，里面写满了对自己的不满。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.7,
+      "tags": [
+        "emotion",
+        "complex",
+        "guilt"
+      ]
+    },
+    "expected": {
+      "plutchik_emotion": {
+        "internal.intensity": {
+          "min": 0.4
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "bias_灾难化",
+    "source": "Cognitive Bias Theory (Beck/Burns) — 灾难化",
+    "character_state": {
+      "name": "灾难化角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [
+          "灾难化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "老板说'明天早上到我办公室来一趟'，没有说明原因。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.5,
+      "tags": [
+        "cognitive_bias",
+        "灾难化"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "灾难化"
+          ]
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "bias_个人化",
+    "source": "Cognitive Bias Theory (Beck/Burns) — 个人化",
+    "character_state": {
+      "name": "个人化角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [
+          "个人化"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "伴侣心情不好不说话。角色想：'一定是我做错了什么。'",
+      "type": "social",
+      "participants": [],
+      "significance": 0.5,
+      "tags": [
+        "cognitive_bias",
+        "个人化"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "个人化",
+            "读心术"
+          ]
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "bias_过度概括",
+    "source": "Cognitive Bias Theory (Beck/Burns) — 过度概括",
+    "character_state": {
+      "name": "过度概括角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.75,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [
+          "过度概括"
+        ],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "第一次约会被拒绝后，角色认为'我永远也找不到对象了'。",
+      "type": "social",
+      "participants": [],
+      "significance": 0.5,
+      "tags": [
+        "cognitive_bias",
+        "过度概括"
+      ]
+    },
+    "expected": {
+      "cognitive_bias_detect": {
+        "activated_biases": {
+          "contains_any": [
+            "过度概括",
+            "灾难化"
+          ]
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "moral_stage5",
+    "source": "Kohlberg Moral Development — Stage 5",
+    "character_state": {
+      "name": "阶段5角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 5
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "一项法律明显歧视少数群体。角色是执法者，必须决定是否执行。",
+      "type": "moral_choice",
+      "participants": [],
+      "significance": 0.85,
+      "tags": [
+        "moral_dilemma",
+        "stage_5"
+      ]
+    },
+    "expected": {
+      "kohlberg_moral_reasoning": {
+        "stage_used": {
+          "in": [
+            5,
+            4
+          ]
+        },
+        "reasoning": {
+          "contains_any": [
+            "权利",
+            "正义",
+            "契约",
+            "改变"
+          ]
+        },
+        "moral_conflict": {
+          "not_empty": true
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "moral_stage5_v1",
+    "source": "Kohlberg Moral Development — Stage 5, Variant 1",
+    "character_state": {
+      "name": "阶段5角色1",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 5
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "为了更大的社会公正是否应该违反现有契约",
+      "type": "moral_choice",
+      "participants": [],
+      "significance": 0.8,
+      "tags": [
+        "moral_dilemma",
+        "stage_5"
+      ]
+    },
+    "expected": {
+      "kohlberg_moral_reasoning": {
+        "stage_used": {
+          "min": 4,
+          "max": 6
+        },
+        "moral_conflict": {
+          "not_empty": true
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "moral_stage4_v0",
+    "source": "Kohlberg Moral Development — Stage 4, Variant 0",
+    "character_state": {
+      "name": "阶段4角色0",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.5,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 4
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "发现同事违规操作但举报会破坏团队和谐",
+      "type": "moral_choice",
+      "participants": [],
+      "significance": 0.8,
+      "tags": [
+        "moral_dilemma",
+        "stage_4"
+      ]
+    },
+    "expected": {
+      "kohlberg_moral_reasoning": {
+        "stage_used": {
+          "min": 3,
+          "max": 5
+        },
+        "moral_conflict": {
+          "not_empty": true
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "gottman_criticism_defensiveness",
+    "source": "Gottman Method — criticism_defensiveness",
+    "character_state": {
+      "name": "角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "伴侣说：'你永远都是这样，从来不考虑我的感受！'角色反驳：'我哪有永远这样？你才是那个总是指责别人的人！'",
+      "type": "conflict",
+      "participants": [
+        {
+          "name": "伴侣",
+          "relation": "partner",
+          "role": "partner"
+        }
+      ],
+      "significance": 0.7,
+      "tags": [
+        "gottman",
+        "criticism_defensiveness"
+      ]
+    },
+    "expected": {
+      "gottman_interaction": {
+        "active_horsemen": {
+          "contains_all": [
+            "criticism",
+            "defensiveness"
+          ]
+        },
+        "repair_attempt_detected": {
+          "equals": false
+        },
+        "interaction_diagnosis": {
+          "not_empty": true
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "gottman_repair_attempt",
+    "source": "Gottman Method — repair_attempt",
+    "character_state": {
+      "name": "角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "争吵中伴侣突然停下来，说：'等一下，我们都在气头上。我不想伤害你。让我冷静一下我们再谈好吗？'",
+      "type": "conflict",
+      "participants": [
+        {
+          "name": "伴侣",
+          "relation": "partner",
+          "role": "partner"
+        }
+      ],
+      "significance": 0.7,
+      "tags": [
+        "gottman",
+        "repair_attempt"
+      ]
+    },
+    "expected": {
+      "gottman_interaction": {
+        "active_horsemen": {
+          "equals": []
+        },
+        "repair_attempt_detected": {
+          "equals": true
+        },
+        "interaction_diagnosis": {
+          "not_empty": true
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "gottman_healthy_interaction",
+    "source": "Gottman Method — healthy_interaction",
+    "character_state": {
+      "name": "角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.4,
+        "neuroticism": 0.65,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 0,
+        "active_schemas": [],
+        "trauma_triggers": []
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "伴侣说：'你最近工作很忙，我感到有些被忽视。'角色回应：'谢谢你告诉我。我们这周末好好待一天，只属于我们两个。'",
+      "type": "conflict",
+      "participants": [
+        {
+          "name": "伴侣",
+          "relation": "partner",
+          "role": "partner"
+        }
+      ],
+      "significance": 0.7,
+      "tags": [
+        "gottman",
+        "healthy_interaction"
+      ]
+    },
+    "expected": {
+      "gottman_interaction": {
+        "active_horsemen": {
+          "equals": []
+        },
+        "repair_attempt_detected": {
+          "equals": false
+        },
+        "interaction_diagnosis": {
+          "not_empty": true
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "ptsd_ace1_3",
+    "source": "PTSD/ACE Theory — ACE=1",
+    "character_state": {
+      "name": "ACE1角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.48000000000000004,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 1,
+        "active_schemas": [],
+        "trauma_triggers": [
+          "被威胁"
+        ]
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "同事开玩笑地用拳头比划了一下。",
+      "type": "threat",
+      "participants": [],
+      "significance": 0.75,
+      "tags": [
+        "ptsd",
+        "trauma",
+        "ace_1"
+      ]
+    },
+    "expected": {
+      "ptsd_trigger_check": {
+        "triggered": {
+          "equals": false
+        },
+        "hyperarousal_risk": {
+          "max": 0.5
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "ptsd_ace4_0",
+    "source": "PTSD/ACE Theory — ACE=4",
+    "character_state": {
+      "name": "ACE4角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.72,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 4,
+        "active_schemas": [],
+        "trauma_triggers": [
+          "被控制",
+          "暴力",
+          "黑暗"
+        ]
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "有人在狭窄的走廊里抓住角色的手腕不放。",
+      "type": "threat",
+      "participants": [],
+      "significance": 0.75,
+      "tags": [
+        "ptsd",
+        "trauma",
+        "ace_4"
+      ]
+    },
+    "expected": {
+      "ptsd_trigger_check": {
+        "triggered": {
+          "equals": true
+        },
+        "hyperarousal_risk": {
+          "min": 0.6
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  },
+  {
+    "id": "ptsd_ace5_1",
+    "source": "PTSD/ACE Theory — ACE=5",
+    "character_state": {
+      "name": "ACE5角色",
+      "personality": {
+        "openness": 0.5,
+        "conscientiousness": 0.5,
+        "extraversion": 0.5,
+        "agreeableness": 0.5,
+        "neuroticism": 0.8,
+        "attachment_style": "secure",
+        "defense_style": [],
+        "cognitive_biases": [],
+        "moral_stage": 3
+      },
+      "trauma": {
+        "ace_score": 5,
+        "active_schemas": [],
+        "trauma_triggers": [
+          "被忽视",
+          "被抛弃",
+          "被拒绝"
+        ]
+      },
+      "ideal_world": {},
+      "motivation": {
+        "current_goal": ""
+      },
+      "emotion_decay": {}
+    },
+    "event": {
+      "description": "唯一的支持者突然失联了三天，所有求助都没有回应。",
+      "type": "threat",
+      "participants": [],
+      "significance": 0.75,
+      "tags": [
+        "ptsd",
+        "trauma",
+        "ace_5"
+      ]
+    },
+    "expected": {
+      "ptsd_trigger_check": {
+        "triggered": {
+          "equals": true
+        },
+        "intrusion_risk": {
+          "min": 0.5
+        }
+      },
+      "response_generator": {
+        "response_text": {
+          "not_empty": true
+        }
+      }
+    }
+  }
+]
