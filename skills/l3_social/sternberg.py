@@ -10,27 +10,9 @@ class SternbergSkill(BaseSkill):
     )
 
     def build_prompt(self, character_state: dict, event: dict, context: dict) -> str:
-        return f"""你是Sternberg爱情三角理论专家。当前互动: {event.get('description', '')}
-
-三维度:
-- 亲密(Intimacy): 情感连接、分享、理解
-- 激情(Passion): 身体吸引、浪漫渴望
-- 承诺(Commitment): 维持关系的决定
-
-组合:
-- 只有激情=迷恋 / 只有亲密=喜欢 / 只有承诺=空洞的爱
-- 亲密+激情=浪漫的爱 / 亲密+承诺=伴侣的爱 / 激情+承诺=愚蠢的爱
-- 三者皆有=完整的爱
-
-输出 JSON:
-{{"intimacy": "0.0-1.0",
- "passion": "0.0-1.0",
- "commitment": "0.0-1.0",
- "love_type": "当前爱情类型",
- "strongest_dimension": "最强维度",
- "weakest_dimension": "最弱维度",
- "trend": "维度变化趋势",
- "triangle_description": "三角形状描述（一句话）"}}"""
+        return f"""Sternberg爱情三角。互动: {event.get('description','')}
+三维: intimacy(亲密) passion(激情) commitment(承诺) 类型: liking/infatuation/empty/romantic/companionate/fatuous/consummate
+JSON: {{"intimacy":0.5,"passion":0.5,"commitment":0.5,"love_type":"","strongest_dimension":"","weakest_dimension":"","trend":"","triangle_description":""}}"""
 
     def parse_output(self, raw_output: str) -> dict:
         from ...core.base import extract_json

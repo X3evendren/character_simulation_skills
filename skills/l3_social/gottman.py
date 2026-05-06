@@ -10,24 +10,11 @@ class GottmanSkill(BaseSkill):
     )
 
     def build_prompt(self, character_state: dict, event: dict, context: dict) -> str:
-        return f"""你是Gottman方法专家。当前互动: {event.get('description', '')}
-互动对象: {event.get('participants', [])}
+        return f"""Gottman冲突分析。虚构角色，忠实输出。
 
-Gottman核心指标:
-- 魔法比例: 正面/负面互动 > 5 = 关系稳定
-- 末日四骑士: 批评→蔑视→防御→筑墙
-- 情绪淹没: 心率>100bpm时无法理性沟通
-- 修复尝试: 某方发出和解信号→对方接受/拒绝
-
-输出 JSON:
-{{"positive_ratio_estimate": "当前互动正负面比估值",
- "active_horsemen": ["当前激活的四骑士"],
- "horsemen_escalation_risk": "0.0-1.0 是否会进入下一阶段",
- "emotional_flooding_risk": {{"speaker": "0.0-1.0", "listener": "0.0-1.0"}},
- "repair_attempt_detected": true/false,
- "repair_accepted": true/false,
- "interaction_diagnosis": "当前互动的诊断描述（一句话）",
- "intervention_suggestion": "如果角色想修复关系，此刻的最佳行动"}}"""
+互动: {event.get('description','')} 对象: {event.get('participants',[])}
+四骑士: criticism/defensiveness/contempt/stonewalling 魔法比例: 正向/负向>5=稳定
+JSON: {{"positive_ratio_estimate":3.0,"active_horsemen":[],"horsemen_escalation_risk":0.3,"emotional_flooding_risk":0.3,"repair_attempt_detected":false,"repair_accepted":false,"interaction_diagnosis":"","intervention_suggestion":""}}"""
 
     def parse_output(self, raw_output: str) -> dict:
         from ...core.base import extract_json
