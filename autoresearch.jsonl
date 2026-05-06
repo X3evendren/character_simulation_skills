@@ -7,3 +7,5 @@
 {"run":6,"commit":"5583fa5","metric":0.7755,"metrics":{"field_coverage":0.7624,"total_tokens":8932.8,"skill_error_rate":0.0},"status":"keep","description":"improved markdown fence extraction with variable backtick counts","timestamp":1778030307,"segment":0}
 {"type":"config","name":"json-parse-quality-v2","metricName":"json_parse_rate","metricUnit":"fraction","bestDirection":"higher"}
 {"run":7,"commit":"eb7bbcc","metric":0.7438,"metrics":{"field_coverage":0.7690,"total_tokens":8994.9,"skill_error_rate":0.0},"status":"keep","description":"re-baseline with sentinel-based metric","timestamp":1778031495,"segment":1}
+{"type":"config","name":"json-parse-quality-v3","metricName":"json_parse_rate","metricUnit":"fraction","bestDirection":"higher"}
+{"run":8,"commit":"e3b65b2","metric":0.8133,"metrics":{"field_coverage":0.7603,"total_tokens":8937.6,"skill_error_rate":0.0},"status":"keep","description":"re-baseline with parse_success-based metric","timestamp":1778031745,"segment":2}

@@ -57,16 +57,39 @@ def extract_json(raw_output: str) -> dict:
     open_braces = text.count('{') - text.count('}')
     open_brackets = text.count('[') - text.count(']')
     if open_braces > 0 or open_brackets > 0:
-        # 在截断的字符串值处截断到最后一个完整的键或值
         fixed = text.rstrip()
-        fixed = re.sub(r',\s*$', '', fixed)  # 移除尾部逗号
-        # 检查是否因字符串未闭合而截断: 奇数个引号
-        if fixed.count('"') % 2 != 0:
-            fixed += '"'
-        fixed += ']' * max(0, open_brackets)
-        fixed += '}' * max(0, open_braces)
+        # 移除尾部逗号
+        fixed = re.sub(r',\s*$', '', fixed)
+
+        # 检查是否因字符串未闭合而截断
+        quote_count = fixed.count('"')
+        if quote_count % 2 != 0:
+            # 有未闭合的字符串 — 尝试闭合并补值
+            try:
+                return json.loads(fixed + '": null' + ']' * max(0, open_brackets) + '}' * max(0, open_braces))
+            except json.JSONDecodeError:
+                pass
+            try:
+                return json.loads(fixed + '"' + ']' * max(0, open_brackets) + '}' * max(0, open_braces))
+            except json.JSONDecodeError:
+                pass
+
+        # 处理截断的键值对: 移除最后一个不完整的键
+        # 模式: ..."key" 后面没有冒号 (键被截断)
+        # 或 ..."key": 后面没有值
+        last_colon = fixed.rfind(':')
+        if last_colon > 0:
+            before_colon = fixed[:last_colon].rstrip()
+            if before_colon.endswith('"'):
+                # "key": 被截断 — 补 null
+                try:
+                    return json.loads(before_colon + ': null' + ']' * max(0, open_brackets) + '}' * max(0, open_braces))
+                except json.JSONDecodeError:
+                    pass
+
+        # 直接尝试闭合
         try:
-            return json.loads(fixed)
+            return json.loads(fixed + ']' * max(0, open_brackets) + '}' * max(0, open_braces))
         except json.JSONDecodeError:
             pass
 
