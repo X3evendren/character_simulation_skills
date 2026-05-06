@@ -566,6 +566,7 @@ class CognitiveOrchestrator:
         has_conflict = event_type in ("conflict", "battle", "confrontation", "argument")
         has_resources = event_type in ("trade", "auction", "resource_allocation")
         has_group = len(participants) > 2
+        has_social = event_type in ("social", "romantic") or len(participants) > 0
 
         triggers = []
         if has_partner: triggers.append("romantic")
@@ -573,7 +574,7 @@ class CognitiveOrchestrator:
         if has_conflict: triggers.append("conflict")
         if has_resources: triggers.append("economic")
         if has_group: triggers.append("group")
-        # reflective场景也触发dirigent
+        if has_social: triggers.append("social")
         if event.get("significance", 0) >= 0.5:
             triggers.append("reflective")
 

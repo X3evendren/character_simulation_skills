@@ -259,19 +259,14 @@ class MockProvider:
     async def chat(self, messages: list[dict], temperature: float = 0.3,
                    max_tokens: int = 500) -> dict:
         """Simulate an LLM chat call. Returns OpenAI-style response dict."""
-        # Simulate API error
         if self.rng.random() < self.error_rate:
             raise Exception("Simulated API error: rate limit exceeded")
 
-        # Extract skill name from the prompt (the last message content)
         prompt = messages[-1]["content"] if messages else ""
         skill_name = self._detect_skill(prompt)
+        content = self._generate_response(skill_name, prompt)
 
-        # Generate response content
-        content = self._generate_response(skill_name)
-
-        # Calculate realistic token usage
-        prompt_tokens = len(prompt) // 3  # rough estimate
+        prompt_tokens = len(prompt) // 3
         completion_tokens = len(content) // 3
         total_tokens = prompt_tokens + completion_tokens + self.rng.randint(-50, 50)
 
@@ -345,14 +340,13 @@ class MockProvider:
                 return name
         return "unknown"
 
-    def _generate_response(self, skill_name: str) -> str:
+    def _generate_response(self, skill_name: str, prompt: str = "") -> str:
         """Generate a response with quality-based variation."""
         schema = SKILL_SCHEMAS.get(skill_name)
         if schema is None:
             return "{}"
 
-        # Build perfect response
-        perfect = self._build_perfect(schema)
+        perfect = self._build_perfect(schema, skill_name, prompt)
 
         # Apply quality-based degradation
         q = self.quality
@@ -413,16 +407,135 @@ class MockProvider:
             else:
                 return self._make_garbage()
 
-    def _build_perfect(self, schema: dict) -> dict:
-        """Build a perfect response dict from schema."""
+    def _build_perfect(self, schema: dict, skill_name: str = "", prompt: str = "") -> dict:
+        """Build a perfect response dict from schema, varying based on personality params in prompt."""
         result = {}
         for field, (value, _critical) in schema.items():
-            # Deep copy mutable values
             if isinstance(value, (dict, list)):
                 result[field] = json.loads(json.dumps(value))
             else:
                 result[field] = value
+
+        # Personality-aware adjustments
+        self._adjust_by_personality(result, skill_name, prompt)
         return result
+
+    def _adjust_by_personality(self, result: dict, skill_name: str, prompt: str):
+        """Adjust mock response based on character personality parameters in the prompt."""
+        # Extract key personality params from prompt
+        neuroticism = self._extract_param(prompt, r'神经质[=:：]\s*([\d.]+)')
+        agreeableness = self._extract_param(prompt, r'宜人性[=:：]\s*([\d.]+)')
+        extraversion = self._extract_param(prompt, r'外向性[=:：]\s*([\d.]+)')
+        conscientiousness = self._extract_param(prompt, r'尽责性[=:：]\s*([\d.]+)')
+        attachment = self._extract_str(prompt, r'依恋风格[=:：]\s*(\w+)')
+        ace_score = self._extract_param(prompt, r'ACE分数[=:：]\s*(\d+)')
+        moral_stage = self._extract_param(prompt, r'道德阶段[=:：]\s*(\d+)')
+
+        if skill_name == "big_five_analysis":
+            if neuroticism is not None:
+                if neuroticism >= 0.7:
+                    result["emotional_reactivity"] = 0.75
+                    result["behavioral_bias"] = "倾向于对模糊信号做出负面解读，容易灾难化思考"
+                    result["stress_response"] = "过度担忧，反复思考最坏情况"
+                    result["interpretation_bias"] = "将模糊或中性事件解读为潜在威胁"
+                elif neuroticism <= 0.35:
+                    result["emotional_reactivity"] = 0.3
+                    result["behavioral_bias"] = "保持情绪稳定，对压力源做出理性评估"
+                    result["stress_response"] = "冷静分析情况，寻找实际解决方案"
+            if agreeableness is not None:
+                if agreeableness <= 0.3:
+                    result["social_approach"] = "confrontational"
+                    result["decision_style"] = "competitive"
+                elif agreeableness >= 0.7:
+                    result["social_approach"] = "accommodating"
+            if conscientiousness is not None and conscientiousness >= 0.75:
+                result["decision_style"] = "deliberate"
+
+        elif skill_name == "ptsd_trigger_check":
+            triggers = self._extract_list(prompt, r'创伤触发[=:：]\s*\[([^\]]+)\]')
+            event_text = self._extract_str(prompt, r'当前事件[=:：]\s*(.+?)(?:\n|$)')
+            if ace_score is not None and ace_score >= 3:
+                # Check if any trigger words appear in event
+                if triggers and event_text:
+                    triggered = any(t.strip() in event_text for t in triggers)
+                    if triggered:
+                        result["triggered"] = True
+                        result["hyperarousal_risk"] = 0.7
+                        result["intrusion_risk"] = 0.65
+                        result["matched_triggers"] = [t.strip() for t in triggers if t.strip() in event_text]
+                        result["immediate_reaction"] = "触发了创伤相关的高度警觉反应"
+
+        elif skill_name == "cognitive_bias_detect":
+            biases_str = self._extract_str(prompt, r'认知偏差[=:：]\s*\[([^\]]+)\]')
+            event_text = self._extract_str(prompt, r'事件[=:：]\s*(.+?)(?:\n|$)') or prompt[-300:]
+            if biases_str:
+                bias_list = [b.strip() for b in biases_str.split(",")]
+                if bias_list:
+                    result["activated_biases"] = [
+                        {"name": b, "intensity": 0.65, "thought": f"基于{b}的自动化思考"}
+                        for b in bias_list[:2]
+                    ]
+                    result["bias_summary"] = f"角色主要受{'和'.join(bias_list[:2])}影响"
+                    result["alternative_interpretation"] = "存在更客观的替代解释"
+
+        elif skill_name == "defense_mechanism_analysis":
+            defense_str = self._extract_str(prompt, r'防御风格[=:：]\s*\[([^\]]+)\]')
+            if defense_str:
+                defenses = [d.strip() for d in defense_str.split(",")]
+                if defenses:
+                    d = defenses[0]
+                    result["activated_defense"] = {"name": d, "level": 3, "intensity": 0.6}
+                    result["defense_behavior"] = f"使用{d}来应对当前压力"
+                    result["what_is_being_defended_against"] = "内在的焦虑和不安全感"
+
+        elif skill_name == "kohlberg_moral_reasoning":
+            if moral_stage is not None:
+                result["stage_used"] = int(moral_stage)
+                stage_reasoning = {
+                    2: "基于个人利益和交换的推理",
+                    3: "基于人际关系和社会期望的推理",
+                    4: "基于法律和社会秩序的推理",
+                    5: "基于社会契约和普遍原则的推理",
+                }
+                result["reasoning"] = stage_reasoning.get(int(moral_stage), "基于常规道德判断")
+
+        elif skill_name == "emotion_probe":
+            if neuroticism is not None and neuroticism >= 0.7:
+                result["fine_grained"] = [
+                    {"emotion": "焦虑", "intensity": 0.7, "evidence": "神经质水平较高"},
+                    {"emotion": "不安", "intensity": 0.6, "evidence": "对威胁信号敏感"},
+                ]
+            if attachment == "anxious":
+                result["primary_undisclosed_emotion"] = "对被抛弃的深层恐惧"
+                result["emotional_complexity"] = "complex"
+            elif attachment == "avoidant":
+                result["primary_undisclosed_emotion"] = "对亲密的抗拒与渴望并存"
+                result["emotional_complexity"] = "complex"
+
+    @staticmethod
+    def _extract_param(text: str, pattern: str) -> float | None:
+        import re
+        m = re.search(pattern, text)
+        if m:
+            try:
+                return float(m.group(1))
+            except ValueError:
+                pass
+        return None
+
+    @staticmethod
+    def _extract_str(text: str, pattern: str) -> str | None:
+        import re
+        m = re.search(pattern, text)
+        return m.group(1).strip() if m else None
+
+    @staticmethod
+    def _extract_list(text: str, pattern: str) -> list[str]:
+        import re
+        m = re.search(pattern, text)
+        if m:
+            return [s.strip().strip("'\"") for s in m.group(1).split(",") if s.strip()]
+        return []
 
     def _drop_fields(self, obj: dict, schema: dict, n: int) -> dict:
         """Drop n random non-critical fields."""
