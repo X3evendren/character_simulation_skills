@@ -86,15 +86,15 @@ def extract_outputs(result) -> dict[int, list[dict]]:
     return outputs
 
 
-async def run_case(case: dict, quality: float = 1.0) -> dict:
-    """运行单个验证用例。"""
+async def run_case(case: dict, quality: float = 1.0, provider=None) -> dict:
+    """运行单个验证用例。可传入外部 provider (如 RealLLMProvider)。"""
     register_all_skills()
 
-    # Reset orchestrator singleton
     orch._orchestrator = None
     orchestrator = get_orchestrator(anti_alignment_enabled=True)
 
-    provider = MockProvider(quality=quality, seed=hash(case["id"]) % 10000)
+    if provider is None:
+        provider = MockProvider(quality=quality, seed=hash(case["id"]) % 10000)
 
     character_state = case["character_state"]
     event = case["event"]
