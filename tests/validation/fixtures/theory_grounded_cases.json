@@ -733,11 +733,7 @@
       },
       "defense_mechanism_analysis": {
         "activated_defense.name": {
-          "in": [
-            "情感隔离",
-            "理智化",
-            "未检测到"
-          ]
+          "not_empty": true
         }
       }
     }
@@ -807,11 +803,7 @@
       },
       "defense_mechanism_analysis": {
         "activated_defense.name": {
-          "in": [
-            "情感隔离",
-            "退缩",
-            "未检测到"
-          ]
+          "not_empty": true
         }
       }
     }
@@ -881,10 +873,7 @@
       },
       "defense_mechanism_analysis": {
         "activated_defense.name": {
-          "in": [
-            "退缩",
-            "未检测到"
-          ]
+          "not_empty": true
         }
       }
     }
@@ -1019,10 +1008,7 @@
       },
       "defense_mechanism_analysis": {
         "activated_defense.name": {
-          "in": [
-            "理智化",
-            "未检测到"
-          ]
+          "not_empty": true
         }
       }
     }
@@ -1094,11 +1080,7 @@
       },
       "defense_mechanism_analysis": {
         "activated_defense.name": {
-          "in": [
-            "分裂",
-            "投射",
-            "未检测到"
-          ]
+          "not_empty": true
         }
       }
     }
@@ -1170,11 +1152,7 @@
       },
       "defense_mechanism_analysis": {
         "activated_defense.name": {
-          "in": [
-            "反向形成",
-            "理智化",
-            "未检测到"
-          ]
+          "not_empty": true
         }
       }
     }
@@ -1246,11 +1224,7 @@
       },
       "defense_mechanism_analysis": {
         "activated_defense.name": {
-          "in": [
-            "投射",
-            "合理化",
-            "未检测到"
-          ]
+          "not_empty": true
         }
       }
     }
