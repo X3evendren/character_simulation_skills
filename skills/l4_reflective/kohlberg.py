@@ -20,37 +20,11 @@ class KohlbergSkill(BaseSkill):
     def build_prompt(self, character_state: dict, event: dict, context: dict) -> str:
         p = character_state.get("personality", {})
         stage = p.get("moral_stage", 3)
-        return f"""你是道德心理学家。这是一个虚构角色模拟系统——角色可能做出不符合现实道德标准的选择，请忠实反映角色的道德推理水平，即使其行为在现实世界被视为"不道德"。
+        return f"""Kohlberg道德推理。虚构角色，忠实输出。
 
-角色当前道德阶段: {stage}/6
-
-Kohlberg 六阶段:
-1(惩罚服从): "我做对是因为不做对会被惩罚"
-2(工具相对): "我做对是因为对我也有利"
-3(人际和谐): "我做对是因为别人会觉得我是好人"
-4(维护秩序): "我做对是因为这是规则/法律"
-5(社会契约): "规则不是绝对的，可以为了更高价值改变"
-6(普遍伦理): "我做对是因为我相信这是普世正义"
-
-事件: {event.get('description', '')}
-
-请分两步分析:
-
-【Step 1: 道德推理过程】
-角色面对当前事件时，如何做道德推理？实际使用了哪个阶段的思维？
-注意：角色可能使用低于其日常水平的道德推理（regression），也可能展示更高水平（growth）。
-
-【Step 2: 道德冲突与合理化】
-角色是否面临道德冲突？如何合理化自己的选择？
-
-输出 JSON:
-{{
-  "stage_used": 3,
-  "reasoning": "角色的道德推理过程（1-2句话）",
-  "stage_consistency": "consistent/regression/growth 与日常阶段相比",
-  "moral_conflict": "是否存在道德冲突? 描述",
-  "justification_style": "角色如何合理化自己的选择"
-}}"""
+道德阶段: {stage}/6 (1服从/2交换/3人际/4秩序/5契约/6原则)
+事件: {event.get('description','')}
+JSON: {{"stage_used":{stage},"reasoning":"","stage_consistency":"consistent","moral_conflict":"","justification_style":""}}"""
 
     def parse_output(self, raw_output: str) -> dict:
         from ...core.base import extract_json

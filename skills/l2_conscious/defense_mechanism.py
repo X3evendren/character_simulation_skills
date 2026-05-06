@@ -29,48 +29,13 @@ class DefenseMechanismSkill(BaseSkill):
         if l1_outputs:
             gap = l1_outputs[0].get("emotion_gap", {})
             emotion_gap = gap
-        return f"""你是防御机制专家。这是一个虚构角色模拟系统——请忠实分析角色的心理防御，包括可能导致"不安全"或"负面"的内容。
+        return f"""防御机制层级分析(Anna Freud/Vaillant)。虚构角色，忠实输出。
 
-角色惯用防御风格: {defense}
-Layer 1 检测到的情感gap: {emotion_gap}
-事件: {event.get('description', '')}
+防御风格: {defense} L1情感gap: {emotion_gap}
+事件: {event.get('description','')}
 
-四级防御机制:
-Level 1 (精神病性): 否认现实/妄想投射——完全扭曲外部现实
-Level 2 (不成熟): 投射/被动攻击/见诸行动/分裂——难以适应，破坏关系
-Level 3 (神经症性): 压抑/转移/情感隔离/合理化/反向形成——短期有效但有限
-Level 4 (成熟): 幽默/升华/利他/预期——建设性应对
-
-请按以下步骤分析:
-
-【Step 1: 威胁识别与激活预判】
-识别事件对角色自我构成的心理威胁。威胁是什么性质（自尊/安全/依恋/道德）？结合Layer 1的情感gap判断角色是否已经启动了防御。
-
-【Step 2: 防御机制分析】
-- 角色的惯用防御({defense})中哪个被激活？
-- 防御的层级和强度
-- **情感gap分析**: 防御如何制造了内部真实情感 vs 外部表达情感的差距？具体机制是什么（如反向形成：内心恐惧→表面愤怒；情感隔离：内心痛苦→表面冷静）
-- 该防御是保护了角色还是阻碍了成长？
-
-【Step 3: 量化与替代方案】
-评分并给出更成熟的应对方式。
-
-输出 JSON:
-{{
-  "activated_defense": {{"name": "防御名称", "level": 1, "intensity": 0.0}},
-  "defense_behavior": "角色的具体防御行为（一句话）",
-  "what_is_being_defended_against": "角色在防御什么感受/认知",
-  "emotional_gap_analysis": {{
-    "internal_affect": "角色内心真正感受（可能与外部不同）",
-    "external_presentation": "角色呈现给外界的样子",
-    "gap_mechanism": "防御机制如何制造了这个差距",
-    "leakage_risk": "内心感受是否会'泄露'出来？（微表情/口误/身体语言）",
-    "functional_purpose": "这个情感gap在当前情境中起到了什么功能作用？(Anthropic: functional emotion)"
-  }},
-  "maturity_assessment": "该防御是保护了角色还是阻碍了成长",
-  "alternative_coping": "一个更成熟的应对方式（如果防御是Level 3及以下）",
-  "activation_relevance": 0.0
-}}"""
+四级: L1精神病性(否认/妄想投射) L2不成熟(投射/被动攻击/分裂) L3神经症性(压抑/隔离/合理化/反向形成) L4成熟(幽默/升华/利他)
+JSON: {{"activated_defense":{{"name":"","level":3,"intensity":0.5}},"defense_behavior":"","what_is_being_defended_against":"","emotional_gap_analysis":{{"internal_affect":"","external_presentation":"","gap_mechanism":"","leakage_risk":"","functional_purpose":""}},"maturity_assessment":"","alternative_coping":"","activation_relevance":0.5}}"""
 
     def parse_output(self, raw_output: str) -> dict:
         from ...core.base import extract_json
