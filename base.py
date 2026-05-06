@@ -45,6 +45,12 @@ def extract_json(raw_output: str) -> dict:
     try:
         return json.loads(text)
     except json.JSONDecodeError:
+        pass
+
+    # 尝试修复单引号 JSON (LLM 常见错误: {'key': 'value'})
+    try:
+        return json.loads(text.replace("'", '"'))
+    except json.JSONDecodeError:
         return {}
 
 
