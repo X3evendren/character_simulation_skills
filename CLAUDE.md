@@ -93,14 +93,6 @@ python tests/validation/run_llm_validation.py --cases 20
 python tests/validation/run_validation.py
 ```
 
-## 设计文档
-
-- `docs/superpowers/specs/2026-05-06-polish-and-validate-design.md` — 打磨计划 (Phase A-D)
-- `docs/superpowers/specs/2026-05-06-toca-architecture-design.md` — TOCA 连续状态流架构
-  - 同一五层管道在时间偏移上运行多实例
-  - 间隔 = 推理时间/N → 体感连续
-  - Blackboard + Event Bus 状态共享
-
 ## 注意事项
 
 - 所有 Skill 通过 `build_prompt()` 构建分析 prompt → LLM 调用 → `parse_output()` 解析 JSON 结果
