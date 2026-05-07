@@ -797,24 +797,20 @@ class CognitiveOrchestrator:
         return ""
 
 
-# 全局单例
-_orchestrator: Optional[CognitiveOrchestrator] = None
-
-
 def get_orchestrator(
     episodic_store: EpisodicMemoryStore | None = None,
     conversation_store: ConversationHistoryStore | None = None,
     anti_alignment_enabled: bool = True,
     biological_bridge=None,
 ) -> CognitiveOrchestrator:
-    global _orchestrator
-    if _orchestrator is None:
-        _orchestrator = CognitiveOrchestrator(
-            episodic_store=episodic_store,
-            conversation_store=conversation_store,
-            anti_alignment_enabled=anti_alignment_enabled,
-            biological_bridge=biological_bridge,
-        )
-    elif biological_bridge is not None:
-        _orchestrator.bio_bridge = biological_bridge
-    return _orchestrator
+    """创建一个新的编排器实例。每次调用返回独立实例，避免会话间状态泄漏。"""
+    return CognitiveOrchestrator(
+        episodic_store=episodic_store,
+        conversation_store=conversation_store,
+        anti_alignment_enabled=anti_alignment_enabled,
+        biological_bridge=biological_bridge,
+    )
+
+
+# 向后兼容：benchmark/tests 中 `orch_mod._orchestrator = None` 成为空操作
+_orchestrator: Optional[CognitiveOrchestrator] = None
