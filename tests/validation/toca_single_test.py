@@ -2,9 +2,9 @@
 import sys, os, asyncio, json, time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 
-from character_mind.core.blackboard import Blackboard
-from character_mind.core.perception_stream import PerceptionStream
-from character_mind.core.toca_runner import TocaRunner, TocaConfig
+from character_mind.experimental.blackboard import Blackboard
+from character_mind.experimental.perception_stream import PerceptionStream
+from character_mind.experimental.toca_runner import TocaRunner, TocaConfig
 from character_mind.tests.validation.llm_provider import RealLLMProvider
 from character_mind import get_orchestrator
 
