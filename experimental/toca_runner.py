@@ -171,10 +171,7 @@ class TocaRunner:
             # 4. 注入 Blackboard 累积状态到 character_state
             cs = self._build_continuous_state(snap)
 
-            # 5. 运行管道（复用 orchestrator，不重建）
-            from character_mind.core import orchestrator as orch
-            orch._orchestrator = self.orchestrator
-
+            # 5. 运行管道（使用持有实例）
             result = await self.orchestrator.process_event(self.provider, cs, event)
             meta.tokens_used = result.total_tokens
 

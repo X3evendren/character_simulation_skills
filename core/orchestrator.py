@@ -84,8 +84,7 @@ class CognitiveOrchestrator:
         ctx = context or {}
 
         # ── 生物基础层更新 (L-3 → L-1) ──
-        import time as _time
-        now = _time.time()
+        now = time.time()
         dt = now - self._last_event_time if self._last_event_time > 0 else 60.0
         self._last_event_time = now
         if self.bio_bridge is not None:

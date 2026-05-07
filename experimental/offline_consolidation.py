@@ -91,9 +91,6 @@ class OfflineConsolidation:
                 "tags": memory.tags + ["consolidation", "replay"],
             }
 
-            from character_mind.core import orchestrator as orch
-            orch._orchestrator = orchestrator
-
             cs = character_state if character_state else self._build_cs_for_consolidation()
             result = await orchestrator.process_event(provider, cs, event)
 

@@ -1,7 +1,7 @@
 """Phase B: stratified validation with DeepSeek."""
 import sys, os, asyncio, json, time, random
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
-os.environ['DEEPSEEK_API_KEY'] = 'REDACTED_API_KEY'
+# DEEPSEEK_API_KEY must be set in environment
 sys.stdout.reconfigure(line_buffering=True)
 
 from character_mind.tests.validation.llm_provider import RealLLMProvider
