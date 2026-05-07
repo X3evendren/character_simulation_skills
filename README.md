@@ -69,7 +69,7 @@ Character Mind:
 | **记忆** | 情景记忆（时序边 + 情感标签 + 优先级淘汰）· 人格状态机 |
 | **质量评估** | LLM-as-Judge 七维度（情感真实 · 人格一致 · 防御表达 · 情感深度 · 关系敏感 · 潜台词 · 心理矛盾） |
 | **测试** | 5,960 用例 · 9 数据集适配器 · 运行时契约测试 |
-| **LLM** | DeepSeek · OpenAI · Ollama · 统一 Provider 接口 |
+| **LLM** | Provider 无关 — 消费 `chat(messages, temperature, max_tokens)` 接口 |
 
 ---
 
