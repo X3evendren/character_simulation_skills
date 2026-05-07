@@ -111,15 +111,15 @@ class CognitiveOrchestrator:
         ctx["l0"] = [s.output for s in l0 if s.success]
 
         # ── Layer 1: 快速前意识 — 并行 ──
-        l1_skills = [s for s in ["plutchik_emotion", "ptsd_trigger_check"]
-                     if s in self.registry]
+        l1_default = ["plutchik_emotion", "ptsd_trigger_check"]
+        l1_skills = [s for s in l1_default if s in self.registry]
         l1 = await self._run_layer(1, l1_skills, provider, character_state, event, ctx, projected_ctx)
         result.layer_results[1] = l1
         ctx["l1"] = [s.output for s in l1 if s.success]
 
         # ── Layer 2: 意识层情绪评估 — 并行 ──
-        l2_skills = [s for s in ["occ_emotion_appraisal", "defense_mechanism_analysis"]
-                     if s in self.registry]
+        l2_default = ["occ_emotion_appraisal", "defense_mechanism_analysis"]
+        l2_skills = [s for s in l2_default if s in self.registry]
         l2 = await self._run_layer(2, l2_skills, provider, character_state, event, ctx, projected_ctx)
         result.layer_results[2] = l2
         ctx["l2"] = [s.output for s in l2 if s.success]
