@@ -69,24 +69,77 @@ def get_registry() -> SkillRegistry:
 
 
 def _register_builtin_skills(registry: SkillRegistry):
-    """注册所有内置 Skill——与 orchestrator 活跃图一致的默认集。"""
-    from character_mind import (
-        BigFiveSkill, AttachmentSkill,
-        PlutchikEmotionSkill, PTSDTriggerSkill, EmotionProbeSkill,
-        OCCEmotionSkill, CognitiveBiasSkill, DefenseMechanismSkill, SmithEllsworthSkill,
-        GottmanSkill, MarionSkill, FoucaultSkill, SternbergSkill,
-        StrogatzSkill, FisherLoveSkill, DiriGentSkill, TheoryOfMindSkill,
-        GrossRegulationSkill, KohlbergSkill, MaslowSkill, SDTSkill,
-        YoungSchemaSkill, ACETraumaSkill, ResponseGeneratorSkill,
-    )
-    skills = [
-        BigFiveSkill(), AttachmentSkill(),
-        PlutchikEmotionSkill(), PTSDTriggerSkill(), EmotionProbeSkill(),
-        OCCEmotionSkill(), CognitiveBiasSkill(), DefenseMechanismSkill(), SmithEllsworthSkill(),
-        GottmanSkill(), MarionSkill(), FoucaultSkill(), SternbergSkill(),
-        StrogatzSkill(), FisherLoveSkill(), DiriGentSkill(), TheoryOfMindSkill(),
-        GrossRegulationSkill(), KohlbergSkill(), MaslowSkill(), SDTSkill(),
-        YoungSchemaSkill(), ACETraumaSkill(), ResponseGeneratorSkill(),
-    ]
-    for skill in skills:
-        registry.register(skill)
+    """从 runtime profile 注册所有内置 Skill。"""
+    from character_mind.core.runtime_profile import DEFAULT_PROFILE
+    from character_mind import __dict__ as exports
+
+    for entry in DEFAULT_PROFILE:
+        if not entry.auto_register:
+            continue
+        skill_cls = exports.get(entry.class_name)
+        if skill_cls is None:
+            # 尝试从子模块导入
+            try:
+                skill_cls = _import_skill(entry.class_name)
+            except ImportError:
+                continue
+        if skill_cls is not None:
+            registry.register(skill_cls())
+
+
+def _import_skill(class_name: str):
+    """按类名推断模块路径并导入。"""
+    # 类名 → skill 名: BigFiveSkill → big_five_analysis
+    skill_name = _class_to_skill_name(class_name)
+    # 从 profile 查找层
+    from character_mind.core.runtime_profile import DEFAULT_PROFILE
+    for entry in DEFAULT_PROFILE:
+        if entry.class_name == class_name:
+            layer = entry.layer
+            break
+    else:
+        return None
+
+    import importlib
+    module_path = f"character_mind.skills.l{layer}_" + {
+        0: "personality",
+        1: "preconscious",
+        2: "conscious",
+        3: "social",
+        4: "reflective",
+        5: "state_update",
+    }[layer]
+    mod = importlib.import_module(module_path)
+    return getattr(mod, class_name, None)
+
+
+def _class_to_skill_name(class_name: str) -> str:
+    """BigFiveSkill → big_five_analysis"""
+    # 简单映射表
+    name_map = {
+        "BigFiveSkill": "big_five_analysis",
+        "AttachmentSkill": "attachment_style_analysis",
+        "PlutchikEmotionSkill": "plutchik_emotion",
+        "PTSDTriggerSkill": "ptsd_trigger_check",
+        "EmotionProbeSkill": "emotion_probe",
+        "OCCEmotionSkill": "occ_emotion_appraisal",
+        "CognitiveBiasSkill": "cognitive_bias_detect",
+        "DefenseMechanismSkill": "defense_mechanism_analysis",
+        "SmithEllsworthSkill": "smith_ellsworth_appraisal",
+        "TheoryOfMindSkill": "theory_of_mind",
+        "GottmanSkill": "gottman_interaction",
+        "FoucaultSkill": "foucauldian_power_analysis",
+        "MarionSkill": "marion_erotic_phenomenology",
+        "SternbergSkill": "sternberg_triangle",
+        "StrogatzSkill": "strogatz_love_dynamics",
+        "FisherLoveSkill": "fisher_love_stages",
+        "DiriGentSkill": "dirigent_world_tension",
+        "GrossRegulationSkill": "gross_emotion_regulation",
+        "KohlbergSkill": "kohlberg_moral_reasoning",
+        "MaslowSkill": "maslow_need_stack",
+        "SDTSkill": "sdt_motivation_analysis",
+        "ResponseGeneratorSkill": "response_generator",
+        "YoungSchemaSkill": "young_schema_update",
+        "ACETraumaSkill": "ace_trauma_processing",
+    }
+    return name_map.get(class_name, class_name.lower())
