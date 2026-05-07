@@ -1,6 +1,6 @@
 # Character Mind
 
-**LLM 角色扮演的心理引擎。** 不是 prompt template，不是角色卡——是一套运行在 LLM 之上的分层认知架构。输入事件 + 角色档案，输出有心理因果链的角色行为。
+**LLM 角色扮演的心理引擎。** 一套运行在 LLM 之上的分层认知架构。输入事件 + 角色档案，输出有心理因果链的角色行为。
 
 ```python
 from character_mind import create_runtime
