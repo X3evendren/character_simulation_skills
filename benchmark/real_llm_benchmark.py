@@ -98,7 +98,7 @@ class OllamaProvider:
 
 def load_provider(provider_type: str = "deepseek", thinking: bool = True):
     if provider_type == "deepseek":
-        api_key = os.environ.get("DEEPSEEK_API_KEY", "REDACTED_API_KEY")
+        api_key = os.environ["DEEPSEEK_API_KEY"]  # 必须设置，不提供fallback
         model = os.environ.get("DEEPSEEK_MODEL", "deepseek-reasoner")
         return DeepSeekProvider(api_key=api_key, model=model, thinking=thinking)
     elif provider_type == "ollama":

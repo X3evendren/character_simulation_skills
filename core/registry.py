@@ -55,10 +55,38 @@ class SkillRegistry:
 
 # 全局单例
 _registry: Optional[SkillRegistry] = None
+_builtins_registered: bool = False
 
 
 def get_registry() -> SkillRegistry:
-    global _registry
+    global _registry, _builtins_registered
     if _registry is None:
         _registry = SkillRegistry()
+        # 首次获取时自动注册内置 Skill
+        _register_builtin_skills(_registry)
+        _builtins_registered = True
     return _registry
+
+
+def _register_builtin_skills(registry: SkillRegistry):
+    """注册所有内置 Skill——与 orchestrator 活跃图一致的默认集。"""
+    from character_mind import (
+        BigFiveSkill, AttachmentSkill,
+        PlutchikEmotionSkill, PTSDTriggerSkill, EmotionProbeSkill,
+        OCCEmotionSkill, CognitiveBiasSkill, DefenseMechanismSkill, SmithEllsworthSkill,
+        GottmanSkill, MarionSkill, FoucaultSkill, SternbergSkill,
+        StrogatzSkill, FisherLoveSkill, DiriGentSkill, TheoryOfMindSkill,
+        GrossRegulationSkill, KohlbergSkill, MaslowSkill, SDTSkill,
+        YoungSchemaSkill, ACETraumaSkill, ResponseGeneratorSkill,
+    )
+    skills = [
+        BigFiveSkill(), AttachmentSkill(),
+        PlutchikEmotionSkill(), PTSDTriggerSkill(), EmotionProbeSkill(),
+        OCCEmotionSkill(), CognitiveBiasSkill(), DefenseMechanismSkill(), SmithEllsworthSkill(),
+        GottmanSkill(), MarionSkill(), FoucaultSkill(), SternbergSkill(),
+        StrogatzSkill(), FisherLoveSkill(), DiriGentSkill(), TheoryOfMindSkill(),
+        GrossRegulationSkill(), KohlbergSkill(), MaslowSkill(), SDTSkill(),
+        YoungSchemaSkill(), ACETraumaSkill(), ResponseGeneratorSkill(),
+    ]
+    for skill in skills:
+        registry.register(skill)

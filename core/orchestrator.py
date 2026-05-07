@@ -452,9 +452,10 @@ class CognitiveOrchestrator:
         projected_context: dict,
         system_hint: str | None = None,
     ) -> list[SkillResult]:
-        """并行执行同一层的所有 Skill
+        """并行执行同一层的所有 Skill。
 
-        反RLHF提示词仅在 Layer 5 (回应生成) 注入——分析层不需要角色行为约束。
+        反RLHF提示词仅在 Layer 5 注入。
+        system_hint 仅在 Layer 0 注入（情境化 OCEAN 偏置）。
         """
         if not skill_names:
             return []
@@ -481,6 +482,9 @@ class CognitiveOrchestrator:
                 "personality_state": context.get("personality_state", {}),
             }
 
+            # 情境化 OCEAN 偏置仅在 Layer 0 注入
+            if layer == 0 and system_hint:
+                enhanced_context["_situational_ocean_hint"] = system_hint
             # 反RLHF提示词仅在回应生成层注入
             if layer == 5:
                 enhanced_context["_anti_alignment_hint"] = context.get("_anti_alignment_hint", "")

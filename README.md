@@ -167,7 +167,7 @@ docs/superpowers/specs/        # 设计文档
 python benchmark/real_llm_benchmark.py --provider deepseek --think 1 --bio 1
 
 # Mock 快速基准
-python benchmark/improved_benchmark.py
+python -c "from character_mind import get_orchestrator; print('OK')"
 
 # 回归验证 (5,960 用例)
 python tests/validation/run_validation.py

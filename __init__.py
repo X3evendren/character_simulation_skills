@@ -26,6 +26,7 @@ from .skills.l0_personality.attachment import AttachmentSkill
 # L1
 from .skills.l1_preconscious.plutchik_emotion import PlutchikEmotionSkill
 from .skills.l1_preconscious.ptsd_trigger import PTSDTriggerSkill
+from .skills.l1_preconscious.emotion_probe import EmotionProbeSkill
 # Emotion Vocabulary
 from .core.emotion_vocabulary import (
     FINE_GRAINED_EMOTIONS, COMPLEX_EMOTIONS, FUNCTIONAL_EMOTIONS,

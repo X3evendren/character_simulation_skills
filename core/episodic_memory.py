@@ -127,8 +127,9 @@ class EpisodicMemoryStore:
     # ═══ 冻结快照 (Hermes 启发) ═══
 
     def freeze_snapshot(self) -> list[dict]:
-        """冻结当前记忆快照 — 会话开始时调用，用于 prompt 注入。
-        后续存储不影响快照内容，保持会话内一致性。
+        """冻结当前记忆快照。
+        注意: orchestrator 当前使用 format_snapshot_for_prompt()
+        直接读取实时记忆而非冻结快照。此方法作为显式会话起点的备选。
         """
         self._snapshot = [m.to_dict() for m in self.get_recent(5)]
         return self._snapshot

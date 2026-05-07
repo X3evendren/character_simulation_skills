@@ -62,10 +62,12 @@ class OfflineConsolidation:
 
         return False
 
-    async def consolidate(self, orchestrator, provider) -> dict:
+    async def consolidate(self, orchestrator, provider, character_state: dict = None) -> dict:
         """执行一次离线巩固：重播近期显著记忆，更新 Blackboard 长期状态。
 
-        轻量：只跑 L0（人格）+ L4（反思），不跑 L5（不生成回应）。
+        注意: 当前走完整 process_event() pipeline。
+        计划优化: 只跑 L0+L4（不跑 L5 回应生成）。
+        character_state 应传入角色真实档案，未提供时使用 fallback。
         """
         now = time.time()
         self.state.last_consolidation = now
@@ -92,7 +94,7 @@ class OfflineConsolidation:
             from character_mind.core import orchestrator as orch
             orch._orchestrator = orchestrator
 
-            cs = self._build_cs_for_consolidation()
+            cs = character_state if character_state else self._build_cs_for_consolidation()
             result = await orchestrator.process_event(provider, cs, event)
 
             # 提取反思结果
