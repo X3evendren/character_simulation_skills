@@ -327,46 +327,18 @@ async def judge_response(judge_provider, character_state: dict, event: dict,
 
 
 # ═══════════════════════════════════════════════════════════
-# Skill registry
-# ═══════════════════════════════════════════════════════════
-
-def register_all_skills():
-    registry = get_registry()
-    registry._skills.clear()
-    for layer in registry._by_layer:
-        registry._by_layer[layer].clear()
-    for domain in registry._by_domain:
-        registry._by_domain[domain].clear()
-    registry._by_trigger.clear()
-    skills = [
-        BigFiveSkill(), AttachmentSkill(),
-        PlutchikEmotionSkill(), PTSDTriggerSkill(),
-        OCCEmotionSkill(), CognitiveBiasSkill(), DefenseMechanismSkill(), SmithEllsworthSkill(),
-        GottmanSkill(), MarionSkill(), FoucaultSkill(), SternbergSkill(),
-        StrogatzSkill(), FisherLoveSkill(), DiriGentSkill(), TheoryOfMindSkill(),
-        GrossRegulationSkill(), KohlbergSkill(), MaslowSkill(), SDTSkill(),
-        YoungSchemaSkill(), ACETraumaSkill(), ResponseGeneratorSkill(),
-    ]
-    for skill in skills:
-        registry.register(skill)
-    return len(skills)
-
-
-# ═══════════════════════════════════════════════════════════
 # Benchmark runner
 # ═══════════════════════════════════════════════════════════
 
 async def run_benchmark(provider, judge_provider, scenarios: list, label: str = "",
                        use_bio: bool = False):
     """运行管道并用 LLM Judge 评估质量。"""
+    from character_mind import create_runtime
     judgments = []
     total_tokens = 0
     total_time = 0.0
 
     for i, s in enumerate(scenarios):
-        from character_mind.core import orchestrator as orch_mod
-        orch_mod._orchestrator = None
-
         # 生物基础层
         bio = None
         if use_bio:
@@ -386,7 +358,12 @@ async def run_benchmark(provider, judge_provider, scenarios: list, label: str = 
                 ace=cs.get('trauma', {}).get('ace_score', 0),
             )
 
-        o = get_orchestrator(anti_alignment_enabled=True, biological_bridge=bio)
+        runtime = create_runtime(
+            include_experimental=True,
+            anti_alignment_enabled=True,
+            biological_bridge=bio,
+        )
+        o = runtime.orchestrator
 
         # 运行管道
         start = time.perf_counter()
@@ -459,7 +436,6 @@ async def main():
     parser.add_argument("--bio", type=int, default=0, help="Enable biological layer (1=on)")
     args = parser.parse_args()
 
-    register_all_skills()
     scenarios = get_scenarios()[:args.scenarios]
     use_bio = bool(args.bio)
 

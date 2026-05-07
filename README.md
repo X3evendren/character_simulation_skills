@@ -73,7 +73,7 @@ pip install openai
 
 ```python
 import asyncio
-from character_mind import get_orchestrator
+from character_mind import create_runtime
 from character_mind.core.biological import BiologicalBridge
 
 # 生物基础层 — OCEAN 自动映射到递质基线
@@ -85,9 +85,9 @@ bio.set_character_profile(
 )
 
 async def main():
-    result = await get_orchestrator(
-        anti_alignment_enabled=True, biological_bridge=bio
-    ).process_event(
+    # create_runtime() 返回独立会话实例，内置 Skill 自动注册
+    runtime = create_runtime(anti_alignment_enabled=True, biological_bridge=bio)
+    result = await runtime.orchestrator.process_event(
         provider,  # DeepSeek / OpenAI / Ollama
         character_state={"personality": {...}, "trauma": {...}},
         event={"description": "陈风两小时没回消息", "type": "social",

@@ -6,6 +6,7 @@ from .core.registry import SkillRegistry, get_registry
 
 # Orchestrator
 from .core.orchestrator import CognitiveOrchestrator, CognitiveResult, get_orchestrator
+from .core.runtime import SessionRuntime, create_runtime
 
 # Emotion & Memory infrastructure
 from .core.emotion_decay import (

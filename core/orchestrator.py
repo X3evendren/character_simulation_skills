@@ -59,12 +59,13 @@ class CognitiveOrchestrator:
     def __init__(self, episodic_store: EpisodicMemoryStore | None = None,
                  conversation_store: ConversationHistoryStore | None = None,
                  anti_alignment_enabled: bool = True,
-                 biological_bridge=None):  # BiologicalBridge, 可选
-        self.registry = get_registry()
+                 biological_bridge=None,
+                 registry=None):
+        self.registry = registry or get_registry()
         self.episodic_store = episodic_store or EpisodicMemoryStore()
-        self.conversation_store = conversation_store  # 外置对话记忆
+        self.conversation_store = conversation_store
         self.anti_alignment_enabled = anti_alignment_enabled
-        self.bio_bridge = biological_bridge  # 生物基础层桥接器
+        self.bio_bridge = biological_bridge
         self._last_event_time: float = 0.0
 
     # ═══════════════════════════════════════════════════════════

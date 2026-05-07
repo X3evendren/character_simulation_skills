@@ -10,7 +10,8 @@ from character_mind import get_orchestrator
 
 
 async def test():
-    # 内置 Skill 自动注册 via get_orchestrator() -> get_registry() -> _register_builtin_skills()
+    from character_mind import create_runtime
+    runtime = create_runtime(anti_alignment_enabled=True)
     provider = RealLLMProvider()
 
     cs = {

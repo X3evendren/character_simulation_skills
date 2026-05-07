@@ -38,26 +38,10 @@ FIXTURE_DIR = Path(__file__).parent / "fixtures"
 
 
 def register_all_skills():
-    registry = get_registry()
-    registry._skills.clear()
-    for layer in registry._by_layer:
-        registry._by_layer[layer].clear()
-    for domain in registry._by_domain:
-        registry._by_domain[domain].clear()
-    registry._by_trigger.clear()
-
-    skills = [
-        BigFiveSkill(), AttachmentSkill(),
-        PlutchikEmotionSkill(), PTSDTriggerSkill(), EmotionProbeSkill(),
-        OCCEmotionSkill(), CognitiveBiasSkill(), DefenseMechanismSkill(), SmithEllsworthSkill(),
-        GottmanSkill(), MarionSkill(), FoucaultSkill(), SternbergSkill(),
-        StrogatzSkill(), FisherLoveSkill(), DiriGentSkill(), TheoryOfMindSkill(),
-        GrossRegulationSkill(), KohlbergSkill(), MaslowSkill(), SDTSkill(),
-        YoungSchemaSkill(), ACETraumaSkill(), ResponseGeneratorSkill(),
-    ]
-    for skill in skills:
-        registry.register(skill)
-    return len(skills)
+    """注册所有内置 Skill（兼容旧路径，内部使用 create_runtime）。"""
+    from character_mind import create_runtime
+    runtime = create_runtime(include_experimental=True)
+    return runtime.registry.skill_count
 
 
 def load_fixtures(source_filter: str | None = None) -> list[dict]:
@@ -109,11 +93,10 @@ def extract_outputs(result) -> dict[int, list[dict]]:
 
 
 async def run_case(case: dict, quality: float = 1.0, provider=None) -> dict:
-    """运行单个验证用例。可传入外部 provider (如 RealLLMProvider)。"""
-    register_all_skills()
-
-    orch._orchestrator = None
-    orchestrator = get_orchestrator(anti_alignment_enabled=True)
+    """运行单个验证用例。"""
+    from character_mind import create_runtime
+    runtime = create_runtime(include_experimental=True, anti_alignment_enabled=True)
+    orchestrator = runtime.orchestrator
 
     if provider is None:
         provider = MockProvider(quality=quality, seed=hash(case["id"]) % 10000)
