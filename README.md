@@ -129,16 +129,7 @@ async def main():
 
 ## 质量
 
-DeepSeek V4 Pro thinking mode，7 维度 LLM-as-Judge：
-
-| 配置 | Skill 数 | 质量 | Tokens | 说明 |
-|------|---------|------|--------|------|
-| Lean | 6 | 0.89 | 4,356 | 最小核心 |
-| Medium | 10 | 0.93 | 7,595 | 每维度一个框架 |
-| Full | 26 | 0.90 | 14,470 | 框架噪音 → 退化 |
-| **最优 + Bio** | **11** | **0.98** | **8,111** | 理论最优 + 生物层 |
-
-生物层提供 +7.7% 质量提升，仅 +4% token 开销。22+ 个冗余 Skill 已被消融实验确认并硬编码跳过。
+LLM-as-Judge 七维度评分（DeepSeek V4 Pro thinking），最优配置 0.98，详见 [benchmark](benchmark/)。
 
 ---
 
@@ -166,15 +157,6 @@ benchmark/
 tests/validation/              # 5,960 用例回归测试
 docs/superpowers/specs/        # 设计文档
 ```
-
----
-
-## 设计原则
-
-- **一个维度，一个框架。** 没有两个 Skill 回答同一个问题。22 个冗余模型已被消融实验移除。
-- **生物层是可选的。** 认知管线独立运行。传入 `biological_bridge` 即激活神经调制。
-- **沉默法则。** 反 RLHF 提示永远不说"不要 X"——只正面定义角色是什么。
-- **LLM 无关。** 管线只消费 `provider.chat(messages, temperature, max_tokens)` 接口。
 
 ---
 
