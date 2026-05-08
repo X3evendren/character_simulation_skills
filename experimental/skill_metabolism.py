@@ -1,4 +1,9 @@
-"""Skill Metabolism — Skills 激活追踪、淘汰标记、合并建议。
+"""Skill Metabolism — Skills 完整生命周期管理 (Hermes 模式)。
+
+Lifecycle: active → idle(30d) → archived(90d) [从不删除]
+  - pinned: 绕过所有自动转换
+  - curator: 辅助 LLM 定期审查 Agent 创建的技能
+  - self_save: 复杂任务后提示保存技能
 
 每个 Skill 被追踪: 激活次数、最后使用时间、平均质量、token成本、输出重叠度。
 自动检测: 长期未激活 → FLAGGED, 输出高度重叠 → MERGE_CANDIDATE,
@@ -22,7 +27,10 @@ class SkillTracker:
     parse_fail_count: int = 0
     quality_scores: list[float] = field(default_factory=list)  # 最近 N 次质量分
     output_overlap_with: dict[str, float] = field(default_factory=dict)  # {skill_name: overlap_ratio}
-    status: str = "active"  # active / flagged / merge_candidate / optimize_candidate / archived
+    status: str = "active"  # active / idle / archived / flagged / merge_candidate / optimize_candidate
+    pinned: bool = False    # 固定: 绕过所有自动转换 (永远不淘汰)
+    created_by_agent: bool = False  # Agent 自己创建的 skill (需要 curator 审查)
+    description: str = ""   # 技能描述 (用于 skill_index)
 
     @property
     def avg_token_cost(self) -> float:
@@ -87,7 +95,18 @@ class SkillMetabolism:
     def __init__(self):
         self.trackers: dict[str, SkillTracker] = {}
 
-    def register(self, skill_name: str, layer: int):
+    def register(self, skill_name: str, layer: int, description: str = "",
+                 created_by_agent: bool = False):
+        if skill_name not in self.trackers:
+            t = SkillTracker(skill_name=skill_name, layer=layer,
+                           description=description, created_by_agent=created_by_agent)
+            self.trackers[skill_name] = t
+        else:
+            t = self.trackers[skill_name]
+            if description:
+                t.description = description
+            if created_by_agent:
+                t.created_by_agent = True
         if skill_name not in self.trackers:
             self.trackers[skill_name] = SkillTracker(skill_name=skill_name, layer=layer)
 
@@ -147,6 +166,74 @@ class SkillMetabolism:
                     )
 
         return report
+
+    # ═══ 生命周期管理 (Hermes 模式) ═══
+
+    def run_lifecycle(self) -> dict:
+        """运行完整的技能生命周期检查。返回状态变更报告。"""
+        report = {"promoted": [], "idled": [], "archived": [], "unpinned": []}
+        now = time.time()
+
+        for t in self.trackers.values():
+            if t.pinned:
+                continue
+
+            days_inactive = t.days_since_activation()
+
+            # active → idle: 30天未激活
+            if t.status == "active" and days_inactive > 30:
+                t.status = "idle"
+                report["idled"].append(t.skill_name)
+
+            # idle → archived: 90天
+            elif t.status == "idle" and days_inactive > 90:
+                t.status = "archived"
+                report["archived"].append(t.skill_name)
+
+            # idle → active: 重新激活
+            elif t.status == "idle" and days_inactive <= 30:
+                t.status = "active"
+                report["promoted"].append(t.skill_name)
+
+        return report
+
+    def pin_skill(self, skill_name: str):
+        """固定技能: 永久保持 active, 不参与自动淘汰。"""
+        if skill_name in self.trackers:
+            self.trackers[skill_name].pinned = True
+            self.trackers[skill_name].status = "active"
+
+    def unpin_skill(self, skill_name: str):
+        """解除固定。"""
+        if skill_name in self.trackers:
+            self.trackers[skill_name].pinned = False
+
+    def build_skill_index(self) -> str:
+        """生成紧凑的技能索引 (注入系统提示词)。
+
+        格式: 名称、描述、触发条件——每个技能一行。
+        """
+        active_skills = [
+            t for t in self.trackers.values()
+            if t.status in ("active", "idle") or t.pinned
+        ]
+        if not active_skills:
+            return ""
+
+        lines = ["## 可用技能索引", ""]
+        for t in sorted(active_skills, key=lambda x: x.layer):
+            desc = t.description or t.skill_name
+            pinned = " [PINNED]" if t.pinned else ""
+            idle = " (闲置)" if t.status == "idle" else ""
+            lines.append(f"- **{t.skill_name}** (L{t.layer}){pinned}{idle}: {desc}")
+        return "\n".join(lines)
+
+    def get_curator_candidates(self) -> list[str]:
+        """获取需要 curator 审查的技能列表 (Agent 创建的技能)。"""
+        return [
+            t.skill_name for t in self.trackers.values()
+            if t.created_by_agent and t.status in ("active", "idle")
+        ]
 
     def get_noise_report(self) -> dict:
         """Skills 噪音报告: 冗余和低质量 skill 占比。"""
