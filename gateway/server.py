@@ -44,6 +44,7 @@ class GatewayServer:
 
     async def _handle_connection(self, reader, writer):
         """处理 TCP 连接: 路由到 HTTP 或 WebSocket。"""
+        peername = writer.get_extra_info("peername", ("?", 0))
         try:
             data = await asyncio.wait_for(reader.read(4096), timeout=5.0)
             if not data:
@@ -51,19 +52,39 @@ class GatewayServer:
 
             text = data.decode("utf-8", errors="replace")
 
+            # 远程连接需要 auth (非 localhost)
+            if not self._is_local(peername[0]) and not self._check_auth(text):
+                writer.write(b"HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n")
+                await writer.drain()
+                return
+
             # WebSocket upgrade
             if "Upgrade: websocket" in text:
                 await self._handle_websocket(reader, writer, text)
             else:
                 await self._handle_http(reader, writer, text)
-        except Exception:
+        except asyncio.TimeoutError:
             pass
+        except ConnectionError:
+            pass
+        except Exception as e:
+            import sys
+            print(f"[gateway] connection error from {peername}: {e}", file=sys.stderr)
         finally:
             try:
                 writer.close()
                 await writer.wait_closed()
             except Exception:
                 pass
+
+    @staticmethod
+    def _is_local(host: str) -> bool:
+        return host in ("127.0.0.1", "localhost", "::1")
+
+    @staticmethod
+    def _check_auth(_request_text: str) -> bool:
+        # 默认: 远程连接拒绝 (需配置 auth token)
+        return False
 
     async def _handle_http(self, reader, writer, request_text: str):
         """处理 HTTP 请求。"""

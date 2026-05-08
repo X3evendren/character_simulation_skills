@@ -21,12 +21,13 @@ class SelfModel:
         text = " ".join(str(item.get("content", "")) for item in workspace)
         kinds = {item.get("kind") for item in workspace}
 
-        if "fear" in text or "没有回复" in text or "抛" in text:
+        text_lower = text.lower()
+        if any(w in text for w in ("fear", "afraid", "anxious", "没有回复", "抛", "离开", "abandon", "ignore", "silent", "沉默")) or ("anxiety" in text_lower):
             self.unresolved_conflict = "想靠近确认，但怕被抛下或显得太需要。"
             self.active_mask = "装作无所谓，用短句保护自尊。"
             self.private_intention = "希望对方主动解释并确认关系仍然安全。"
             self.current_other_model = "对方可能正在远离我，也可能只是没有意识到我的不安。"
-        elif "anger" in text or "愤" in text:
+        elif any(w in text for w in ("anger", "angry", "rage", "愤", "怒", "hate", "恨")):
             self.unresolved_conflict = "想攻击对方，又想保留关系。"
             self.active_mask = "把受伤包装成冷淡或讽刺。"
             self.private_intention = "让对方承认自己造成了伤害。"

@@ -565,13 +565,7 @@ class CognitiveOrchestrator:
             triggers.append("reflective")
 
         all_l3 = set(self.registry.list_by_layer(3))
-        selected = [s for s in self.registry.select_by_triggers(triggers) if s in all_l3]
-
-        # 精简 L3: 移除理论价值高但实用冗余的技能
-        SKIP_L3 = {"marion_erotic_phenomenology", "strogatz_love_dynamics", "fisher_love_stages", "sternberg_triangle", "dirigent_world_tension"}
-        selected = [s for s in selected if s not in SKIP_L3]
-
-        return selected
+        return [s for s in self.registry.select_by_triggers(triggers) if s in all_l3]
 
     # ═══════════════════════════════════════════════════════════
     # Layer 4 激活判断
@@ -811,6 +805,3 @@ def get_orchestrator(
         biological_bridge=biological_bridge,
     )
 
-
-# 向后兼容：benchmark/tests 中 `orch_mod._orchestrator = None` 成为空操作
-_orchestrator: Optional[CognitiveOrchestrator] = None

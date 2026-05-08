@@ -230,10 +230,18 @@ class PhenomenologicalRuntime:
             f"当前: {event_desc}"
         ).strip()
 
+        # 从感知内容推断事件类型
+        etype = self._infer_event_type(descriptions)
+        # 从感知源提取 participants
+        participants = []
+        for p in perception_window[-3:]:
+            src = p.get("source", "").strip()
+            if src and src not in ("", "internal"):
+                participants.append({"name": src, "relation": "acquaintance"})
         event = {
             "description": event_desc,
-            "type": "continuous",
-            "participants": [],
+            "type": etype,
+            "participants": participants,
             "significance": 0.4,
             "tags": ["cognitive_frame"],
             "_phenomenological_tick": self.tick_count,
@@ -412,6 +420,26 @@ class PhenomenologicalRuntime:
                 "idle_mentation",
                 False,
             )
+
+    @staticmethod
+    def _infer_event_type(descriptions: list[str]) -> str:
+        """从感知内容关键词推断事件类型。"""
+        text = " ".join(descriptions).lower()
+        if any(w in text for w in ("冲突", "争吵", "骂", "conflict", "argument")):
+            return "conflict"
+        if any(w in text for w in ("爱", "喜欢", "想你", "love", "miss you", "romantic")):
+            return "romantic"
+        if any(w in text for w in ("背叛", "骗", "betrayal", "secret")):
+            return "betrayal"
+        if any(w in text for w in ("死", "威胁", "危险", "death", "threat", "danger")):
+            return "threat"
+        if any(w in text for w in ("道德", "应该", "不该", "moral", "choice")):
+            return "moral_choice"
+        if any(w in text for w in ("权威", "师父", "老板", "master", "superior", "authority")):
+            return "social"
+        if any(w in text for w in ("你", "他", "她", "你们", "回", "说")):
+            return "social"
+        return "routine"
 
     # ═══ 状态查询 ═══
 
