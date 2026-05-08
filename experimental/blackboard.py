@@ -66,6 +66,16 @@ class Blackboard:
                 value=value, version=1,
                 updated_at=time.time(), updated_by=instance_id,
             )
+        # 事件日志
+        self._event_log.append({
+            "t": time.time(),
+            "key": key,
+            "value": value,
+            "version": self._fields[key].version,
+            "instance_id": instance_id,
+        })
+        if len(self._event_log) > 500:
+            self._event_log = self._event_log[-500:]
 
     def read(self, keys: list[str] | None = None) -> dict:
         """读取指定字段的最新值。keys=None 时读取全部。"""
@@ -154,6 +164,9 @@ class Blackboard:
         return [p for p in stream if p.get("t", 0) >= cutoff]
 
     # ═══ 工具 ═══
+
+    def get_event_log(self, limit: int = 50) -> list[dict]:
+        return list(self._event_log[-limit:])
 
     def __contains__(self, key: str) -> bool:
         return key in self._fields

@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import time
+import math
 from dataclasses import dataclass, field
 
 
@@ -84,9 +85,25 @@ class WmLtmBridge:
                 unique.append(m)
         unique.sort(key=lambda m: (m.significance, m.timestamp), reverse=True)
 
-        # 4. 过滤：只返回足够相关的
-        retrieved = [m.to_dict() for m in unique[:3]
-                     if m.significance >= self.threshold]
+        # 4. 情感签名余弦相似度过滤
+        # 从感知窗口构建当前情感向量
+        current_emotion_vec = {}
+        if current_emotion:
+            current_emotion_vec[current_emotion] = 0.7
+        for tag in emotion_tags:
+            if tag not in current_emotion_vec:
+                current_emotion_vec[tag] = 0.3
+
+        filtered = []
+        for m in unique[:6]:
+            mem_emo = m.emotional_signature
+            sim = self._cosine_similarity(current_emotion_vec, mem_emo)
+            if sim >= 0.15 or m.significance >= 0.6:
+                filtered.append((sim, m))
+
+        # 按相似度+显著性排序
+        filtered.sort(key=lambda x: x[0] * 0.4 + x[1].significance * 0.6, reverse=True)
+        retrieved = [m.to_dict() for _, m in filtered[:3]]
 
         if retrieved:
             self.state.hits += 1
@@ -107,26 +124,83 @@ class WmLtmBridge:
         return "\n".join(lines)
 
     def _extract_emotion_tags(self, text: str) -> list[str]:
-        """简单的情绪关键词提取。"""
-        emotions = {
-            "joy": ["开心", "高兴", "兴奋", "快乐", "喜悦", "满足"],
-            "fear": ["害怕", "恐惧", "担心", "焦虑", "紧张", "不安"],
-            "sadness": ["难过", "悲伤", "失落", "孤独", "绝望", "伤心"],
-            "anger": ["愤怒", "生气", "恼火", "怨恨", "暴躁"],
-            "trust": ["信任", "安心", "依赖", "相信"],
-        }
-        found = []
-        for emo, words in emotions.items():
-            if any(w in text for w in words):
-                found.append(emo)
-        return found
+        """从情感词典做子串匹配提取情绪标签。"""
+        tags = set()
+        for word in self._get_emotion_words():
+            if word in text:
+                for basic, fines in self._get_emotion_map().items():
+                    if word in fines:
+                        tags.add(basic)
+                        break
+        return list(tags)
 
     def _extract_keywords(self, text: str) -> list[str]:
-        """提取有意义的实词作为关键词。"""
-        # 简化版：按长度过滤，取前几个非虚词
-        words = text.replace("，", " ").replace("。", " ").split()
-        meaningful = [w for w in words if len(w) >= 2][:5]
-        return meaningful
+        """2-4字滑动窗口提取实词，过滤虚词和标点。"""
+        stop_chars = set("，。！？、；：""''（）…— \t\n\r,./;'[]<>?!@#$")
+        stop_words = {"的", "了", "在", "是", "我", "有", "和", "就",
+                      "不", "人", "都", "一", "一个", "这个", "那个",
+                      "什么", "怎么", "为什么", "因为", "所以", "但是",
+                      "可以", "没有", "这个", "这里", "那里", "已经"}
+        # 清理标点
+        cleaned = "".join(c for c in text if c not in stop_chars)
+        # 2-4字滑动窗口
+        keywords = set()
+        for size in (4, 3, 2):
+            for i in range(len(cleaned) - size + 1):
+                chunk = cleaned[i:i+size]
+                if chunk not in stop_words:
+                    keywords.add(chunk)
+        # 长词优先，去子串重复
+        result = []
+        for kw in sorted(keywords, key=len, reverse=True):
+            if not any(kw in r for r in result):
+                result.append(kw)
+            if len(result) >= 8:
+                break
+        return result
+
+    @staticmethod
+    def _get_emotion_words() -> list[str]:
+        """延迟获取所有细粒度情绪词。"""
+        try:
+            from character_mind.core.emotion_vocabulary import ALL_FINE_GRAINED
+            return ALL_FINE_GRAINED
+        except ImportError:
+            # fallback: 常用情绪词
+            return [
+                "焦虑", "恐慌", "不安", "畏惧", "绝望", "心碎", "沮丧",
+                "愤怒", "暴怒", "怨恨", "嫉妒", "敌意",
+                "狂喜", "满足", "自豪", "依恋", "感激",
+                "反感", "鄙夷", "憎恶", "震惊", "困惑",
+            ]
+
+    @staticmethod
+    def _get_emotion_map() -> dict[str, list[str]]:
+        """延迟获取基础情绪→细粒度映射。"""
+        try:
+            from character_mind.core.emotion_vocabulary import FINE_GRAINED_EMOTIONS
+            return FINE_GRAINED_EMOTIONS
+        except ImportError:
+            return {
+                "fear": ["焦虑", "恐慌", "不安", "畏惧", "紧张"],
+                "sadness": ["失落", "沮丧", "绝望", "心碎", "孤独"],
+                "anger": ["愤怒", "暴怒", "怨恨", "嫉妒", "暴躁"],
+                "joy": ["狂喜", "满足", "自豪", "欣慰", "雀跃"],
+                "disgust": ["反感", "鄙夷", "憎恶", "恶心", "嫌弃"],
+            }
+
+    @staticmethod
+    def _cosine_similarity(vec1: dict, vec2: dict) -> float:
+        """两个情感向量的余弦相似度。"""
+        if not vec1 or not vec2:
+            return 0.0
+        keys = set(vec1) | set(vec2)
+        dot = sum(vec1.get(k, 0) * vec2.get(k, 0) for k in keys)
+        norm1 = math.sqrt(sum(v**2 for v in vec1.values()))
+        norm2 = math.sqrt(sum(v**2 for v in vec2.values()))
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
+        return dot / (norm1 * norm2)
 
     def stats(self) -> dict:
         return {

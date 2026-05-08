@@ -92,18 +92,42 @@ class ThalamicGate:
         self.state.last_full_process = time.time()
         return buffered
 
+    # 从 core emotion_vocabulary 生成的高/中情绪关键词
+    # 高情绪: fear + anger + sadness 细粒度词（Plutchik 高强度类别）
+    _high_emotion: list[str] = [
+        # fear 细粒度
+        "焦虑", "紧张", "恐慌", "不安", "畏惧", "惊惶", "无助", "战栗",
+        "窒息感", "草木皆兵", "惶惶不可终日",
+        # anger 细粒度
+        "恼怒", "愤恨", "暴躁", "怨恨", "嫉妒", "敌意", "暴怒",
+        "委屈", "隐忍的怒火", "杀意", "睚眦必报", "咬牙切齿",
+        # sadness 细粒度
+        "失落", "惆怅", "忧郁", "哀伤", "凄凉", "沮丧", "心碎",
+        "怀念", "孤独", "绝望", "消沉", "怅然若失", "心如死灰",
+        # 口语高频补充
+        "崩溃", "受不了", "救命", "死了", "完了", "毁了", "疯了",
+    ]
+    _medium_emotion: list[str] = [
+        # disgust 细粒度
+        "反感", "鄙夷", "恶心", "嫌弃", "不屑", "厌烦", "轻蔑",
+        "憎恶", "嗤之以鼻", "生理排斥", "道德唾弃",
+        # anticipation 细粒度
+        "希望", "憧憬", "渴望", "急切", "警觉", "忐忑", "耐心",
+        "翘首以盼", "患得患失", "蠢蠢欲动", "煎熬的等待",
+        # surprise 细粒度
+        "震惊", "困惑", "好奇", "茫然", "错愕", "不可思议", "恍惚",
+        "瞠目结舌", "如梦初醒", "始料未及",
+        # 口语高频补充
+        "难受", "不舒服", "烦人", "讨厌", "不高兴", "压力", "疲惫",
+    ]
+
     def _emotional_weight(self, content: str) -> float:
-        """基于关键词的快速情绪权重。"""
-        high_emotion = ["害怕", "生气", "愤怒", "绝望", "恐惧", "恨",
-                        "崩溃", "受不了", "救命", "死了"]
-        medium_emotion = ["难过", "担心", "焦虑", "不安", "紧张",
-                          "失望", "委屈", "烦"]
-        content_lower = content.lower()
-        for w in high_emotion:
-            if w in content_lower:
+        """基于情感词典的关键词快速情绪权重。"""
+        for w in self._high_emotion:
+            if w in content:
                 return 0.9
-        for w in medium_emotion:
-            if w in content_lower:
+        for w in self._medium_emotion:
+            if w in content:
                 return 0.5
         return 0.15
 

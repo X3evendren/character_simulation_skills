@@ -18,6 +18,8 @@ from .consciousness import ConsciousnessLayer
 from .thalamic_gate import ThalamicGate
 from .offline_consolidation import OfflineConsolidation
 from .wm_ltm_bridge import WmLtmBridge
+from .self_model import SelfModel
+from .procedural_memory import ProceduralMemoryStore
 
 
 @dataclass
@@ -69,6 +71,7 @@ class TocaRunner:
         self.provider = provider
         self.character_state = character_state
         self.config = config or TocaConfig()
+        self.behavior_stream = None  # 可选：由外部注入
 
         self._instances: list[InstanceMeta] = []
         self._running = False
@@ -88,6 +91,12 @@ class TocaRunner:
         # WM-LTM 桥接
         self.wm_ltm_bridge = WmLtmBridge(
             orchestrator.episodic_store if orchestrator else None)
+
+        # 自我模型
+        self.self_model = SelfModel()
+
+        # 过程记忆
+        self.procedural_memory = ProceduralMemoryStore()
 
         # 记录最后一次输入时间
         self._last_input_time = time.time()
@@ -118,7 +127,7 @@ class TocaRunner:
             await asyncio.sleep(5)  # 每5秒检查一次
             if self.offline_consolidation.should_consolidate(self._last_input_time):
                 await self.offline_consolidation.consolidate(
-                    self.orchestrator, self.provider)
+                    self.orchestrator, self.provider, self.character_state)
 
     async def _scheduler(self):
         """主调度循环：按时间间隔启动管道实例。"""
@@ -151,6 +160,17 @@ class TocaRunner:
                 if not gate_result["should_process"]:
                     meta.status = "gated"
                     return
+                # 门控触发后消费缓冲区，合并累积感知到当前窗口
+                buffered = self.thalamic_gate.flush()
+                if buffered:
+                    seen = set()
+                    merged = []
+                    for item in buffered + perception_window:
+                        key = (item.get("t"), item.get("modality"), item.get("content"))
+                        if key not in seen:
+                            seen.add(key)
+                            merged.append(item)
+                    perception_window = merged
 
             # 3. 预测加工: 层次化预测下一帧状态
             self.consciousness.predict_next()
@@ -162,11 +182,26 @@ class TocaRunner:
             )
             memory_context = self.wm_ltm_bridge.format_for_context(retrieved_memories)
 
+            # 4.5. 过程记忆检索
+            perception_text = " ".join(p.get("content", "") for p in perception_window)
+            procedural_matches = self.procedural_memory.retrieve(perception_text)
+            procedural_context = ""
+            if procedural_matches:
+                lines = ["[习得模式]"]
+                for rule in procedural_matches[:2]:
+                    lines.append(
+                        f"- 触发:{rule['trigger']} 预期:{rule['prediction']} "
+                        f"防御:{rule['defense']} 表达:{rule['response_style']}"
+                    )
+                procedural_context = "\n".join(lines)
+
             # 5. 构建事件（感知 + 心理状态 + 记忆上下文）
-            event = self._build_event(perception_window, snap, memory_context)
+            event = self._build_event(perception_window, snap,
+                                     memory_context + "\n" + procedural_context)
             if event is None:
                 meta.status = "idle"
                 return
+            self.bb.write("last_continuous_event", event, instance_id)
 
             # 4. 注入 Blackboard 累积状态到 character_state
             cs = self._build_continuous_state(snap)
@@ -176,11 +211,25 @@ class TocaRunner:
             meta.tokens_used = result.total_tokens
 
             # 6. 写回 Blackboard（实时版本号）
-            self._write_back(result, instance_id)
+            self._write_back(result, instance_id, snap)
+
+            # 6.5. 行为流发布
+            response = self.get_latest_response()
+            if self.behavior_stream is not None and response and response.get("text"):
+                last_speech = self.behavior_stream.get_last_speech()
+                if not last_speech or last_speech.get("content") != response["text"]:
+                    self.behavior_stream.emit("speech", response["text"],
+                                            response.get("confidence", 0.8))
 
             # 7. 意识层处理
             self.consciousness.compute_prediction_error()
             broadcast = self.consciousness.filter_broadcast()
+
+            # 7.5. 构建工作空间 + 更新自我模型
+            candidates = self.consciousness.build_workspace_candidates()
+            workspace = self.consciousness.update_workspace(candidates)
+            self_model_state = self.self_model.update(workspace)
+            self.bb.write("self_model", self_model_state, instance_id)
             self.consciousness.self_perceive()
 
             # 8. Nudge Engine: 记录显著事件
@@ -256,9 +305,11 @@ class TocaRunner:
             "_toca_instance": True,
         }
 
-    def _write_back(self, result, instance_id: int):
+    def _write_back(self, result, instance_id: int, expected_versions: dict | None = None) -> tuple[int, int]:
         """将管道产出写回 Blackboard。
-        注意：版本号在写入时实时读取（不是管道开始时的快照）。"""
+
+        使用实例启动时的快照版本做乐观锁检查。如果未提供 expected_versions，
+        则退回到实时读取版本（非连续模式下兼容旧调用）。"""
         writes = 0
         conflicts = 0
 
@@ -266,8 +317,7 @@ class TocaRunner:
         l2 = result.layer_results.get(2, [])
         l5 = result.layer_results.get(5, [])
 
-        # 实时读版本号（不是管道开始时的快照）
-        now_versions = self.bb.read_with_versions()
+        versions = expected_versions or self.bb.read_with_versions()
 
         # L1: 情感
         for sr in l1:
@@ -278,12 +328,12 @@ class TocaRunner:
                     "arousal": internal.get("intensity", 0.5),
                     "dominance": 0.0,
                 }
-                ev = now_versions.get("pad", (None, 0))[1]
+                ev = versions.get("pad", (None, 0))[1]
                 if self.bb.try_write("pad", pad, ev, instance_id):
                     writes += 1
                 else:
                     conflicts += 1
-                ev2 = now_versions.get("dominant_emotion", (None, 0))[1]
+                ev2 = versions.get("dominant_emotion", (None, 0))[1]
                 if self.bb.try_write("dominant_emotion", internal.get("dominant", "neutral"),
                                      ev2, instance_id):
                     writes += 1
@@ -294,7 +344,7 @@ class TocaRunner:
         # L1: PTSD
         for sr in l1:
             if sr.skill_name == "ptsd_trigger_check" and sr.success:
-                ev = now_versions.get("ptsd_triggered", (None, 0))[1]
+                ev = versions.get("ptsd_triggered", (None, 0))[1]
                 if self.bb.try_write("ptsd_triggered", sr.output.get("triggered", False),
                                      ev, instance_id):
                     writes += 1
@@ -305,7 +355,7 @@ class TocaRunner:
         # L2: 防御
         for sr in l2:
             if sr.skill_name == "defense_mechanism_analysis" and sr.success:
-                ev = now_versions.get("active_defense", (None, 0))[1]
+                ev = versions.get("active_defense", (None, 0))[1]
                 if self.bb.try_write("active_defense", sr.output.get("activated_defense", {}),
                                      ev, instance_id):
                     writes += 1
@@ -318,7 +368,7 @@ class TocaRunner:
             if sr.skill_name == "response_generator" and sr.success:
                 rt = sr.output.get("response_text", "")
                 if rt:
-                    ev = now_versions.get("pending_response", (None, 0))[1]
+                    ev = versions.get("pending_response", (None, 0))[1]
                     if self.bb.try_write("pending_response",
                                          {"text": rt, "confidence": 0.8, "t": time.time()},
                                          ev, instance_id):
@@ -333,6 +383,7 @@ class TocaRunner:
                 self._instances[i].writes_succeeded = writes
                 self._instances[i].writes_conflicted = conflicts
                 break
+        return writes, conflicts
 
     # ═══ 状态查询 ═══
 

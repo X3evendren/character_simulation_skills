@@ -25,6 +25,11 @@ class ConsciousnessState:
     last_self_perceive: float = 0.0                    # 上次自感知时间
     broadcast_count: int = 0                           # 广播次数
     suppressed_count: int = 0                          # 抑制次数
+    # EWMA 状态追踪
+    ewma_values: dict = field(default_factory=dict)    # {key: ewma_value}
+    delta_history: dict = field(default_factory=lambda: {"pleasure": [], "arousal": [], "defense": []})
+    _history_maxlen: int = 10                          # 波动计算窗口
+    workspace: list[dict] = field(default_factory=list)  # 当前工作空间内容
 
 
 class ConsciousnessLayer:
@@ -33,15 +38,21 @@ class ConsciousnessLayer:
     def __init__(self, blackboard):
         self.bb = blackboard
         self.state = ConsciousnessState()
-        self.salience_threshold = 0.3          # 显著性阈值
+        self.salience_threshold = 0.3           # 显著性阈值
         self.self_perceive_interval = 30.0       # 自感知间隔(秒)
-        self.alpha = 0.3                         # 预测平滑系数
+        self.alpha_base = 0.3                    # EWMA 基线平滑系数
+        self.alpha_min = 0.1                     # 高波动时最小 alpha
+        self.alpha_max = 0.6                     # 低波动时最大 alpha
+        self.trend_dampening = 0.5               # 趋势外推阻尼
+        self.workspace_capacity = 4              # GWT 工作空间容量
 
     # ═══ 1. 预测加工 (Predictive Processing) ═══
 
     def predict_next(self) -> dict:
         """层次化预测：L1情绪 / L2认知 / L4反思 三层独立预测。
-        线性外推: next = current + alpha * (current - last)。
+
+        EWMA: ewma = alpha * current + (1-alpha) * previous_ewma
+        自适应 alpha: 高波动→低alpha(更平滑), 低波动→高alpha(更快响应)
         纯数学，零 Token。"""
         current = self.bb.read(["pad", "dominant_emotion", "active_defense",
                                  "ptsd_triggered"])
@@ -52,19 +63,19 @@ class ConsciousnessLayer:
         pad = current.get("pad", {})
         if pad:
             last_pad = last_predictions.get("L1_pad", {})
+            last_pleasure = last_pad.get("pleasure", pad.get("pleasure", 0))
+            last_arousal = last_pad.get("arousal", pad.get("arousal", 0.5))
             predictions["L1_pad"] = {
-                "pleasure": self._extrapolate(pad.get("pleasure", 0),
-                                              last_pad.get("pleasure", pad.get("pleasure", 0))),
-                "arousal": self._extrapolate(pad.get("arousal", 0.5),
-                                             last_pad.get("arousal", pad.get("arousal", 0.5))),
+                "pleasure": self._predict("pleasure", pad.get("pleasure", 0), last_pleasure),
+                "arousal": self._predict("arousal", pad.get("arousal", 0.5), last_arousal),
             }
 
         # L2: 认知层预测 (防御激活)
         defense = current.get("active_defense", {})
         if defense and isinstance(defense, dict):
-            last_def = last_predictions.get("L2_defense_intensity", defense.get("intensity", 0.3))
-            predictions["L2_defense_intensity"] = self._extrapolate(
-                defense.get("intensity", 0.3), last_def)
+            intensity = defense.get("intensity", 0.3)
+            last_def = last_predictions.get("L2_defense_intensity", intensity)
+            predictions["L2_defense_intensity"] = self._predict("defense", intensity, last_def)
 
         # L4: 反思层预测 (是否可能触发PTSD)
         triggered = current.get("ptsd_triggered", False)
@@ -73,11 +84,46 @@ class ConsciousnessLayer:
         self.state.predictions = predictions
         return predictions
 
-    def _extrapolate(self, current: float, last: float) -> float:
-        """线性外推: estimate = current + alpha * delta。"""
-        delta = current - last
-        val = current + self.alpha * delta
-        return max(-1.0, min(1.0, val))
+    def _predict(self, key: str, current: float, last_observed: float) -> float:
+        """EWMA + 自适应 alpha + 趋势外推预测。
+
+        1. 计算 EWMA 平滑值
+        2. 计算自适应 alpha (基于历史波动)
+        3. 用趋势分量做预测: pred = ewma + trend * dampening
+        """
+        alpha = self._adaptive_alpha(key)
+        prev_ewma = self.state.ewma_values.get(key, current)
+        ewma = alpha * current + (1 - alpha) * prev_ewma
+        self.state.ewma_values[key] = ewma
+
+        # 趋势 = EWMA 变化方向
+        trend = ewma - prev_ewma
+        pred = ewma + trend * self.trend_dampening
+
+        # 追踪 delta 用于波动计算
+        delta = abs(current - last_observed)
+        hist = self.state.delta_history.get(key, [])
+        hist.append(delta)
+        if len(hist) > self.state._history_maxlen:
+            hist.pop(0)
+        self.state.delta_history[key] = hist
+
+        return max(-1.0, min(1.0, pred))
+
+    def _adaptive_alpha(self, key: str) -> float:
+        """自适应 alpha: 高波动→低alpha, 低波动→高alpha。
+
+        volatility_ratio = mean_delta / max_expected_delta
+        alpha = alpha_base * (1 - volatility_ratio), clamped to [alpha_min, alpha_max]
+        """
+        hist = self.state.delta_history.get(key, [])
+        if len(hist) < 2:
+            return self.alpha_base
+        mean_delta = sum(hist) / len(hist)
+        # max_expected_delta: 心理参数单帧变化很少超过 0.5
+        volatility_ratio = min(1.0, mean_delta / 0.5)
+        alpha = self.alpha_base * (1 - volatility_ratio * 0.7)
+        return max(self.alpha_min, min(self.alpha_max, alpha))
 
     def compute_prediction_error(self) -> dict:
         """层次化预测误差：L1情绪/L2认知/L4反思 三层独立误差。
@@ -131,7 +177,11 @@ class ConsciousnessLayer:
         if "dominant_emotion" in current and current["dominant_emotion"]:
             emotion_sal = arousal * 0.6  # 高唤醒情绪更显著
         # 预测误差贡献
-        emotion_sal += (errors.get("pad_pleasure", 0) + errors.get("pad_arousal", 0)) * 0.2
+        emotion_sal += (
+            errors.get("L1_pleasure", 0.0) +
+            errors.get("L1_arousal", 0.0) +
+            errors.get("L1_combined", 0.0)
+        ) * 0.2
         salience["emotion"] = min(1.0, emotion_sal)
 
         # 威胁显著性
@@ -156,6 +206,66 @@ class ConsciousnessLayer:
 
         self.state.salience = salience
         return salience
+
+    # ═══ 有限全局工作空间 (GWT) ═══
+
+    def update_workspace(self, candidates: list[dict]) -> list[dict]:
+        valid = [
+            dict(item)
+            for item in candidates
+            if item.get("salience", 0.0) >= self.salience_threshold
+        ]
+        valid.sort(key=lambda item: item.get("salience", 0.0), reverse=True)
+        selected = valid[:self.workspace_capacity]
+        self.state.workspace = selected
+        self.bb.write("conscious_workspace", selected)
+        return selected
+
+    def build_workspace_candidates(self) -> list[dict]:
+        current = self.bb.read([
+            "dominant_emotion", "pad", "ptsd_triggered", "active_defense",
+            "pending_response", "retrieved_memories",
+        ])
+        salience = self.score_salience()
+        candidates = []
+        if current.get("dominant_emotion"):
+            candidates.append({
+                "kind": "emotion",
+                "content": current["dominant_emotion"],
+                "salience": salience.get("emotion", 0.0),
+                "source": "blackboard",
+            })
+        if current.get("ptsd_triggered"):
+            candidates.append({
+                "kind": "threat",
+                "content": "trauma_trigger",
+                "salience": salience.get("threat", 0.0),
+                "source": "ptsd_trigger",
+            })
+        defense = current.get("active_defense")
+        if isinstance(defense, dict) and defense.get("name"):
+            candidates.append({
+                "kind": "defense",
+                "content": defense.get("name"),
+                "salience": salience.get("defense", 0.0),
+                "source": "defense_mechanism",
+            })
+        for memory in current.get("retrieved_memories", [])[:3]:
+            candidates.append({
+                "kind": "memory",
+                "content": memory.get("description", "")[:160],
+                "salience": max(0.35, memory.get("significance", 0.4)),
+                "source": "wm_ltm",
+            })
+        response_item = current.get("pending_response")
+        if isinstance(response_item, dict) and response_item.get("text"):
+            candidates.append({
+                "kind": "response",
+                "content": response_item["text"][:160],
+                "salience": salience.get("response", 0.0),
+                "source": "l5",
+            })
+        return candidates
 
     def should_broadcast(self, field: str) -> bool:
         """该心理内容是否应该被广播到全局空间（进入意识/L5）？"""

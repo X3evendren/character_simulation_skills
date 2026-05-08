@@ -62,12 +62,12 @@ class OfflineConsolidation:
 
         return False
 
-    async def consolidate(self, orchestrator, provider, character_state: dict = None) -> dict:
+    async def consolidate(self, orchestrator, provider, character_state: dict) -> dict:
         """执行一次离线巩固：重播近期显著记忆，更新 Blackboard 长期状态。
 
         注意: 当前走完整 process_event() pipeline。
         计划优化: 只跑 L0+L4（不跑 L5 回应生成）。
-        character_state 应传入角色真实档案，未提供时使用 fallback。
+        character_state 必须传入角色真实档案。
         """
         now = time.time()
         self.state.last_consolidation = now
@@ -91,8 +91,7 @@ class OfflineConsolidation:
                 "tags": memory.tags + ["consolidation", "replay"],
             }
 
-            cs = character_state if character_state else self._build_cs_for_consolidation()
-            result = await orchestrator.process_event(provider, cs, event)
+            result = await orchestrator.process_event(provider, character_state, event)
 
             # 提取反思结果
             l4 = result.layer_results.get(4, [])
@@ -122,33 +121,71 @@ class OfflineConsolidation:
         self.state.significant_event_count = 0
         self.state.memories_replayed += consolidated
 
+        # 从工作空间学习过程规则（当fear/abandonment模式重复出现时）
+        ws = self.bb.read(["conscious_workspace"]).get("conscious_workspace", [])
+        ws_text = " ".join(str(item.get("content", "")) for item in ws)
+        if "fear" in ws_text or "没有回复" in ws_text:
+            rules = self.bb.read(["procedural_rules"]).get("procedural_rules", [])
+            rules.append({
+                "t": now,
+                "trigger": "对方沉默",
+                "prediction": "我会被抛弃",
+                "defense": "冷淡试探",
+                "response_style": "短句、否认需要",
+                "weight": 0.6,
+            })
+            self.bb.write("procedural_rules", rules[-20:])
+
+        # 写入冻结快照
+        self.bb.write("frozen_snapshot", self.build_frozen_snapshot())
+
         return {
             "consolidated": True,
             "events_replayed": consolidated,
             "consolidation_num": self.state.consolidation_count,
         }
 
-    def _build_cs_for_consolidation(self) -> dict:
-        """构建离线巩固用的角色状态。"""
-        state = self.bb.read(["pad", "dominant_emotion", "active_defense",
-                               "self_perception", "schema_trajectory"])
+    def build_frozen_snapshot(self) -> dict:
+        current = self.bb.read([
+            "conscious_workspace",
+            "self_perception",
+            "dominant_emotion",
+            "pad",
+            "active_defense",
+            "schema_trajectory",
+        ])
         return {
-            "name": "角色",
-            "personality": {
-                "openness": 0.5, "conscientiousness": 0.5, "extraversion": 0.5,
-                "agreeableness": 0.5, "neuroticism": 0.5,
-                "attachment_style": "secure", "defense_style": [],
-                "cognitive_biases": [], "moral_stage": 3,
-            },
-            "trauma": {"ace_score": 0, "active_schemas": [], "trauma_triggers": []},
-            "ideal_world": {},
-            "motivation": {"current_goal": ""},
-            "emotion_decay": {
-                "fast": {"pleasure": state.get("pad", {}).get("pleasure", 0),
-                         "arousal": state.get("pad", {}).get("arousal", 0.5)},
-                "slow": {},
-            },
+            "t": time.time(),
+            "workspace": current.get("conscious_workspace", []),
+            "self_perception": current.get("self_perception", ""),
+            "dominant_emotion": current.get("dominant_emotion", "neutral"),
+            "pad": current.get("pad", {}),
+            "active_defense": current.get("active_defense", {}),
+            "schema_trajectory": current.get("schema_trajectory", []),
         }
+
+    def extract_divergence_rule(self) -> dict:
+        inner = self.bb.read(["inner_experience"]).get("inner_experience", {})
+        items = inner.get("items", [])
+        divergences = [
+            item for item in items
+            if item.get("kind") == "inner_outer_divergence"
+        ]
+        if not divergences:
+            return {}
+        latest = divergences[-1]
+        rule = {
+            "t": time.time(),
+            "trigger": "高强度未表达需求",
+            "prediction": latest.get("inner", {}).get("content", ""),
+            "defense": latest.get("mechanism", "masking"),
+            "response_style": latest.get("outer", {}).get("content", ""),
+            "weight": min(1.0, latest.get("intensity", 0.5)),
+        }
+        rules = self.bb.read(["procedural_rules"]).get("procedural_rules", [])
+        rules.append(rule)
+        self.bb.write("procedural_rules", rules[-20:])
+        return rule
 
     def stats(self) -> dict:
         return {
