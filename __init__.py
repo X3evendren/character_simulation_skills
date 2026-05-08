@@ -61,3 +61,6 @@ from .skills.l4_reflective.sdt_motivation import SDTSkill
 from .skills.l5_state_update.young_schema import YoungSchemaSkill
 from .skills.l5_state_update.ace_trauma import ACETraumaSkill
 from .skills.l5_state_update.response_generator import ResponseGeneratorSkill
+
+# V2 Production API
+from .core.runtime_v2 import CharacterMind, CharacterResponse
