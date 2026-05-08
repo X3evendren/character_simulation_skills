@@ -64,3 +64,8 @@ from .skills.l5_state_update.response_generator import ResponseGeneratorSkill
 
 # V2 Production API
 from .core.runtime_v2 import CharacterMind, CharacterResponse
+
+# Workspace & Context
+from .core.workspace import Workspace
+from .core.context_assembly import ContextAssembly, scan_for_threats, scrub_output
+from .core.session import Session, SessionKey, SessionManager, TrustLevel
