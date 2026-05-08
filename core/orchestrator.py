@@ -99,7 +99,7 @@ class CognitiveOrchestrator:
 
         # ── Layer 0: 人格滤镜 — 使用情境化OCEAN ──
         # Attachment仅在社交/浪漫场景激活
-        is_social = event.get("type") in ("social", "romantic", "conflict") or len(event.get("participants", [])) > 0
+        is_social = event.get("type") in ("social", "romantic", "conflict")
         l0_names = ["big_five_analysis"]
         if is_social:
             l0_names.append("attachment_style_analysis")
@@ -468,19 +468,18 @@ class CognitiveOrchestrator:
                     success=False, error=f"Skill not found: {name}"
                 )
 
+            # 每层只接收前几层的输出 (避免跨层未来数据泄漏)
             enhanced_context = {
                 **projected_context,
-                "l0": context.get("l0", []),
-                "l1": context.get("l1", []),
-                "l2": context.get("l2", []),
-                "l3": context.get("l3", []),
-                "l4": context.get("l4", []),
-                "l5": context.get("l5", []),
                 "mood_bias": context.get("mood_bias", {}),
                 "episodic_memories": context.get("episodic_memories", []),
                 "recent_events": context.get("recent_events", []),
                 "personality_state": context.get("personality_state", {}),
             }
+            # 注入已完成层的输出 (L0 → L1, L1 → L2, etc.)
+            for prev_layer in range(layer):
+                key = f"l{prev_layer}"
+                enhanced_context[key] = context.get(key, [])
 
             # 情境化 OCEAN 偏置仅在 Layer 0 注入
             if layer == 0 and system_hint:

@@ -3,8 +3,11 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import time
 from dataclasses import dataclass, field
+
+logger = logging.getLogger("character_mind.gateway")
 
 
 @dataclass
@@ -30,7 +33,7 @@ class GatewayServer:
         self._server = await asyncio.start_server(
             self._handle_connection, self.host, self.port,
         )
-        print(f"Gateway listening on {self.host}:{self.port}")
+        logger.info(f"Gateway listening on {self.host}:{self.port}")
 
     async def stop(self):
         """停止网关。"""
@@ -68,8 +71,7 @@ class GatewayServer:
         except ConnectionError:
             pass
         except Exception as e:
-            import sys
-            print(f"[gateway] connection error from {peername}: {e}", file=sys.stderr)
+            logger.error(f"connection error from {peername}: {e}")
         finally:
             try:
                 writer.close()
@@ -94,7 +96,7 @@ class GatewayServer:
         path = parts[1] if len(parts) > 1 else "/"
 
         status, body = await self._route_http(method, path, request_text)
-        response = f"HTTP/1.1 {status}\r\nContent-Type: application/json; charset=utf-8\r\nAccess-Control-Allow-Origin: *\r\nContent-Length: {len(body.encode('utf-8'))}\r\n\r\n{body}"
+        response = f"HTTP/1.1 {status}\r\nContent-Type: application/json; charset=utf-8\r\nAccess-Control-Allow-Origin: http://localhost:{self.port}\r\nContent-Length: {len(body.encode('utf-8'))}\r\n\r\n{body}"
         writer.write(response.encode("utf-8"))
         await writer.drain()
 

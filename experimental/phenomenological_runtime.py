@@ -295,11 +295,13 @@ class PhenomenologicalRuntime:
             emotion = {item.get("kind", "unknown"): intensity}
             significance = max(0.0, min(1.0, intensity))
             tags = [item.get("kind", ""), item.get("source", "")]
-            # 避免重复摄入: 简单检查 (用内容和时间戳)
-            already_ingested = any(
-                m.content == content
-                for m in self.memory_metabolism.working[-5:]
+            # 避免重复摄入: 检查所有层级
+            all_memories = (
+                self.memory_metabolism.working +
+                self.memory_metabolism.short_term +
+                self.memory_metabolism.long_term
             )
+            already_ingested = any(m.content == content for m in all_memories[-20:])
             if not already_ingested:
                 self.memory_metabolism.ingest(content, emotion, significance, tags)
 

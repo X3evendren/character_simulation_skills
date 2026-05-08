@@ -116,7 +116,8 @@ class TocaRunner:
         self._running = False
         if self._schedule_loop:
             self._schedule_loop.cancel()
-        if hasattr(self, '_consolidation_loop') and self._consolidation_loop:
+        consolidation_loop = getattr(self, '_consolidation_loop', None)
+        if consolidation_loop:
             self._consolidation_loop.cancel()
         if self._tasks:
             await asyncio.gather(*self._tasks, return_exceptions=True)

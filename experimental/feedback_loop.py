@@ -21,8 +21,9 @@ class FeedbackPattern:
 
     def to_rule(self) -> dict:
         """转换为可用过程记忆的规则。"""
+        trigger_content = self.trigger.rsplit("|", 1)[0] if "|" in self.trigger else self.trigger
         return {
-            "trigger": self.trigger,
+            "trigger": trigger_content,
             "prediction": self.response,
             "defense": "learned_adaptation",
             "response_style": self._suggest_adaptation(),
@@ -66,7 +67,9 @@ class FeedbackLoop:
         # 按 action_content 分组
         groups: dict[str, list[dict]] = {}
         for fb in self._feedback_buffer:
-            key = fb["action_content"][:80]  # 用内容前80字做key
+            # 内容前80字 + 效价符号作为分组 key
+            valence_sign = "pos" if fb["valence"] > 0 else "neg"
+            key = f"{fb['action_content'][:80]}|{valence_sign}"
             groups.setdefault(key, []).append(fb)
 
         extracted = []
