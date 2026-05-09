@@ -1,6 +1,6 @@
 # Character Mind
 
-**现象学 Agent 运行时。** 不是角色卡——是一个完整的角色智能体操作系统。
+**现象学 Agent 运行时。**
 
 基于 CLARION 认知架构、Scherer 评估理论、现象学时间意识模型和 Hermes/OpenClaw Agent 模式，Character Mind 将 24 个心理学模型、五层认知管线、连续意识循环、记忆新陈代谢、技能生命周期和现实世界反馈闭环整合为一个可部署的角色智能体。
 
