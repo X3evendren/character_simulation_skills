@@ -2,7 +2,7 @@
 
 # Character Simulation Skills — 五层认知编排系统
 
-基于 **CLARION 认知架构 + Scherer 评估理论** 的角色心理模拟框架。37 个心理学模型以 **Skill** 形式注册，通过五层时序编排器 (`CognitiveOrchestrator`) 对事件进行分层并行/串行处理。
+基于 **CLARION 认知架构 + Scherer 评估理论** 的角色心理模拟框架。24 个心理学模型以 **Skill** 形式注册，通过五层时序编排器 (`CognitiveOrchestrator`) 对事件进行分层并行/串行处理。
 
 ## 架构总览
 

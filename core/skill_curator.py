@@ -17,6 +17,8 @@ class CuratorReview:
     health: str = "healthy"  # healthy / degraded / redundant / should_archive
     suggestions: list[str] = field(default_factory=list)
     quality_score: float = 0.5
+    consecutive_degraded: int = 0  # 连续降级次数（用于自动归档判断）
+    evolution_suggestions: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -64,12 +66,29 @@ class SkillCurator:
             if tracker.avg_token_cost > 800:
                 suggestions.append(f"Token 消耗过高({tracker.avg_token_cost:.0f}/call), 考虑精简 prompt")
 
+        # 计算连续降级次数
+        prev_reviews = self.reviews.get(skill_name, [])
+        consecutive = 0
+        for r in reversed(prev_reviews):
+            if r.health in ("degraded", "redundant", "should_archive"):
+                consecutive += 1
+            else:
+                break
+        if health in ("degraded", "redundant", "should_archive"):
+            consecutive += 1
+
+        # 连续 3 次降级 → 建议归档
+        if consecutive >= 3:
+            health = "should_archive"
+            suggestions.append(f"连续 {consecutive} 次降级审查，建议自动归档")
+
         review = CuratorReview(
             skill_name=skill_name,
             reviewed_at=time.time(),
             health=health,
             suggestions=suggestions,
             quality_score=tracker.avg_quality_score,
+            consecutive_degraded=consecutive,
         )
 
         self.reviews.setdefault(skill_name, []).append(review)

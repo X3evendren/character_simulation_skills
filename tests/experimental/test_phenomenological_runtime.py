@@ -20,7 +20,6 @@ class TestPhenomenologicalRuntime(unittest.IsolatedAsyncioTestCase):
         runtime = PhenomenologicalRuntime(
             blackboard=Blackboard(),
             perception_stream=PerceptionStream(),
-            toca_runner=None,
             tick_s=0.05,
         )
 
@@ -33,7 +32,7 @@ class TestPhenomenologicalRuntime(unittest.IsolatedAsyncioTestCase):
 
     async def test_tick_writes_runtime_heartbeat(self):
         bb = Blackboard()
-        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), None, tick_s=0.05)
+        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), tick_s=0.05)
 
         await runtime.tick_once()
 
@@ -48,7 +47,7 @@ class TestPhenomenologicalRuntime(unittest.IsolatedAsyncioTestCase):
             "private_intention": "希望对方主动解释。",
             "active_mask": "装作无所谓。",
         })
-        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), None, tick_s=0.05)
+        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), tick_s=0.05)
 
         await runtime.tick_once()
 
@@ -64,7 +63,7 @@ class TestPhenomenologicalRuntime(unittest.IsolatedAsyncioTestCase):
             "active_mask": "装作无所谓，用短句保护自尊。",
             "private_intention": "希望对方主动解释。",
         })
-        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), None, tick_s=0.05)
+        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), tick_s=0.05)
         runtime.inner_stream.append(
             "forbidden_wish", "不要离开我，快证明你还在乎我", 0.9, "self_model", False
         )
@@ -84,7 +83,7 @@ class TestPhenomenologicalRuntime(unittest.IsolatedAsyncioTestCase):
 
         bb = Blackboard()
         behavior = BehaviorStream("林雨")
-        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), None, tick_s=0.05)
+        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), tick_s=0.05)
         runtime.behavior_stream = behavior
         bb.write("outer_behavior", {"type": "speech", "content": "没事，你忙吧。"})
 
@@ -94,7 +93,7 @@ class TestPhenomenologicalRuntime(unittest.IsolatedAsyncioTestCase):
 
     async def test_idle_tick_generates_spontaneous_thought(self):
         bb = Blackboard()
-        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), None, tick_s=0.05)
+        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), tick_s=0.05)
         runtime.idle_after_s = 0.0
         bb.write("self_model", {
             "unresolved_conflict": "想靠近确认，但怕被抛下或显得太需要。",

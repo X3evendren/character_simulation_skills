@@ -31,7 +31,6 @@ from .consciousness import ConsciousnessLayer
 class PhenomenologicalRuntime:
     blackboard: object
     perception_stream: object
-    toca_runner: object | None
     tick_s: float = 1.0
     inner_stream: InnerExperienceStream = field(default_factory=InnerExperienceStream)
     expression_policy: ExpressionPolicy = field(default_factory=ExpressionPolicy)
@@ -41,6 +40,7 @@ class PhenomenologicalRuntime:
     world_adapter: object | None = None
     _last_feedback_count: int = 0
     behavior_stream: object | None = None
+    behavior_controller: object | None = None  # BehaviorController (双通道)
     _last_outer_behavior: dict | None = None
     idle_after_s: float = 5.0
     last_external_input_t: float = 0.0
@@ -81,8 +81,6 @@ class PhenomenologicalRuntime:
         if self.running:
             return
         self.running = True
-        if self.toca_runner is not None:
-            await self.toca_runner.start()
         self._task = asyncio.create_task(self._loop())
 
     async def stop(self) -> None:
@@ -90,8 +88,6 @@ class PhenomenologicalRuntime:
         if self._task is not None:
             self._task.cancel()
             await asyncio.gather(self._task, return_exceptions=True)
-        if self.toca_runner is not None:
-            await self.toca_runner.stop()
 
     async def _loop(self) -> None:
         while self.running:
@@ -113,8 +109,11 @@ class PhenomenologicalRuntime:
         # 3. 空闲思维
         self._maybe_generate_idle_thought()
 
-        # 4. 内部体验更新
+        # 4. 内部体验更新 + 双通道状态同步
         self._update_inner_stream()
+        if self.behavior_controller and self.last_external_input_t > 0:
+            # 如果有最近的外部输入，推进 inbound 通道到 processing
+            self.behavior_controller.on_processing_start()
 
         # 5. 体验场更新 (Retention+Protention)
         self._update_experiential_field()
@@ -200,6 +199,39 @@ class PhenomenologicalRuntime:
 
         return max_error > self._prediction_error_threshold or max_salience > 0.6
 
+    def _build_prediction_context(self) -> dict:
+        """构建预测上下文，供 orchestrator 自适应管道判断。
+
+        返回包含预测误差和显著性数据的字典，
+        注入到 orchestrator.process_event() 的 context 参数中。
+        """
+        errors = self.blackboard.read([
+            "prediction_errors", "conscious_workspace",
+        ])
+        pred_errors = errors.get("prediction_errors", {})
+        max_error = max(pred_errors.values()) if pred_errors else 0.0
+
+        workspace = errors.get("conscious_workspace", [])
+        max_salience = max(
+            (item.get("salience", 0.0) for item in workspace),
+            default=0.0,
+        )
+
+        reason = "low_prediction_error"
+        if max_error < 0.15 and max_salience < 0.3:
+            reason = "very_low_prediction_error"
+        elif max_salience < 0.4:
+            reason = "low_salience"
+
+        return {
+            "_prediction_context": {
+                "max_error": max_error,
+                "max_salience": max_salience,
+                "reason": reason,
+                "tick": self.tick_count,
+            },
+        }
+
     async def _trigger_cognitive_frame(self) -> None:
         """运行 Cognitive Frame: orchestrator.process_event() (L0-L3 情感脑+社会脑)。
 
@@ -258,8 +290,12 @@ class PhenomenologicalRuntime:
             "_phenomenological_tick": self.tick_count,
         }
 
+        # 注入预测上下文用于自适应管道判断
+        pred_ctx = self._build_prediction_context()
         try:
-            result = await self.orchestrator.process_event(self.provider, cs, event)
+            result = await self.orchestrator.process_event(
+                self.provider, cs, event, context=pred_ctx,
+            )
 
             # 写回 Blackboard
             for layer, skill_results in result.layer_results.items():
@@ -410,12 +446,32 @@ class PhenomenologicalRuntime:
             return
         outer = self.blackboard.read(["outer_behavior"]).get("outer_behavior")
         if not isinstance(outer, dict) or not outer.get("content"):
+            # 沉默——通过双通道记录
+            if self.behavior_controller:
+                silence = self.behavior_controller.on_silence()
+                self.behavior_stream.emit("silence", "", confidence=silence.get("confidence", 1.0))
             return
         if self._last_outer_behavior == outer:
             return
         self._last_outer_behavior = dict(outer)
         btype = outer.get("type", "speech")
-        self.behavior_stream.emit(btype, outer["content"], outer.get("confidence", 0.8))
+        content = outer["content"]
+        confidence = outer.get("confidence", 0.8)
+
+        # 通过双通道发布（如果已配置）
+        if self.behavior_controller:
+            expressed = self.behavior_controller.on_express(
+                content, confidence=confidence, response_type=btype,
+            )
+            if expressed is None:
+                return  # 冷却中，跳过
+            # 同步到行为流
+            self.behavior_stream.emit(
+                expressed["type"], expressed["content"],
+                confidence=expressed["confidence"],
+            )
+        else:
+            self.behavior_stream.emit(btype, content, confidence=confidence)
 
     # ═══ 空闲思维 ═══
 

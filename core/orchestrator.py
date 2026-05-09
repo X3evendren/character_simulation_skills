@@ -44,6 +44,8 @@ class CognitiveResult:
     updated_personality_state: dict = field(default_factory=dict)
     episodic_memory_stored: bool = False
     mood_bias: dict = field(default_factory=dict)
+    # 自适应管道记录
+    adaptive_info: dict = field(default_factory=dict)  # skipped_layers, reason, prediction_error, salience
 
 
 class CognitiveOrchestrator:
@@ -60,13 +62,18 @@ class CognitiveOrchestrator:
                  conversation_store: ConversationHistoryStore | None = None,
                  anti_alignment_enabled: bool = True,
                  biological_bridge=None,
-                 registry=None):
+                 registry=None,
+                 adaptive_skip: bool = True):
         self.registry = registry or get_registry()
         self.episodic_store = episodic_store or EpisodicMemoryStore()
         self.conversation_store = conversation_store
         self.anti_alignment_enabled = anti_alignment_enabled
         self.bio_bridge = biological_bridge
+        self.adaptive_skip = adaptive_skip
         self._last_event_time: float = 0.0
+        # 自适应阈值
+        self._skip_prediction_error_max: float = 0.3
+        self._skip_salience_max: float = 0.6
 
     # ═══════════════════════════════════════════════════════════
     # 主处理流程
@@ -94,16 +101,14 @@ class CognitiveOrchestrator:
         # ── 情感衰减 + 记忆检索 + 状态更新 ──
         ctx = self._prepare_context(character_state, event, ctx)
 
+        # 事件触发条件 (统一计算，供各层 Skill 选择使用)
+        event_triggers = self._compute_event_triggers(event)
+
         # SPASM 自我中心上下文投射 — 每事件计算一次
         projected_ctx = self._project_egocentric_context(ctx, character_state)
 
         # ── Layer 0: 人格滤镜 — 使用情境化OCEAN ──
-        # Attachment仅在社交/浪漫场景激活
-        is_social = event.get("type") in ("social", "romantic", "conflict")
-        l0_names = ["big_five_analysis"]
-        if is_social:
-            l0_names.append("attachment_style_analysis")
-        l0_skills = [s for s in l0_names if s in self.registry]
+        l0_skills = self._get_layer_skills(0, event_triggers)
         l0_prompt_override = self._get_layer0_bias(ctx)
         l0 = await self._run_layer(0, l0_skills, provider, character_state, event, ctx,
                                    projected_ctx, system_hint=l0_prompt_override)
@@ -111,37 +116,52 @@ class CognitiveOrchestrator:
         ctx["l0"] = [s.output for s in l0 if s.success]
 
         # ── Layer 1: 快速前意识 — 并行 ──
-        l1_default = ["plutchik_emotion", "ptsd_trigger_check"]
-        l1_skills = [s for s in l1_default if s in self.registry]
+        l1_skills = self._get_layer_skills(1, event_triggers)
         l1 = await self._run_layer(1, l1_skills, provider, character_state, event, ctx, projected_ctx)
         result.layer_results[1] = l1
         ctx["l1"] = [s.output for s in l1 if s.success]
 
-        # ── Layer 2: 意识层情绪评估 — 并行 ──
-        l2_default = ["occ_emotion_appraisal", "defense_mechanism_analysis"]
-        l2_skills = [s for s in l2_default if s in self.registry]
-        l2 = await self._run_layer(2, l2_skills, provider, character_state, event, ctx, projected_ctx)
-        result.layer_results[2] = l2
-        ctx["l2"] = [s.output for s in l2 if s.success]
+        # ── 自适应跳过判断 ──
+        # 从上下文读取预测数据，决定是否跳过 L2-L4 深度评估
+        pred_ctx = ctx.get("_prediction_context") or {}
+        should_skip_deep = self._should_skip_deep_layers(event, event_triggers, pred_ctx)
+        if should_skip_deep:
+            result.adaptive_info = {
+                "skipped_layers": [2, 3, 4],
+                "reason": pred_ctx.get("reason", "low_prediction_error"),
+                "prediction_error": pred_ctx.get("max_error", 0.0),
+                "salience": pred_ctx.get("max_salience", 0.0),
+            }
+            # 跳过 L2-L4，直接进入 L5 回应生成
+            # L2-L3-L4 的结果设为空列表，保持 ctx 结构完整
+            for layer in (2, 3, 4):
+                result.layer_results[layer] = []
+                ctx[f"l{layer}"] = []
+        else:
+            # ── Layer 2: 意识层情绪评估 — 并行 ──
+            l2_skills = self._get_layer_skills(2, event_triggers)
+            l2 = await self._run_layer(2, l2_skills, provider, character_state, event, ctx, projected_ctx)
+            result.layer_results[2] = l2
+            ctx["l2"] = [s.output for s in l2 if s.success]
 
-        # ── Layer 3: 关系/社会处理 — 按触发条件选择性激活 ──
-        l3_skills = self._select_l3(character_state, event)
-        if l3_skills:
-            l3 = await self._run_layer(3, l3_skills, provider, character_state, event, ctx, projected_ctx)
-            result.layer_results[3] = l3
-            ctx["l3"] = [s.output for s in l3 if s.success]
+            # ── Layer 3: 关系/社会处理 — 按触发条件选择性激活 ──
+            l3_skills = self._get_layer_skills(3, event_triggers)
+            if l3_skills:
+                l3 = await self._run_layer(3, l3_skills, provider, character_state, event, ctx, projected_ctx)
+                result.layer_results[3] = l3
+                ctx["l3"] = [s.output for s in l3 if s.success]
 
-        # ── Layer 4: 反思处理 — 仅在关键场景激活 ──
-        if self._is_significant(event, result):
-            l4_skills = [s for s in ["gross_emotion_regulation", "sdt_motivation_analysis"]
-                         if s in self.registry]
-            l4 = await self._run_layer(4, l4_skills, provider, character_state, event, ctx, projected_ctx)
-            result.layer_results[4] = l4
-            ctx["l4"] = [s.output for s in l4 if s.success]
+            # ── Layer 4: 反思处理 — 仅在关键场景激活 ──
+            if self._is_significant(event, result):
+                l4_skills = self._get_layer_skills(4, event_triggers)
+                if l4_skills:
+                    l4 = await self._run_layer(4, l4_skills, provider, character_state, event, ctx, projected_ctx)
+                    result.layer_results[4] = l4
+                    ctx["l4"] = [s.output for s in l4 if s.success]
 
-        # ── Layer 5: 状态更新 + 回应生成 — 串行 ──
-        has_trauma = event.get("type") in ("trauma", "betrayal", "death") or "trauma" in event.get("tags", [])
-        has_reflective = event.get("significance", 0) >= 0.7
+        # ── Layer 5: 状态更新 + 回应生成 — 串行（始终运行，不受自适应跳过影响） ──
+        has_trauma = "trauma" in event_triggers
+        has_reflective = "reflective" in event_triggers
         l5_skill_names = ["response_generator"]
         if has_trauma or has_reflective:
             l5_skill_names.insert(0, "young_schema_update")
@@ -210,11 +230,14 @@ class CognitiveOrchestrator:
             character_state["_biological_drives"] = bio.get("drives", {})
             character_state["_biological_nt"] = bio.get("neurotransmitters", {})
 
-        # 2. 事件记忆检索 + 冻结快照 (Hermes Frozen Snapshot 模式)
+        # 2. 事件记忆检索 + 冻结快照 — 使用混合检索
         event_type = event.get("type", "unknown")
-        relevant_memories = self.episodic_store.get_context_for_event(event_type, n=5)
+        event_tags = event.get("tags", [])
+        relevant_memories = self.episodic_store.search_hybrid(
+            event_type=event_type, n=5, tags=event_tags,
+        )
         if relevant_memories:
-            ctx["episodic_memories"] = relevant_memories
+            ctx["episodic_memories"] = [m.to_dict() for m in relevant_memories]
         ctx["recent_events"] = self.episodic_store.get_recent_descriptions(5)
         ctx["memory_snapshot"] = self.episodic_store.format_snapshot_for_prompt()
 
@@ -538,11 +561,11 @@ class CognitiveOrchestrator:
         return projected
 
     # ═══════════════════════════════════════════════════════════
-    # Layer 3 选择性激活 (保持不变，但增加 diri_gent)
+    # Skill 选择 (统一入口, profile 为单一真理源)
     # ═══════════════════════════════════════════════════════════
 
-    def _select_l3(self, character_state: dict, event: dict) -> list[str]:
-        """按触发条件选择性激活 Layer 3 Skill"""
+    def _compute_event_triggers(self, event: dict) -> list[str]:
+        """从事件中提取触发条件标签，供各层 Skill 匹配。"""
         event_type = event.get("type", "")
         participants = event.get("participants", [])
 
@@ -560,11 +583,42 @@ class CognitiveOrchestrator:
         if has_resources: triggers.append("economic")
         if has_group: triggers.append("group")
         if has_social: triggers.append("social")
+        if event_type in ("trauma", "betrayal", "death") or "trauma" in event.get("tags", []):
+            triggers.append("trauma")
         if event.get("significance", 0) >= 0.5:
             triggers.append("reflective")
 
-        all_l3 = set(self.registry.list_by_layer(3))
-        return [s for s in self.registry.select_by_triggers(triggers) if s in all_l3]
+        # moral 触发: 事件类型或标签
+        if event_type in ("moral_choice", "confession") or "moral" in event.get("tags", []):
+            triggers.append("moral")
+
+        return triggers
+
+    def _get_layer_skills(self, layer: int, event_triggers: list[str]) -> list[str]:
+        """从 registry 获取某层的 Skill，按触发条件匹配。
+
+        "always" 触发条件的 Skill 始终选中。
+        其余 Skill 仅当 event_triggers 与其触发条件有交集时选中。
+        """
+        all_layer = self.registry.list_by_layer(layer)
+        if not all_layer:
+            return []
+
+        event_set = set(event_triggers)
+        selected = []
+        for name in all_layer:
+            skill = self.registry.get(name)
+            if skill is None:
+                continue
+            skill_triggers = set(skill.meta.trigger_conditions)
+            if "always" in skill_triggers or (event_set & skill_triggers):
+                selected.append(name)
+
+        return selected
+
+    def _select_l3(self, character_state: dict, event: dict) -> list[str]:
+        """按触发条件选择性激活 Layer 3 Skill (向后兼容)。"""
+        return self._get_layer_skills(3, self._compute_event_triggers(event))
 
     # ═══════════════════════════════════════════════════════════
     # Layer 4 激活判断
@@ -592,6 +646,42 @@ class CognitiveOrchestrator:
             return True
 
         return False
+
+    # ═══════════════════════════════════════════════════════════
+    # 自适应管道控制
+    # ═══════════════════════════════════════════════════════════
+
+    def _should_skip_deep_layers(
+        self, event: dict, event_triggers: list[str], pred_ctx: dict,
+    ) -> bool:
+        """判断是否应跳过 L2-L4 深度评估。
+
+        条件：
+        - adaptive_skip 已启用
+        - 非 trauma 事件（trauma 始终走完整管道）
+        - 预测误差低于阈值 且 显著性低于阈值
+        - 非 moral_choice/betrayal/death/confession 类型
+        """
+        if not self.adaptive_skip:
+            return False
+
+        # trauma 事件始终完整处理
+        if "trauma" in event_triggers:
+            return False
+
+        # 关键事件类型不跳过
+        event_type = event.get("type", "")
+        if event_type in ("moral_choice", "betrayal", "death", "breakthrough", "confession"):
+            return False
+
+        # 高显著性事件不跳过
+        if event.get("significance", 0) >= 0.7:
+            return False
+
+        max_error = pred_ctx.get("max_error", 1.0)
+        max_salience = pred_ctx.get("max_salience", 1.0)
+
+        return max_error < self._skip_prediction_error_max and max_salience < self._skip_salience_max
 
     # ═══════════════════════════════════════════════════════════
     # 多Agent交互处理

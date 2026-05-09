@@ -75,6 +75,7 @@ class ContextAssembly:
     """
 
     workspace: object  # Workspace instance
+    cache_manager: object | None = None  # CacheManager 实例
 
     # 缓存
     _cached_system_prompt: str | None = None
@@ -157,10 +158,16 @@ class ContextAssembly:
         parts.append(user_message)
         return "\n\n".join(parts)
 
-    def invalidate_cache(self):
-        """使缓存失效 (配置变化时调用)。"""
-        self._cached_system_prompt = None
-        self._cached_hash = 0
+    def invalidate_cache(self, force: bool = False):
+        """使缓存失效——通过 CacheManager 调度（如果已配置）。
+
+        force=True（--now）跳过延迟，立即失效。
+        """
+        if self.cache_manager and not force:
+            self.cache_manager.schedule_invalidation("system_prompt")
+        else:
+            self._cached_system_prompt = None
+            self._cached_hash = 0
 
 
 def _platform_hint(platform: str) -> str:

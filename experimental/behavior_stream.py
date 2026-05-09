@@ -9,7 +9,8 @@ import time
 from dataclasses import dataclass, field
 from typing import Literal
 
-BehaviorType = Literal["speech", "action", "micro_expression", "silence", "internal"]
+BehaviorType = Literal["speech", "action", "micro_expression", "silence", "internal",
+                         "typing", "status_reaction", "draft"]
 
 
 @dataclass
@@ -19,12 +20,14 @@ class Behavior:
     type: BehaviorType
     content: str
     confidence: float = 0.8
-    target: str = ""  # 对话对象
+    target: str = ""       # 对话对象
+    channel: str = ""      # inbound / outbound（双通道标记）
 
     def to_dict(self) -> dict:
         return {
             "t": self.t, "type": self.type, "content": self.content,
             "confidence": self.confidence, "target": self.target,
+            "channel": self.channel,
         }
 
 
@@ -78,6 +81,18 @@ class BehaviorStream:
                 "source": source_name or self.name,
             })
         return perps
+
+    def publish_typing(self, is_typing: bool) -> None:
+        """发布 typing 状态。"""
+        self.emit("typing", "typing" if is_typing else "", confidence=1.0)
+
+    def publish_reaction(self, reaction: str) -> None:
+        """发布状态反应 (seen/hearted/angry/reacted)。"""
+        self.emit("status_reaction", reaction, confidence=0.9)
+
+    def get_drafts(self) -> list[dict]:
+        """获取所有草稿行为。"""
+        return [b.to_dict() for b in self._behaviors if b.type == "draft"]
 
     def __len__(self) -> int:
         return len(self._behaviors)

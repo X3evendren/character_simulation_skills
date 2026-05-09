@@ -58,6 +58,9 @@ class ToolDescriptor:
     availability: ToolAvailability = field(default_factory=ToolAvailability)
     parallel_safe: bool = False
     destructive: bool = False
+    executor_class: str = ""          # 执行器类名 (LocalBashExecutor / FileReadExecutor 等)
+    timeout_seconds: float = 30.0     # 超时秒数
+    audit_level: str = "basic"       # none / basic / full
 
     def to_dict(self) -> dict:
         return {
@@ -113,9 +116,13 @@ def build_default_tool_registry() -> ToolRegistry:
         name="bash",
         description="执行 shell 命令。返回 stdout/stderr。",
         executor=ToolExecutorKind.BASH,
-        input_schema={"type": "object", "properties": {"command": {"type": "string"}}},
+        input_schema={"type": "object", "required": ["command"],
+                      "properties": {"command": {"type": "string"}}},
         availability=ToolAvailability(min_trust=TrustLevel.OWNER, sandbox_only=True),
         destructive=True,
+        executor_class="LocalBashExecutor",
+        timeout_seconds=30.0,
+        audit_level="full",
     ))
 
     # File 读
@@ -123,9 +130,12 @@ def build_default_tool_registry() -> ToolRegistry:
         name="file_read",
         description="读取文件内容。",
         executor=ToolExecutorKind.FILE,
-        input_schema={"type": "object", "properties": {"path": {"type": "string"}}},
+        input_schema={"type": "object", "required": ["path"],
+                      "properties": {"path": {"type": "string"}}},
         availability=ToolAvailability(min_trust=TrustLevel.APPROVED),
         parallel_safe=True,
+        executor_class="FileReadExecutor",
+        timeout_seconds=5.0,
     ))
 
     # File 写 (仅 owner)
@@ -133,9 +143,13 @@ def build_default_tool_registry() -> ToolRegistry:
         name="file_write",
         description="写入文件。",
         executor=ToolExecutorKind.FILE,
-        input_schema={"type": "object", "properties": {"path": {"type": "string"}, "content": {"type": "string"}}},
+        input_schema={"type": "object", "required": ["path", "content"],
+                      "properties": {"path": {"type": "string"}, "content": {"type": "string"}}},
         availability=ToolAvailability(min_trust=TrustLevel.OWNER, sandbox_only=True),
         destructive=True,
+        executor_class="FileWriteExecutor",
+        timeout_seconds=10.0,
+        audit_level="full",
     ))
 
     # Session 工具 (所有信任级别)

@@ -32,7 +32,6 @@ class TestE2ELFM(unittest.IsolatedAsyncioTestCase):
         self.runtime = PhenomenologicalRuntime(
             blackboard=self.bb,
             perception_stream=self.ps,
-            toca_runner=None,
             tick_s=0.05,
         )
         # 注入 orchestrator + provider 用于 Cognitive Frame

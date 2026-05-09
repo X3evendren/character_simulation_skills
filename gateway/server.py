@@ -10,6 +10,16 @@ from dataclasses import dataclass, field
 logger = logging.getLogger("character_mind.gateway")
 
 
+def _constant_time_compare(a: str, b: str) -> bool:
+    """恒定时间字符串比较——防止时序攻击。"""
+    if len(a) != len(b):
+        return False
+    result = 0
+    for x, y in zip(a, b):
+        result |= ord(x) ^ ord(y)
+    return result == 0
+
+
 @dataclass
 class GatewayServer:
     """轻量级 Gateway 服务器。
@@ -17,6 +27,12 @@ class GatewayServer:
     默认绑定 127.0.0.1:18790, 提供:
     - HTTP API: /status, /sessions, /tick, /memory
     - WebSocket: 实时状态推送
+
+    安全特性:
+    - Bearer Token 认证（可选）
+    - 请求大小限制（默认 1MB）
+    - 速率限制（令牌桶，每 IP）
+    - TLS 支持（可选 certfile/keyfile）
     """
 
     host: str = "127.0.0.1"
@@ -26,14 +42,28 @@ class GatewayServer:
     _server: asyncio.AbstractServer | None = None
     _clients: list = field(default_factory=list)
     running: bool = False
+    # 安全配置
+    api_key: str = ""                       # Bearer Token（空=无认证）
+    max_request_size: int = 1_048_576       # 1MB
+    rate_limit_per_minute: int = 120        # 每 IP 每分钟最大请求
+    certfile: str = ""                      # TLS 证书路径
+    keyfile: str = ""                       # TLS 密钥路径
+    _rate_buckets: dict[str, list[float]] = field(default_factory=dict)
 
     async def start(self):
         """启动网关。"""
         self.running = True
+        ssl_context = None
+        if self.certfile and self.keyfile:
+            import ssl
+            ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+            ssl_context.load_cert_chain(self.certfile, self.keyfile)
+            logger.info(f"TLS enabled: {self.certfile}")
         self._server = await asyncio.start_server(
-            self._handle_connection, self.host, self.port,
+            self._handle_connection, self.host, self.port, ssl=ssl_context,
         )
-        logger.info(f"Gateway listening on {self.host}:{self.port}")
+        proto = "https" if ssl_context else "http"
+        logger.info(f"Gateway listening on {proto}://{self.host}:{self.port}")
 
     async def stop(self):
         """停止网关。"""
@@ -52,11 +82,25 @@ class GatewayServer:
         self._clients.clear()
 
     async def _handle_connection(self, reader, writer):
-        """处理 TCP 连接: 路由到 HTTP 或 WebSocket。"""
+        """处理 TCP 连接: 认证→速率限制→路由。"""
         peername = writer.get_extra_info("peername", ("?", 0))
+        client_ip = peername[0]
+
+        # 速率限制检查
+        if not self._check_rate_limit(client_ip):
+            self._send_http(writer, "429 Too Many Requests",
+                           '{"error":"rate limited","retry_after":60}')
+            return
+
         try:
-            data = await asyncio.wait_for(reader.read(8192), timeout=10.0)
+            data = await asyncio.wait_for(
+                reader.read(self.max_request_size + 1024), timeout=10.0,
+            )
             if not data:
+                return
+            if len(data) > self.max_request_size:
+                self._send_http(writer, "413 Payload Too Large",
+                               '{"error":"request too large"}')
                 return
 
             text = data.decode("utf-8", errors="replace")
@@ -90,9 +134,47 @@ class GatewayServer:
         return host in ("127.0.0.1", "localhost", "::1")
 
     @staticmethod
-    def _check_auth(_request_text: str) -> bool:
-        # 默认: 远程连接拒绝 (需配置 auth token)
+    def _send_http(writer, status: str, body: str) -> None:
+        """发送 HTTP 响应。"""
+        response = (
+            f"HTTP/1.1 {status}\r\n"
+            f"Content-Type: application/json; charset=utf-8\r\n"
+            f"Access-Control-Allow-Origin: *\r\n"
+            f"Content-Length: {len(body.encode('utf-8'))}\r\n"
+            f"\r\n{body}"
+        )
+        writer.write(response.encode("utf-8"))
+
+    @staticmethod
+    def _send_403(writer) -> None:
+        writer.write(b"HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n")
+
+    def _check_auth(self, request_text: str) -> bool:
+        """Bearer Token 认证检查。"""
+        if not self.api_key:
+            return False  # 未配置 API key，拒绝所有远程连接
+        for line in request_text.split("\r\n"):
+            if line.lower().startswith("authorization: bearer "):
+                token = line[22:].strip()
+                return _constant_time_compare(token, self.api_key)
         return False
+
+    def _check_rate_limit(self, ip: str) -> bool:
+        """令牌桶速率限制。返回 True 表示未超限。"""
+        now = time.time()
+        bucket = self._rate_buckets.setdefault(ip, [])
+        # 清理超过 60 秒的记录
+        bucket[:] = [t for t in bucket if now - t < 60]
+        if len(bucket) >= self.rate_limit_per_minute:
+            return False
+        bucket.append(now)
+        # 防止内存泄漏：最多保留 200 个 IP 的桶
+        if len(self._rate_buckets) > 200:
+            oldest = sorted(self._rate_buckets.keys(),
+                           key=lambda k: self._rate_buckets[k][0] if self._rate_buckets[k] else 0)[:50]
+            for k in oldest:
+                del self._rate_buckets[k]
+        return True
 
     async def _handle_http(self, reader, writer, request_text: str):
         """处理 HTTP 请求。"""

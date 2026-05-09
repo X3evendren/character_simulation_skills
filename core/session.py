@@ -13,6 +13,44 @@ class TrustLevel(Enum):
     GROUP = "group"       # 群聊
 
 
+_SANDBOX_TRUST = {TrustLevel.GUEST, TrustLevel.GROUP}
+
+
+def should_sandbox(trust: TrustLevel, sandbox_enabled: bool = True) -> bool:
+    """判断是否应沙箱执行。非 OWNER/APPROVED 且沙箱启用时返回 True。"""
+    if not sandbox_enabled:
+        return False
+    return trust in _SANDBOX_TRUST
+
+
+def parse_sandbox_env() -> tuple[str, dict]:
+    """从 CHARACTER_MIND_SANDBOX 环境变量解析沙箱配置。
+
+    格式: docker[:image] | ssh:user@host[:port] | none
+
+    Returns: (sandbox_type, config_dict)
+    """
+    import os
+    val = os.environ.get("CHARACTER_MIND_SANDBOX", "none").strip()
+    if not val or val == "none":
+        return "none", {}
+    if val.startswith("docker"):
+        parts = val.split(":", 1)
+        image = parts[1] if len(parts) > 1 else "ubuntu:latest"
+        return "docker", {"image": image}
+    if val.startswith("ssh:"):
+        target = val[4:]
+        user_host = target.split("@")
+        if len(user_host) == 2:
+            user = user_host[0]
+            host_port = user_host[1].split(":")
+            host = host_port[0]
+            port = int(host_port[1]) if len(host_port) > 1 else 22
+            return "ssh", {"host": host, "user": user, "port": port}
+        return "ssh", {"host": target}
+    return "none", {}
+
+
 @dataclass
 class SessionKey:
     """会话标识符, 编码了"谁的会话"和"信任级别" (OpenClaw 模式)。

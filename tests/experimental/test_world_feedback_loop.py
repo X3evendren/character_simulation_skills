@@ -40,7 +40,7 @@ class TestWorldFeedbackRuntime(unittest.IsolatedAsyncioTestCase):
             result="对方沉默了更久",
             valence=-0.6,
         )
-        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), None, tick_s=0.05)
+        runtime = PhenomenologicalRuntime(bb, PerceptionStream(), tick_s=0.05)
         runtime.world_adapter = adapter
 
         await runtime.tick_once()

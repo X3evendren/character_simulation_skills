@@ -50,14 +50,26 @@ class EpisodicMemory:
 
 
 class EpisodicMemoryStore:
-    """事件记忆存储与检索 — 增强版"""
+    """事件记忆存储与检索 — 增强版
 
-    def __init__(self, max_size: int = 100):
+    新增：分区存储 + 混合检索（语义相似度 + 时间衰减 + 显著性权重）。
+    """
+
+    # 标准事件类型分区
+    PARTITION_KEYS = ("social", "romantic", "trauma", "conflict", "routine", "other")
+
+    def __init__(self, max_size: int = 100, embedding_function=None):
         self.memories: list[EpisodicMemory] = []
         self.max_size = max_size
         self._next_id = 1
         # 冻结快照 — 会话开始时捕获，不受后续写入影响 (Hermes 启发)
         self._snapshot: list[dict] | None = None
+        # 分区存储 — 按事件类型归类
+        self._partitions: dict[str, list[EpisodicMemory]] = {
+            k: [] for k in self.PARTITION_KEYS
+        }
+        # 可选嵌入函数: (text: str) -> list[float]
+        self._embed_fn = embedding_function
 
     # ═══ 存储 ═══
 
@@ -76,10 +88,20 @@ class EpisodicMemoryStore:
 
         self.memories.append(memory)
 
+        # 分区存储
+        partition_key = memory.event_type if memory.event_type in self._partitions else "other"
+        self._partitions[partition_key].append(memory)
+
         # 优先级淘汰：按重要性排序，淘汰最低分的
         if len(self.memories) > self.max_size:
             self.memories.sort(key=lambda m: m.importance_score(), reverse=True)
+            removed = set(id(m) for m in self.memories[self.max_size:])
             self.memories = self.memories[:self.max_size]
+            # 同步清理分区
+            for key in self._partitions:
+                self._partitions[key] = [
+                    m for m in self._partitions[key] if id(m) not in removed
+                ]
 
     # ═══ 检索 ═══
 
@@ -123,6 +145,79 @@ class EpisodicMemoryStore:
             entry["related_events"] = related
             timeline.append(entry)
         return timeline
+
+    # ═══ 混合检索 ═══
+
+    def search_hybrid(
+        self,
+        query_embedding: list[float] | None = None,
+        event_type: str | None = None,
+        n: int = 5,
+        tags: list[str] | None = None,
+    ) -> list[EpisodicMemory]:
+        """混合检索：语义相似度 + 时间衰减 + 显著性权重 + 类型匹配加分。
+
+        公式：score = semantic_sim*0.3 + time_decay*0.3 + significance*0.4 + type_bonus
+
+        如果未配置 embedding_function，回退到标签匹配 + 显著性排序。
+        """
+        now = time.time()
+        candidates = (
+            self._partitions.get(event_type, []) if event_type
+            else list(self.memories)
+        )
+        if not candidates:
+            candidates = list(self.memories)
+
+        scored: list[tuple[float, EpisodicMemory]] = []
+
+        for m in candidates:
+            sig_weight = m.significance * 0.4
+            time_weight = self._time_decay_weight(m, now) * 0.3
+            sem_weight = 0.0
+
+            if self._embed_fn and query_embedding:
+                try:
+                    mem_emb = self._embed_fn(m.description)
+                    sem_weight = self._cosine_sim(query_embedding, mem_emb) * 0.3
+                except Exception:
+                    sem_weight = 0.0
+            elif tags:
+                overlap = len(set(tags) & set(m.tags))
+                sem_weight = min(overlap / max(len(tags), 1), 1.0) * 0.3
+
+            type_bonus = 0.2 if event_type and m.event_type == event_type else 0.0
+
+            total = sem_weight + time_weight + sig_weight + type_bonus
+            scored.append((total, m))
+
+        scored.sort(key=lambda x: x[0], reverse=True)
+        return [m for _, m in scored[:n]]
+
+    def _time_decay_weight(self, memory: EpisodicMemory, now: float) -> float:
+        """时间衰减权重：exp(-age_days / 30)，30 天半衰期。"""
+        age_days = (now - memory.timestamp) / 86400.0
+        return math.exp(-age_days / 30.0)
+
+    @staticmethod
+    def _cosine_sim(a: list[float], b: list[float]) -> float:
+        """余弦相似度。"""
+        if not a or not b or len(a) != len(b):
+            return 0.0
+        dot = sum(x * y for x, y in zip(a, b))
+        norm_a = math.sqrt(sum(x * x for x in a))
+        norm_b = math.sqrt(sum(y * y for y in b))
+        if norm_a == 0 or norm_b == 0:
+            return 0.0
+        return dot / (norm_a * norm_b)
+
+    def get_partition(self, event_type: str) -> list[EpisodicMemory]:
+        """获取特定事件类型分区的记忆。"""
+        return list(self._partitions.get(event_type, []))
+
+    def set_embedding_function(self, fn) -> None:
+        """设置嵌入函数。fn: (text: str) -> list[float]。"""
+        self._embed_fn = fn
 
     # ═══ 冻结快照 (Hermes 启发) ═══
 

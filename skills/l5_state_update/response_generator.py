@@ -61,7 +61,8 @@ class ResponseGeneratorSkill(BaseSkill):
         emotions = occ.get("emotions", [])
         action_tendency = occ.get("action_tendency", "保持现状")
 
-        # (cognitive_bias removed from pipeline, DefenseMechanism at index 1)
+        # L2: OCC (index 0), DefenseMechanism (index 1)
+        # 实验性 skill (CognitiveBias, SmithEllsworth) 仅在 include_experimental=True 时出现
 
         # L2: 防御机制
         defense = l2[1] if len(l2) > 1 else {}

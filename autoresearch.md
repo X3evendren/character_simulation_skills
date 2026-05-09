@@ -5,7 +5,6 @@ Optimize token efficiency (tokens per pipeline event), TOCA write success rate, 
 
 ## Metrics
 - **Primary**: total_tokens (count, lower is better) — total tokens consumed per pipeline event
-- **Secondary**: toca_write_rate (fraction, higher is better) — TOCA write success rate
 - **Secondary**: response_quality (fraction, higher is better) — response_generator produces non-empty text
 - **Secondary**: multi_agent_continuity (fraction, higher is better) — emotion consistency across turns
 
@@ -15,7 +14,6 @@ Optimize token efficiency (tokens per pipeline event), TOCA write success rate, 
 ## Files in Scope
 - `skills/*/` — all Skill prompt files (token reduction via prompt shortening)
 - `core/orchestrator.py` — pipeline efficiency
-- `core/toca_runner.py` — write-back optimization
 - `skills/l5_state_update/response_generator.py` — response quality
 - `core/base.py` — extract_json already optimized, don't touch
 

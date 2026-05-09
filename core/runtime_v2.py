@@ -83,7 +83,6 @@ class CharacterMind:
         self.runtime = PhenomenologicalRuntime(
             blackboard=self.blackboard,
             perception_stream=self.perception,
-            toca_runner=None,
             tick_s=tick_interval,
         )
         self.runtime.orchestrator = self.orchestrator

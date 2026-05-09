@@ -17,7 +17,7 @@ class AttachmentSkill(BaseSkill):
         description="分析角色依恋风格在当前社交/亲密情境中的激活程度和行为倾向",
         scientific_basis="Bowlby/Ainsworth; Soares et al. (2024); Htet et al. (2024)",
         scientific_rating=5,
-        trigger_conditions=["always", "romantic", "social"],
+        trigger_conditions=["romantic", "social"],
         estimated_tokens=600,
         can_parallel=True,
     )

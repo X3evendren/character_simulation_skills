@@ -31,6 +31,11 @@ class SkillTracker:
     pinned: bool = False    # 固定: 绕过所有自动转换 (永远不淘汰)
     created_by_agent: bool = False  # Agent 自己创建的 skill (需要 curator 审查)
     description: str = ""   # 技能描述 (用于 skill_index)
+    # 自进化追踪
+    version: int = 1
+    prompt_versions: list[str] = field(default_factory=list)  # 历史 prompt 版本
+    generated_by: str = "human"  # human / llm / evolution
+    evolution_history: list[str] = field(default_factory=list)  # 变更描述时间线
 
     @property
     def avg_token_cost(self) -> float:
@@ -207,6 +212,26 @@ class SkillMetabolism:
         """解除固定。"""
         if skill_name in self.trackers:
             self.trackers[skill_name].pinned = False
+
+    def commit_archive(self, skill_name: str) -> bool:
+        """将技能标记为归档状态（不删除，可恢复）。"""
+        if skill_name not in self.trackers:
+            return False
+        tracker = self.trackers[skill_name]
+        if tracker.pinned:
+            return False  # pinned 技能不可归档
+        tracker.status = "archived"
+        return True
+
+    def reanimate(self, skill_name: str) -> bool:
+        """恢复已归档的技能到 active 状态。"""
+        if skill_name not in self.trackers:
+            return False
+        tracker = self.trackers[skill_name]
+        if tracker.status == "archived":
+            tracker.status = "active"
+            return True
+        return False
 
     def build_skill_index(self) -> str:
         """生成紧凑的技能索引 (注入系统提示词)。

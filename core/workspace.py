@@ -24,8 +24,19 @@ class Workspace:
 
     def __post_init__(self):
         if not self.base_dir:
-            home = os.path.expanduser("~")
-            self.base_dir = os.path.join(home, ".character_mind", "workspaces", self.name)
+            home = os.environ.get(
+                "CHARACTER_MIND_HOME",
+                os.path.join(os.path.expanduser("~"), ".character_mind"),
+            )
+            self.base_dir = os.path.join(home, "workspaces", self.name)
+
+    @classmethod
+    def from_env(cls, name: str) -> "Workspace":
+        """从 CHARACTER_MIND_HOME 环境变量构造工作区。
+
+        如果未设置环境变量，回退到 ~/.character_mind。
+        """
+        return cls(name=name)
 
     @property
     def path(self) -> str:

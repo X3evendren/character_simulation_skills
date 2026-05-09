@@ -23,7 +23,7 @@ class TestPhenomenologicalSmoke(unittest.IsolatedAsyncioTestCase):
         ps = PerceptionStream()
         behavior = BehaviorStream("林雨")
         world = WorldAdapter()
-        runtime = PhenomenologicalRuntime(bb, ps, None, tick_s=0.05)
+        runtime = PhenomenologicalRuntime(bb, ps, tick_s=0.05)
         runtime.behavior_stream = behavior
         runtime.world_adapter = world
 

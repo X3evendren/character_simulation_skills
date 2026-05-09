@@ -75,3 +75,54 @@ from .core.skill_curator import SkillCurator, CuratorReview
 from .core.tools import ToolRegistry, ToolDescriptor, ToolAvailability, ToolExecutorKind, build_default_tool_registry
 from .core.multi_agent import AgentRegistry, AgentMessage
 from .core.cron import CronScheduler, CronJob
+
+# Curator Scheduler
+from .core.curator_scheduler import CuratorScheduler
+
+# Tool Execution Engine
+from .core.tool_executor import (
+    ToolResult, ToolExecutorFactory, ToolExecutionChain,
+    LocalBashExecutor, FileReadExecutor, FileWriteExecutor,
+    build_default_chain,
+)
+from .core.tool_middleware import (
+    ToolMiddleware, ToolContext,
+    ParameterValidationMiddleware, AuditLoggingMiddleware,
+    RateLimitMiddleware, PathSafetyMiddleware,
+)
+from .core.tool_audit import AuditLog, AuditEntry
+
+# Sub-Agent System
+from .core.sub_agent import SubAgentManager, SubAgentSpec, SubAgentHandle
+from .core.sub_agent_pool import SubAgentPool
+
+# Skill Evolution
+from .core.skill_evolution import SkillEvolutionManager, EvolutionReport
+from .core.skill_factory import SkillFactory, GeneratedSkillMeta
+
+# Dual-Channel Behavior
+from .experimental.behavior_channel import (
+    InboundChannel, OutboundChannel,
+    InboundState, OutboundState, DraftEntry,
+)
+from .experimental.behavior_controller import BehaviorController
+
+# Cache Manager
+from .core.cache_manager import CacheManager
+
+# Sandbox
+from .core.sandbox import DockerSandboxExecutor, SSHSandboxExecutor
+
+# Profile Isolation
+from .core.profile_isolation import IsolationContext, get_isolation
+
+# Manifest + Runtime Facts (v2 infrastructure)
+from .core.manifest import (
+    validate_manifest, ManifestValidationResult,
+    export_profile_to_json, import_profile_from_json,
+    export_profile_to_yaml, import_profile_from_yaml,
+)
+from .core.runtime_facts import (
+    RuntimeFacts, ProviderFact, ModelFact, ChannelFact, EnvironmentFact,
+    build_runtime_facts, detect_provider, detect_environment,
+)

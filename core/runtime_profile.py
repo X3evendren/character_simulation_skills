@@ -15,13 +15,17 @@ class SkillEntry:
     trigger_conditions: list[str] = field(default_factory=list)
     experimental: bool = False  # True = 不在默认图里
     auto_register: bool = True  # True = 启动时自动注册
+    auto_evolve: bool = False    # True = 允许自进化（仅非 human 生成的技能）
+    manifest_version: str = "v2"
+    tags: list[str] = field(default_factory=list)
+    metadata: dict = field(default_factory=dict)
 
 
 # ── 默认运行图（最优 11-skill + 生物层） ──
 DEFAULT_PROFILE: list[SkillEntry] = [
     # L0 — 人格滤镜 (始终在线)
     SkillEntry("BigFiveSkill",            layer=0, trigger_conditions=["always"]),
-    SkillEntry("AttachmentSkill",         layer=0, trigger_conditions=["always", "social", "romantic"]),
+    SkillEntry("AttachmentSkill",         layer=0, trigger_conditions=["social", "romantic"]),
 
     # L1 — 快速前意识
     SkillEntry("PlutchikEmotionSkill",    layer=1, trigger_conditions=["always"]),
