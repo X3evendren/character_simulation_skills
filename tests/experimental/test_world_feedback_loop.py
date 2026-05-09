@@ -8,7 +8,6 @@ from character_mind.experimental.blackboard import Blackboard
 from character_mind.experimental.perception_stream import PerceptionStream
 from character_mind.experimental.world_adapter import WorldAdapter
 from character_mind.experimental.phenomenological_runtime import PhenomenologicalRuntime
-from character_mind.experimental._archive.offline_consolidation import OfflineConsolidation
 
 
 class TestWorldAdapter(unittest.TestCase):
@@ -48,25 +47,3 @@ class TestWorldFeedbackRuntime(unittest.IsolatedAsyncioTestCase):
 
         contents = " ".join(item["content"] for item in runtime.inner_stream.recent(5))
         self.assertIn("对方沉默了更久", contents)
-
-
-class TestDivergenceConsolidation(unittest.TestCase):
-    def test_consolidates_divergence_record_into_procedural_rule(self):
-        bb = Blackboard()
-        bb.write("inner_experience", {
-            "items": [
-                {
-                    "kind": "inner_outer_divergence",
-                    "inner": {"content": "不要离开我"},
-                    "outer": {"content": "没事，你忙吧。"},
-                    "mechanism": "masking",
-                    "intensity": 0.9,
-                }
-            ]
-        })
-        oc = OfflineConsolidation(bb, episodic_store=None)
-
-        rule = oc.extract_divergence_rule()
-
-        self.assertEqual(rule["defense"], "masking")
-        self.assertIn("不要离开", rule["prediction"])

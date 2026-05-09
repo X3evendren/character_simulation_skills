@@ -16,9 +16,6 @@
 - LoveState: Fisher 三阶段爱情调制
 - FeedbackLoop: 现实世界反馈闭环
 
-已归档到 _archive/ (TocaRunner 生态, 不再用于生产):
-- toca_runner, offline_consolidation, wm_ltm_bridge
-- procedural_memory, self_model, experience_auditor
 """
 from .blackboard import Blackboard
 from .perception_stream import PerceptionStream
@@ -35,13 +32,3 @@ from .skill_metabolism import SkillMetabolism, SkillTracker
 from .noise_manager import NoiseManager
 from .love_state import LoveState
 from .feedback_loop import FeedbackLoop
-
-# 向后兼容: 已归档模块仍可从 _archive 导入
-from ._archive import (
-    TocaRunner, TocaConfig,
-    OfflineConsolidation,
-    WmLtmBridge,
-    ProceduralMemoryStore,
-    SelfModel,
-    ExperienceAuditor,
-)
