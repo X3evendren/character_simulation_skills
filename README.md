@@ -1,8 +1,8 @@
 # Character Mind
 
-**现象学 Agent 运行时。** 基于 CLARION 认知架构、Scherer 评估理论和连续意识模型的角色心理引擎。
+基于 CLARION 认知架构、Scherer 评估理论和连续意识模型的角色心理引擎。
 
-24 个心理学模型通过五层认知管线（L0 人格 → L1 情绪 → L2 评价 → L3 社交 → L4 反思 → L5 回应）对事件做分层并行/串行处理。不是给 LLM 一段文字描述角色，而是告诉 LLM 这个角色在此刻会怎么想、怎么感受、怎么回应。
+多个心理学模型通过五层认知管线（L0 人格 → L1 情绪 → L2 评价 → L3 社交 → L4 反思 → L5 回应）对事件做分层并行/串行处理。告诉 LLM 这个角色在此刻会怎么想、怎么感受、怎么回应。
 
 ```python
 from character_mind import CharacterMind
@@ -61,7 +61,7 @@ Perception → ThalamicGate → ConsciousnessLayer (预测+workspace)
 ### 记忆系统
 
 ```
-Layer 1: soul.md + memory_index.md (黄金指针, 始终注入)
+Layer 1: soul.md + memory_index.md (指针, 始终注入)
 Layer 2: fact_store + skills (tag/FTS5 检索)
 Layer 3: 语义向量 + 时间线检索
 
@@ -210,15 +210,6 @@ benchmark/                # LLM-as-Judge + MockProvider
 tests/                    # 123 tests
 cli.py                    # CLI 入口
 ```
-
----
-
-## 成本 (DeepSeek Flash)
-
-| 场景 | RMB/h |
-|------|-------|
-| 聊天 30msg/h | 0.13 |
-| 直播 4次/min | 0.53 |
 
 ---
 
