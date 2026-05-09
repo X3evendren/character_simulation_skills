@@ -40,16 +40,22 @@ class GatewayServer:
         self.running = False
         if self._server:
             self._server.close()
-            await self._server.wait_closed()
-        for ws in self._clients:
-            await ws.close()
+            try:
+                await asyncio.wait_for(self._server.wait_closed(), timeout=2.0)
+            except asyncio.TimeoutError:
+                pass
+        for ws in list(self._clients):
+            try:
+                ws.close()
+            except Exception:
+                pass
         self._clients.clear()
 
     async def _handle_connection(self, reader, writer):
         """处理 TCP 连接: 路由到 HTTP 或 WebSocket。"""
         peername = writer.get_extra_info("peername", ("?", 0))
         try:
-            data = await asyncio.wait_for(reader.read(4096), timeout=5.0)
+            data = await asyncio.wait_for(reader.read(8192), timeout=10.0)
             if not data:
                 return
 
