@@ -26,10 +26,10 @@ from character_mind import (
 from character_mind.benchmark.mock_provider import MockProvider
 from character_mind.experimental.blackboard import Blackboard
 from character_mind.experimental.perception_stream import PerceptionStream
-from character_mind.experimental.toca_runner import TocaRunner, TocaConfig
+from character_mind.experimental._archive.toca_runner import TocaRunner, TocaConfig
 from character_mind.experimental.thalamic_gate import ThalamicGate
 from character_mind.experimental.consciousness import ConsciousnessLayer
-from character_mind.experimental.wm_ltm_bridge import WmLtmBridge
+from character_mind.experimental._archive.wm_ltm_bridge import WmLtmBridge
 
 
 def _build_minimal_orchestrator():

@@ -5,8 +5,8 @@ import time
 import unittest
 
 from character_mind.experimental.blackboard import Blackboard
-from character_mind.experimental.offline_consolidation import OfflineConsolidation
-from character_mind.experimental.procedural_memory import ProceduralMemoryStore
+from character_mind.experimental._archive.offline_consolidation import OfflineConsolidation
+from character_mind.experimental._archive.procedural_memory import ProceduralMemoryStore
 
 
 class TestMemoryNudges(unittest.TestCase):

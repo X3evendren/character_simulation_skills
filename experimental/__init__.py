@@ -1,37 +1,33 @@
-"""实验性子系统 — 非默认运行图，独立于主认知管线。
+"""实验性子系统 — 生产运行时模块。
 
-连续意识流原型:
-- TOCA / PerceptionStream / BehaviorStream: 连续意识流
+活跃模块 (13):
 - Blackboard: 版本化共享状态
-- ConsciousnessLayer: GWT + HOT + 预测处理
-- ThalamicGate / WmLtmBridge: 注意-记忆桥接
-
-现象学Agent运行时:
+- PerceptionStream / BehaviorStream: 感知-行为流
 - PhenomenologicalRuntime: 长运行守护进程
+- ConsciousnessLayer: GWT + 预测加工 (零 token)
+- ThalamicGate: 感知门控 (零 token)
 - InnerExperienceStream: 私有内部体验流
 - ExpressionPolicy: 内部→外部表达转换
-- WorldAdapter: OpenClaw风格通道/工具边界
-- ExperienceAuditor: NLA风格内部状态审计
-- SelfModel: 第一人称自我/他人/冲突模型
-- ProceduralMemoryStore: 触发-预测-防御-回应规则
-- OfflineConsolidation: 记忆重播与巩固
+- WorldAdapter: 外部反馈入口
+- MemoryMetabolism: 五级记忆代谢
+- ExperientialField: 时间意识结构 (Retention+Protention)
+- SkillMetabolism: 技能生命周期管理
+- NoiseManager: 上下文噪音查询
+- LoveState: Fisher 三阶段爱情调制
+- FeedbackLoop: 现实世界反馈闭环
 
-所有模块独立于 core 主管线运行，可单独启停。
+已归档到 _archive/ (TocaRunner 生态, 不再用于生产):
+- toca_runner, offline_consolidation, wm_ltm_bridge
+- procedural_memory, self_model, experience_auditor
 """
 from .blackboard import Blackboard
 from .perception_stream import PerceptionStream
 from .behavior_stream import BehaviorStream
 from .consciousness import ConsciousnessLayer
 from .thalamic_gate import ThalamicGate
-from .wm_ltm_bridge import WmLtmBridge
-from .self_model import SelfModel
-from .procedural_memory import ProceduralMemoryStore
-from .offline_consolidation import OfflineConsolidation
-from .toca_runner import TocaRunner, TocaConfig
 from .inner_experience import InnerExperienceStream
 from .expression_policy import ExpressionPolicy
 from .world_adapter import WorldAdapter
-from .experience_auditor import ExperienceAuditor
 from .phenomenological_runtime import PhenomenologicalRuntime
 from .memory_metabolism import MemoryMetabolism, MemoryEntry
 from .experiential_field import ExperientialField, RetentionBuffer, ProtentionSpread
@@ -39,3 +35,13 @@ from .skill_metabolism import SkillMetabolism, SkillTracker
 from .noise_manager import NoiseManager
 from .love_state import LoveState
 from .feedback_loop import FeedbackLoop
+
+# 向后兼容: 已归档模块仍可从 _archive 导入
+from ._archive import (
+    TocaRunner, TocaConfig,
+    OfflineConsolidation,
+    WmLtmBridge,
+    ProceduralMemoryStore,
+    SelfModel,
+    ExperienceAuditor,
+)

@@ -12,10 +12,10 @@ import math
 from dataclasses import dataclass, field
 from typing import Any
 
-from .blackboard import Blackboard
-from .perception_stream import PerceptionStream
-from .consciousness import ConsciousnessLayer
-from .thalamic_gate import ThalamicGate
+from ..blackboard import Blackboard
+from ..perception_stream import PerceptionStream
+from ..consciousness import ConsciousnessLayer
+from ..thalamic_gate import ThalamicGate
 from .offline_consolidation import OfflineConsolidation
 from .wm_ltm_bridge import WmLtmBridge
 from .self_model import SelfModel

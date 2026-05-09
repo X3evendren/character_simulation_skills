@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import unittest
 
-from character_mind.experimental.experience_auditor import ExperienceAuditor
+from character_mind.experimental._archive.experience_auditor import ExperienceAuditor
 
 
 class TestExperienceAuditor(unittest.TestCase):

@@ -17,7 +17,7 @@ from character_mind.benchmark.mock_provider import MockProvider
 from character_mind.experimental.blackboard import Blackboard
 from character_mind.experimental.behavior_stream import BehaviorStream
 from character_mind.experimental.perception_stream import PerceptionStream
-from character_mind.experimental.toca_runner import TocaRunner, TocaConfig
+from character_mind.experimental._archive.toca_runner import TocaRunner, TocaConfig
 
 
 class TestContinuousConsciousnessSmoke(unittest.IsolatedAsyncioTestCase):

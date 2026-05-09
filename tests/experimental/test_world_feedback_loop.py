@@ -8,7 +8,7 @@ from character_mind.experimental.blackboard import Blackboard
 from character_mind.experimental.perception_stream import PerceptionStream
 from character_mind.experimental.world_adapter import WorldAdapter
 from character_mind.experimental.phenomenological_runtime import PhenomenologicalRuntime
-from character_mind.experimental.offline_consolidation import OfflineConsolidation
+from character_mind.experimental._archive.offline_consolidation import OfflineConsolidation
 
 
 class TestWorldAdapter(unittest.TestCase):

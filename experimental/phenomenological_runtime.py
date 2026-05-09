@@ -24,6 +24,7 @@ from .noise_manager import NoiseManager
 from .skill_metabolism import SkillMetabolism
 from .love_state import LoveState
 from .feedback_loop import FeedbackLoop
+from .consciousness import ConsciousnessLayer
 
 
 @dataclass
@@ -51,6 +52,7 @@ class PhenomenologicalRuntime:
     noise_manager: object | None = None
     love_state: LoveState = field(default_factory=LoveState)
     feedback_loop: FeedbackLoop = field(default_factory=FeedbackLoop)
+    consciousness: object | None = None  # 延迟初始化
 
     # orchestrator 引用 (用于 Cognitive Frame)
     orchestrator: object | None = None
@@ -148,6 +150,18 @@ class PhenomenologicalRuntime:
     def _update_experiential_field(self) -> None:
         ws_state = self.blackboard.read(["conscious_workspace", "pad"])
         workspace = ws_state.get("conscious_workspace", [])
+
+        # ConsciousnessLayer: 预测加工 (纯数学, 零 token)
+        if self.consciousness is None:
+            self.consciousness = ConsciousnessLayer(self.blackboard)
+        if workspace:
+            self.consciousness.predict_next()
+            self.consciousness.compute_prediction_error()
+            errors = self.consciousness.state.errors
+            self.blackboard.write("prediction_errors", errors)
+            self.consciousness.filter_broadcast()
+
+        # ExperientialField: Retention+Protention
         if workspace:
             self.experiential_field.tick(workspace)
             retention_ctx = self.experiential_field.retention.format_for_context()
@@ -155,7 +169,6 @@ class PhenomenologicalRuntime:
                 self.blackboard.write("retention_context", retention_ctx)
             openness = self.experiential_field.protention.openness_score()
             self.blackboard.write("protention_openness", openness)
-            # 注入前摄样本 (供 ThalamicGate 或 ConsciousnessLayer 使用)
             pad = ws_state.get("pad", {})
             samples = self.experiential_field.protention.sample_futures({
                 "pleasure": pad.get("pleasure", 0.0),
