@@ -70,3 +70,8 @@ from .core.workspace import Workspace
 from .core.context_assembly import ContextAssembly, scan_for_threats, scrub_output
 from .core.session import Session, SessionKey, SessionManager, TrustLevel
 from .core.skill_curator import SkillCurator, CuratorReview
+
+# Tool System + Multi-Agent + Cron
+from .core.tools import ToolRegistry, ToolDescriptor, ToolAvailability, ToolExecutorKind, build_default_tool_registry
+from .core.multi_agent import AgentRegistry, AgentMessage
+from .core.cron import CronScheduler, CronJob
