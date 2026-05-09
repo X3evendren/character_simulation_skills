@@ -4,9 +4,9 @@
 
 使用:
     mind = CharacterMind(provider, character_profile)
-    mind.start()
     mind.perceive("陈风两小时没回消息")
-    response = await mind.tick()
+    await mind.runtime.tick_once()
+    response = mind.get_response()
     print(response.text)
 """
 from __future__ import annotations
@@ -147,6 +147,7 @@ class CharacterMind:
         if self._running:
             return
         self._running = True
+        self.runtime.running = True
         self._task = asyncio.create_task(self.runtime._loop())
 
     def stop(self):

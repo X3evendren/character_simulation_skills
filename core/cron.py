@@ -26,6 +26,8 @@ class CronJob:
     def to_dict(self) -> dict:
         return {
             "name": self.name, "schedule": self.schedule,
+            "prompt": self.prompt,
+            "character_profile": self.character_profile,
             "enabled": self.enabled, "last_run": self.last_run,
             "next_run": self.next_run, "run_count": self.run_count,
         }
@@ -136,7 +138,8 @@ class CronScheduler:
                 data = json.load(f)
                 for name, d in data.items():
                     job = CronJob(name=name, schedule=d["schedule"],
-                                 prompt="", character_profile={})
+                                 prompt=d.get("prompt", ""),
+                                 character_profile=d.get("character_profile", {}))
                     job.enabled = d.get("enabled", True)
                     job.last_run = d.get("last_run", 0)
                     job.run_count = d.get("run_count", 0)

@@ -1,16 +1,14 @@
 """Long-running phenomenological agent runtime.
 
-每个 tick 的完整循环 (对照大脑):
-1. 生物层持续演化 (驱力/HPA/递质)
-2. 感知流 → ThalamicGate (预测误差驱动)
-3. ConsciousnessLayer: predict→error→workspace
-4. ExperientialField: Retention+Protention 更新
-5. Cognitive Frame 触发 (L0-L3 频繁脉冲)
-6. SelfModel 更新
-7. Inner Stream 记录 + 空闲DMN思维
-8. Memory Metabolism: 摄入→代谢
-9. Expression Policy: 内部→外部
-10. 行为发布 + 噪音管理
+每个 tick 的实际循环:
+1. LoveState 演化 + 世界反馈消费
+2. 空闲思维 (DMN)
+3. Inner Stream 更新 (从 Blackboard 读取 self_model)
+4. ExperientialField: Retention+Protention 更新 (纯数学, 零 token)
+5. Cognitive Frame 触发 (L0-L3 频繁脉冲, ~1-3s 或预测误差时)
+6. Memory Metabolism: 摄入→代谢
+7. Expression Policy: 内部→外部 (masking/omission)
+8. 行为发布 + 噪音管理 + 周期任务
 """
 from __future__ import annotations
 
