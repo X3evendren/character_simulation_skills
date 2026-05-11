@@ -1,4 +1,4 @@
-"""Character Mind v3 CLI"""
+"""Character Mind v3 CLI — 抄 nanobot REPL + StreamRenderer 模式。"""
 from __future__ import annotations
 
 import argparse, asyncio, os, sys, time
@@ -46,8 +46,13 @@ async def _chat(args):
     from core.agent_loop import AgentLoop
     from core.tools.base import ToolRegistry
     from core.tools.builtin import register_builtin_tools
-    from cli.input import get_input, add_history
-    from cli.commands import create_default_registry
+    from cli.stream import StreamRenderer
+    from cli.repl import _print_tool_line, _print_response, _render_to_ansi
+    from prompt_toolkit.formatted_text import ANSI
+    from prompt_toolkit.shortcuts import print_formatted_text
+    from prompt_toolkit.application import run_in_terminal
+    from prompt_toolkit import PromptSession
+    from prompt_toolkit.history import FileHistory
 
     config = _load_config(os.path.join(args.config, "assistant.md"))
     name = args.name or config.get("name", "林雨")
@@ -68,54 +73,63 @@ async def _chat(args):
     registry = ToolRegistry()
     register_builtin_tools(registry)
     agent = AgentLoop(gen, registry)
-    cmd_reg = create_default_registry(params, oath, sat, metrics, None, None)
     anchor = silence.build_identity_anchor(config)
     tick = 0
 
-    print(f"\n  {name}  [/help]\n")
+    # prompt_toolkit session
+    hist_file = os.path.expanduser("~/.character_mind_history")
+    os.makedirs(os.path.dirname(hist_file), exist_ok=True)
+    ps = PromptSession(history=FileHistory(hist_file))
 
-    while True:
-        try:
-            ui = get_input("> ")
-        except (EOFError, KeyboardInterrupt):
-            print(); break
-        if not ui: continue
+    print(f"\n  {name}  [/help /quit /stats]\n")
 
-        if ui.startswith("/"):
-            cmd, args = cmd_reg.match(ui)
-            if cmd:
-                if cmd.name == "quit": break
-                r = cmd.handler(args, {})
-                if r: print(f"  {r}")
-            else: print(f"  ? {ui}")
-            continue
-
-        add_history(ui)
+    async def on_submit(user_input: str):
+        nonlocal tick
         tick += 1
         t0 = time.time()
 
-        # 1. psych (flash)
+        # handle commands
+        if user_input == "/stats":
+            snap = params.snapshot()
+            def _w(): print(f"  pleasure={snap['pleasure']:.1f} safety={snap['safety_precision']:.1f} threat={snap['threat_precision']:.1f}")
+            await run_in_terminal(_w)
+            return
+        if user_input == "/love":
+            def _w(): print(f"  oath={oath.state.value}({oath.strength:.1f}) sat={sat.saturation_level:.2f}")
+            await run_in_terminal(_w)
+            return
+        if user_input == "/good":
+            metrics.record_positive(); oath.renew()
+            await run_in_terminal(lambda: print("  +"))
+            return
+        if user_input == "/bad":
+            metrics.record_negative()
+            await run_in_terminal(lambda: print("  -"))
+            return
+
+        # 1. memory
         mem_text = ""
         try:
-            mems = await wm.recall(ui, 2)
+            mems = await wm.recall(user_input, 2)
             mem_text = "; ".join(m.content[:60] for m in mems)
         except: pass
 
-        sys.stdout.write("  ..."); sys.stdout.flush()
+        # 2. psych analysis (flash)
         try:
             psych_result = await psych_engine.analyze(
-                {"description": ui, "type": "social", "significance": 0.5},
+                {"description": user_input, "type": "social", "significance": 0.5},
                 memory_context=mem_text, assistant_config=config)
         except Exception as e:
-            print(f" [psych err: {e}]"); continue
+            await run_in_terminal(lambda: print(f"  [err: {e}]"))
+            return
 
-        # 2. modulate
+        # 3. modulate
         fast = modulator.modulate_fast(psych_result)
         modulator.apply_shifts(fast)
         sat.observe(0.2, abs(params.self_update_openness.activation))
         sat.evaluate()
 
-        # 3. prompt
+        # 4. build prompt
         snap = params.snapshot()
         love_ctx = ""
         if sat.saturation_level > 0.3:
@@ -129,40 +143,62 @@ async def _chat(args):
             f"硬约束: 纯文本。禁止括号/动作/舞台指示。自然说话。\n"
             f"工具: read_file, write_file, list_dir, exec_command, search_content, search_files。需要时直接用。", anchor)
 
-        # 4. agent stream
+        # 5. agent stream with StreamRenderer
+        renderer = StreamRenderer(bot_name=name)
         turn = None
         try:
-            first = True
             async def od(text):
-                nonlocal first
-                if first: first = False
-                print(text, end="", flush=True)
-            turn = await agent.run(system, ui, on_delta=od)
-            print()
+                await renderer.on_delta(text)
+            turn = await agent.run(system, user_input, on_delta=od)
+            if renderer.streamed:
+                await renderer.on_end()
+            else:
+                # 非流式回退
+                await renderer.close()
+                if turn and turn.final_text:
+                    await _print_response(turn.final_text, name)
         except Exception as e:
-            print(f" [err: {e}]"); continue
+            await renderer.close()
+            await run_in_terminal(lambda: print(f"  [err: {e}]"))
+            return
 
-        # 5. tools
+        # 6. tool results
         for tr in (turn.tool_results if turn else []):
-            i = "+" if tr.success else "-"
-            print(f"  {i} {tr.name}: {(tr.output or tr.error)[:80].replace(chr(10),' ')}")
+            icon = "+" if tr.success else "-"
+            preview = (tr.output or tr.error)[:80].replace("\n", " ")
+            await _print_tool_line(f"{icon} {tr.name}: {preview}")
 
-        # 6. post
+        # 7. post-process
         if turn and turn.final_text:
-            _, mods = post_filter.replace(turn.final_text)
+            _, _ = post_filter.replace(turn.final_text)
         slow = modulator.modulate_slow(psych_result, mem_text, fast)
         modulator.apply_shifts(slow, is_baseline=True)
         params.decay_all_activations(0.25)
         metrics.record_positive()
 
-        # 7. store
-        try: await wm.store(MemoryRecord(content=ui, significance=0.5, event_type="dialogue", timestamp=time.time()))
+        # 8. store
+        try: await wm.store(MemoryRecord(content=user_input, significance=0.5, event_type="dialogue", timestamp=time.time()))
         except: pass
 
-        # 8. status
+        # 9. status line
         tn = len(turn.tool_results) if turn else 0
         tok = turn.total_tokens if turn else 0
-        print(f"  [t{tick} tok:{tok} tool:{tn} {time.time()-t0:.0f}s]")
+        elapsed = time.time() - t0
+        await _print_tool_line(f"t{tick} tok:{tok} tool:{tn} {elapsed:.0f}s")
+
+    # REPL loop
+    while True:
+        try:
+            user_input = await ps.prompt_async("> ")
+            user_input = user_input.strip()
+            if not user_input:
+                continue
+        except (EOFError, KeyboardInterrupt):
+            print("\nGoodbye!")
+            break
+        if user_input in ("/quit", "/q", "/exit"):
+            break
+        await on_submit(user_input)
 
 
 def _load_config(path: str) -> dict:
