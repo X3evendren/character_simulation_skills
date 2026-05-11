@@ -59,6 +59,7 @@ async def _chat(args):
     from core.tools.base import ToolRegistry
     from core.tools.builtin import register_builtin_tools
     from cli.main import _load_config
+    from cli.input import get_input
 
     config = _load_config(os.path.join(args.config, "assistant.md"))
     name = args.name or config.get("name", "林雨")
@@ -92,7 +93,7 @@ async def _chat(args):
 
     while True:
         try:
-            user_input = input("> ").strip()
+            user_input = get_input("> ")
         except (EOFError, KeyboardInterrupt):
             print()
             break
@@ -161,11 +162,11 @@ async def _chat(args):
             print(f"\n  [错误: {e}]")
             continue
 
-        # ── 5. 工具结果 ──
+        # ── 5. 工具结果 (抄 Hermes get_cute_tool_message) ──
         for tr in turn.tool_results:
-            status = "OK" if tr.success else "ERR"
-            preview = (tr.output or tr.error)[:60]
-            print(f"  [{status}] {tr.name}: {preview}")
+            icon = "✓" if tr.success else "✗"
+            preview = (tr.output or tr.error)[:80].replace("\n", " ")
+            print(f"  {icon} {tr.name}: {preview}")
 
         # ── 6. 后处理 ──
         final = turn.final_text
