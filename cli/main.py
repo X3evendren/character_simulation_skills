@@ -78,6 +78,7 @@ async def _chat(args):
     from core.tools.base import ToolRegistry
     from core.tools.builtin import register_builtin_tools
     from cli.stream import StreamRenderer
+    from cli.hud import ConsoleHUD
 
     # ═══ 加载配置 ═══
     config_dir = args.config
@@ -155,11 +156,13 @@ async def _chat(args):
     # ═══ 会话 ═══
     session = Session(session_id="chat")
     renderer = StreamRenderer(bot_name=name)
+    hud = ConsoleHUD()
     anchor = silence.build_identity_anchor(assistant_config)
     tick = 0
 
-    print(f"\n  {name} — Character Mind v3 (Love Engine + 32 Params)")
-    print("  /quit /stats /love /self /good /bad /skills\n")
+    print(f"\n  {name}")
+    print("  /quit /stats /love /hud /good /bad\n")
+    hud.start()
 
     while True:
         try:
@@ -206,6 +209,12 @@ async def _chat(args):
             continue
         if user_input == "/skills":
             print(f"  {skill_lib.stats()}")
+            continue
+        if user_input == "/hud":
+            snap = params.snapshot()
+            print(f"  FSM:{session.fsm.state.value} sat:{sat_detector.saturation_level:.2f} oath:{oath.state.value}")
+            print(f"  悦{snap['pleasure']:+.1f} 安{snap['safety_precision']:.1f} 胁{snap['threat_precision']:.1f}")
+            print(f"  玩{snap['playfulness']:.1f} 性{params.true_effective('sexual_activation'):.1f} 表{snap['expressiveness']:.1f}")
             continue
 
         tick += 1
@@ -395,7 +404,25 @@ async def _chat(args):
         session.record_turn()
         session.fsm.transition("done")
 
+        # HUD 更新
+        snap = params.snapshot()
+        hud.update(
+            fsm=session.fsm.state.value,
+            sat=sat_detector.saturation_level,
+            oath=oath.state.value,
+            tick=tick,
+            params={
+                "pleasure": snap["pleasure"],
+                "safety": snap["safety_precision"],
+                "threat": snap["threat_precision"],
+                "playfulness": snap["playfulness"],
+                "sexual": params.true_effective("sexual_activation"),
+                "expressiveness": snap["expressiveness"],
+            },
+        )
+
     # ═══ 会话结束 ═══
+    hud.stop()
     if reflection.should_session_reflect():
         await reflection.slow_reflect(psych_provider, self_model, skill_lib)
     await metabolism.full_sleep()
