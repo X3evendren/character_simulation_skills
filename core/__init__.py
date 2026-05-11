@@ -1,5 +1,5 @@
 """Character Mind v3 — 核心模块。"""
-from .provider import LLMProvider, OpenAIProvider, AnthropicProvider, LLMResponse, ToolCallRequest, ToolResult
+from .provider import OpenAIProvider, LLMResponse, ToolCallRequest, ToolResult
 from .json_parser import extract_json, extract_xml, extract_xml_attr
 from .fsm import FiniteStateMachine, State, FSMContext
 from .mind_state import MindState

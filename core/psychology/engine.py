@@ -12,7 +12,7 @@ import json
 import re
 from dataclasses import dataclass, field
 
-from ..provider import LLMProvider
+from ..provider import OpenAIProvider
 from ..mind_state import MindState
 from ..json_parser import extract_xml, extract_xml_attr
 
@@ -91,7 +91,7 @@ class PsychologyEngine:
         # result.inner_monologue → "他在犹豫，我能感觉到"
     """
 
-    def __init__(self, provider: LLMProvider, model: str = ""):
+    def __init__(self, provider: OpenAIProvider, model: str = ""):
         self.provider = provider
         self.model = model  # 如果为空，使用 provider 的默认模型
 

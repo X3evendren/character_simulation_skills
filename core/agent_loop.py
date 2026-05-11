@@ -1,7 +1,7 @@
 """Agent 执行循环 — 抄 nanobot runner.py + Claude Code query.ts。
 
-while True:
-    LLM 生成 → 检测 tool_call → 暂停 → 执行工具 → 注入结果 → 继续生成 → ... → 最终回复
+流式 + 工具调用: 每轮迭代一次完整的流式 HTTP 请求。
+工具调用的"暂停/恢复"是迭代边界，不是流内中断。
 """
 from __future__ import annotations
 
@@ -9,13 +9,12 @@ import asyncio
 import time
 from dataclasses import dataclass, field
 
-from .provider import LLMProvider, LLMResponse, ToolCallRequest, ToolResult
-from .tools.base import ToolRegistry
+from .provider import OpenAIProvider, LLMResponse, ToolCallRequest
+from .tools.base import ToolRegistry, ToolResult
 
 
 @dataclass
 class AgentTurn:
-    """一次 agent 轮次的结果"""
     final_text: str = ""
     tool_calls: list[ToolResult] = field(default_factory=list)
     total_tokens: int = 0
@@ -24,27 +23,26 @@ class AgentTurn:
 
 
 class AgentLoop:
-    """Agent 执行循环。
+    """Agent 执行循环。抄 nanobot runner.py。
 
-    抄 Claude Code query.ts 的 while loop 模式:
-    1. 发消息给 LLM
-    2. 如果 LLM 返回 tool_call → 执行 → 注入结果 → 回到步骤1
-    3. 如果 LLM 返回纯文本 → 结束，返回结果
-
-    抄 nanobot runner.py 的并发工具执行 + 错误处理。
+    每轮迭代:
+    1. 流式调用 LLM → on_delta 回调实时输出文本
+    2. 流结束后，检测 tool_calls
+    3. 有 tool_calls → 执行 → 注入结果到消息 → 开启下一轮
+    4. 无 tool_calls → 结束，返回最终文本
     """
 
-    def __init__(self, provider: LLMProvider, registry: ToolRegistry,
+    def __init__(self, provider: OpenAIProvider, registry: ToolRegistry,
                  max_iterations: int = 10):
         self.provider = provider
         self.registry = registry
         self.max_iterations = max_iterations
 
     async def run(self, system_prompt: str, user_message: str,
-                  stream_callback=None) -> AgentTurn:
+                  on_delta=None) -> AgentTurn:
         """执行一轮 agent 对话。
 
-        stream_callback: 可选，每收到 token 时调用 callback(token_str)
+        on_delta: async def fn(text: str) — 每收到 token 时调用
         """
         t0 = time.time()
         messages = []
@@ -54,47 +52,48 @@ class AgentLoop:
 
         turn = AgentTurn()
         tools = self.registry.get_definitions() if self.registry else None
+        text_buf = ""
 
         for iteration in range(self.max_iterations):
             turn.iterations = iteration + 1
 
-            # 调用 LLM
-            resp = await self.provider.chat(
+            # 流式调用
+            resp = await self.provider.chat_stream(
                 messages, temperature=0.7, max_tokens=4000, tools=tools,
+                on_delta=on_delta,
             )
             turn.total_tokens += resp.usage.get("total_tokens", 0)
+            text_buf = resp.content
 
             # 无 tool_call → 结束
             if not resp.tool_calls:
-                turn.final_text = resp.content
+                turn.final_text = text_buf
                 break
 
-            # 有 tool_call → 执行
-            # 先把 assistant 消息加入历史
-            assistant_msg = {"role": "assistant", "content": resp.content or ""}
-            if tools:
-                assistant_msg["tool_calls"] = [
-                    {"id": tc.id, "type": "function",
-                     "function": {"name": tc.name, "arguments": str(tc.arguments)}}
-                    for tc in resp.tool_calls
-                ]
+            # 有 tool_call → 暂停流式 → 执行工具 → 注入结果
+            # 构建 assistant 消息
+            assistant_msg = {"role": "assistant", "content": text_buf or None}
+            tc_list = []
+            for tc in resp.tool_calls:
+                tc_list.append({
+                    "id": tc.id, "type": "function",
+                    "function": {"name": tc.name, "arguments": str(tc.arguments)},
+                })
+            if tc_list:
+                assistant_msg["tool_calls"] = tc_list
             messages.append(assistant_msg)
 
-            # 执行工具 (并发)
-            tasks = []
-            for tc in resp.tool_calls:
-                tasks.append(self.registry.execute(tc.name, tc.arguments))
+            # 并发执行工具
+            tasks = [self.registry.execute(tc.name, tc.arguments) for tc in resp.tool_calls]
             results = await asyncio.gather(*tasks)
 
-            # 注入工具结果
             for tc, tr in zip(resp.tool_calls, results):
                 turn.tool_calls.append(tr)
-                tool_msg = {
+                messages.append({
                     "role": "tool",
                     "tool_call_id": tc.id,
-                    "content": tr.output if tr.success else f"Error: {tr.error}",
-                }
-                messages.append(tool_msg)
+                    "content": tr.output[:4000] if tr.success else f"Error: {tr.error}",
+                })
 
         turn.elapsed = time.time() - t0
         return turn

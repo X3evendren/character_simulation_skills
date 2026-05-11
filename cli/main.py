@@ -55,7 +55,7 @@ def main():
 
 async def _chat(args):
     """集成全部模块的聊天循环。"""
-    from core.provider import OpenAIProvider, AnthropicProvider
+    from core.provider import OpenAIProvider
     from core.session import Session
     from core.fsm import FSMContext
     from core.psychology import PsychologyEngine
@@ -86,20 +86,16 @@ async def _chat(args):
     name = args.name or assistant_config.get("name", "林雨")
 
     # ═══ Provider ═══
-    if args.provider == "anthropic":
-        ak = args.api_key or os.environ.get("ANTHROPIC_API_KEY", "")
-        provider = AnthropicProvider(model=args.gen_model, api_key=ak)
-        psych_provider = AnthropicProvider(model=args.psych_model, api_key=ak)
-    elif args.provider == "deepseek":
+    if args.provider == "deepseek":
         ak = args.api_key or os.environ.get("DEEPSEEK_API_KEY", "")
         base_url = "https://api.deepseek.com/v1"
         provider = OpenAIProvider(model=args.gen_model or "deepseek-v4-pro", api_key=ak, base_url=base_url)
         psych_provider = OpenAIProvider(model=args.psych_model or "deepseek-v4-flash", api_key=ak, base_url=base_url)
     else:
-        base_url = args.base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
         ak = args.api_key or os.environ.get("OPENAI_API_KEY", "not-needed")
-        provider = OpenAIProvider(model=args.gen_model, api_key=ak, base_url=base_url)
-        psych_provider = OpenAIProvider(model=args.psych_model, api_key=ak, base_url=base_url)
+        base_url = args.base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
+        provider = OpenAIProvider(model=args.gen_model or "gpt-4o", api_key=ak, base_url=base_url)
+        psych_provider = OpenAIProvider(model=args.psych_model or "gpt-4o-mini", api_key=ak, base_url=base_url)
 
     # ═══ 引擎 ═══
     psych_engine = PsychologyEngine(psych_provider, model=args.psych_model)
@@ -338,23 +334,30 @@ async def _chat(args):
         )
 
         # ═══════════════════════════════════════════════════
-        # 9. Agent 循环执行
+        # 9. Agent 流式执行
         # ═══════════════════════════════════════════════════
         try:
-            turn = await agent.run(system_prompt, user_input)
+            # 流式回调
+            async def on_delta(text: str):
+                await renderer.on_delta(text)
+
+            renderer._buf = ""
+            renderer._start_spinner()
+            turn = await agent.run(system_prompt, user_input, on_delta=on_delta)
+            renderer._stop_spinner()
             final_text = turn.final_text
 
-            # 显示工具调用
-            for tr in turn.tool_calls:
-                icon = "OK" if tr.success else "ERR"
-                renderer.print_tool("", tr.name, 0, tr.output[:60] if tr.success else tr.error[:60])
-
             if final_text:
-                print(f"\n{final_text}\n")
+                print()  # 换行
             else:
                 print(f"\n  [空响应] iters={turn.iterations} tokens={turn.total_tokens}")
+
+            # 工具调用反馈
+            for tr in turn.tool_calls:
+                renderer.print_tool("", tr.name, 0,
+                                    tr.output[:60] if tr.success else tr.error[:60])
         except Exception as e:
-            print(f"\n  [执行错误: {e}]")
+            print(f"\n  [错误: {e}]")
             final_text = ""
 
         final_text, mods = post_filter.replace(final_text)
@@ -405,21 +408,8 @@ async def _chat(args):
         session.fsm.transition("done")
 
         # HUD 更新
-        snap = params.snapshot()
-        hud.update(
-            fsm=session.fsm.state.value,
-            sat=sat_detector.saturation_level,
-            oath=oath.state.value,
-            tick=tick,
-            params={
-                "pleasure": snap["pleasure"],
-                "safety": snap["safety_precision"],
-                "threat": snap["threat_precision"],
-                "playfulness": snap["playfulness"],
-                "sexual": params.true_effective("sexual_activation"),
-                "expressiveness": snap["expressiveness"],
-            },
-        )
+        hud.update(fsm=session.fsm.state.value, tick=tick,
+                   tokens=session.total_tokens, tools_used=len(turn.tool_calls))
 
     # ═══ 会话结束 ═══
     hud.stop()
