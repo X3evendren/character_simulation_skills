@@ -97,7 +97,7 @@ async def _chat(args):
 
     while True:
         try:
-            user_input = get_input("> ")
+            user_input = await get_input("> ")
         except (EOFError, KeyboardInterrupt):
             print()
             break
