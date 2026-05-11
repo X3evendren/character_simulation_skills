@@ -336,7 +336,9 @@ async def _chat(args):
         # ═══════════════════════════════════════════════════
         # 9. Agent 流式执行
         # ═══════════════════════════════════════════════════
+        turn = None
         try:
+            print("", end="", flush=True)  # 确保光标在新行
             # 流式回调
             async def on_delta(text: str):
                 await renderer.on_delta(text)
@@ -408,8 +410,9 @@ async def _chat(args):
         session.fsm.transition("done")
 
         # HUD 更新
-        hud.update(fsm=session.fsm.state.value, tick=tick,
-                   tokens=session.total_tokens, tools_used=len(turn.tool_calls))
+        tools_n = len(turn.tool_calls) if turn else 0
+        hud.update(tick=tick, tokens=session.total_tokens, tools_used=tools_n)
+        hud.show()
 
     # ═══ 会话结束 ═══
     hud.stop()
