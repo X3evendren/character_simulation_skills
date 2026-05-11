@@ -165,6 +165,8 @@ class AgentLoop:
             assistant_msg = {"role": "assistant"}
             if resp.content:
                 assistant_msg["content"] = resp.content
+            if resp.reasoning_content:
+                assistant_msg["reasoning_content"] = resp.reasoning_content
             assistant_msg["tool_calls"] = [
                 {"id": tc.id, "type": "function",
                  "function": {"name": tc.name, "arguments": str(tc.arguments)}}

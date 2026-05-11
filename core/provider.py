@@ -14,6 +14,7 @@ from typing import AsyncIterator
 @dataclass
 class LLMResponse:
     content: str = ""
+    reasoning_content: str = ""
     tool_calls: list["ToolCallRequest"] = field(default_factory=list)
     usage: dict = field(default_factory=dict)
     finish_reason: str = "stop"
@@ -82,6 +83,7 @@ class OpenAIProvider:
             return LLMResponse()
         msg = choice.message
         content = msg.content or ""
+        reasoning = getattr(msg, 'reasoning_content', '') or ''
         tool_calls = []
         for tc in (msg.tool_calls or []):
             import json
@@ -90,17 +92,21 @@ class OpenAIProvider:
                 args = json.loads(tc.function.arguments)
             except: pass
             tool_calls.append(ToolCallRequest(id=tc.id, name=tc.function.name, arguments=args))
-        return LLMResponse(content=content, tool_calls=tool_calls,
-                          usage=self._usage(resp), finish_reason=choice.finish_reason or "stop")
+        return LLMResponse(content=content, reasoning_content=reasoning,
+                          tool_calls=tool_calls, usage=self._usage(resp),
+                          finish_reason=choice.finish_reason or "stop")
 
     def _parse_chunks(self, chunks) -> LLMResponse:
         content_parts = []
+        reasoning_parts = []
         tc_bufs: dict[int, dict] = {}
         finish = "stop"
         for c in chunks:
             if not c.choices: continue
             d = c.choices[0].delta
             if d.content: content_parts.append(d.content)
+            rc = getattr(d, 'reasoning_content', '')
+            if rc: reasoning_parts.append(rc)
             if c.choices[0].finish_reason: finish = c.choices[0].finish_reason
             for tc in (d.tool_calls or []):
                 buf = tc_bufs.setdefault(tc.index, {"id": "", "name": "", "arguments": ""})
@@ -119,6 +125,7 @@ class OpenAIProvider:
 
         return LLMResponse(
             content="".join(content_parts),
+            reasoning_content="".join(reasoning_parts),
             tool_calls=tool_calls,
             usage=self._chunks_usage(chunks),
             finish_reason=finish,
