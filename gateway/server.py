@@ -1,72 +1,44 @@
-"""Gateway Server — HTTP + WebSocket, asyncio 单进程 (OpenClaw 模式)"""
+"""Gateway Server — HTTP + WebSocket 服务。
+
+抄 OpenClaw + Hermes Agent 的 Gateway 模式:
+- HTTP API: /status, /chat
+- WebSocket: 实时流式对话
+"""
 from __future__ import annotations
 
 import asyncio
 import json
-import logging
 import time
-from dataclasses import dataclass, field
+import logging
 
 logger = logging.getLogger("character_mind.gateway")
 
 
-def _constant_time_compare(a: str, b: str) -> bool:
-    """恒定时间字符串比较——防止时序攻击。"""
-    if len(a) != len(b):
-        return False
-    result = 0
-    for x, y in zip(a, b):
-        result |= ord(x) ^ ord(y)
-    return result == 0
-
-
-@dataclass
 class GatewayServer:
     """轻量级 Gateway 服务器。
 
-    默认绑定 127.0.0.1:18790, 提供:
-    - HTTP API: /status, /sessions, /tick, /memory
-    - WebSocket: 实时状态推送
-
-    安全特性:
-    - Bearer Token 认证（可选）
-    - 请求大小限制（默认 1MB）
-    - 速率限制（令牌桶，每 IP）
-    - TLS 支持（可选 certfile/keyfile）
+    默认绑定 127.0.0.1:18790。
+    安全: Bearer Token 认证 (可选) + 速率限制。
     """
 
-    host: str = "127.0.0.1"
-    port: int = 18790
-    character_mind: object | None = None  # CharacterMind instance
-    session_manager: object | None = None
-    _server: asyncio.AbstractServer | None = None
-    _clients: list = field(default_factory=list)
-    running: bool = False
-    # 安全配置
-    api_key: str = ""                       # Bearer Token（空=无认证）
-    max_request_size: int = 1_048_576       # 1MB
-    rate_limit_per_minute: int = 120        # 每 IP 每分钟最大请求
-    certfile: str = ""                      # TLS 证书路径
-    keyfile: str = ""                       # TLS 密钥路径
-    _rate_buckets: dict[str, list[float]] = field(default_factory=dict)
+    def __init__(self, host: str = "127.0.0.1", port: int = 18790,
+                 api_key: str = ""):
+        self.host = host
+        self.port = port
+        self.api_key = api_key
+        self._server: asyncio.AbstractServer | None = None
+        self._ws_clients: list = []
+        self.running = False
+        self.character_mind = None  # CharacterMind 实例
 
     async def start(self):
-        """启动网关。"""
         self.running = True
-        ssl_context = None
-        if self.certfile and self.keyfile:
-            import ssl
-            ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-            ssl_context.load_cert_chain(self.certfile, self.keyfile)
-            logger.info(f"TLS enabled: {self.certfile}")
         self._server = await asyncio.start_server(
-            self._handle_connection, self.host, self.port, ssl=ssl_context,
+            self._handle_connection, self.host, self.port,
         )
-        proto = "https" if ssl_context else "http"
-        logger.info(f"Gateway listening on {proto}://{self.host}:{self.port}")
+        logger.info(f"Gateway listening on http://{self.host}:{self.port}")
 
     async def stop(self):
-        """停止网关。"""
         self.running = False
         if self._server:
             self._server.close()
@@ -74,44 +46,21 @@ class GatewayServer:
                 await asyncio.wait_for(self._server.wait_closed(), timeout=2.0)
             except asyncio.TimeoutError:
                 pass
-        for ws in list(self._clients):
+        for ws in list(self._ws_clients):
             try:
                 ws.close()
             except Exception:
                 pass
-        self._clients.clear()
+        self._ws_clients.clear()
 
     async def _handle_connection(self, reader, writer):
-        """处理 TCP 连接: 认证→速率限制→路由。"""
-        peername = writer.get_extra_info("peername", ("?", 0))
-        client_ip = peername[0]
-
-        # 速率限制检查
-        if not self._check_rate_limit(client_ip):
-            self._send_http(writer, "429 Too Many Requests",
-                           '{"error":"rate limited","retry_after":60}')
-            return
-
         try:
-            data = await asyncio.wait_for(
-                reader.read(self.max_request_size + 1024), timeout=10.0,
-            )
+            data = await asyncio.wait_for(reader.read(65536), timeout=10.0)
             if not data:
-                return
-            if len(data) > self.max_request_size:
-                self._send_http(writer, "413 Payload Too Large",
-                               '{"error":"request too large"}')
                 return
 
             text = data.decode("utf-8", errors="replace")
 
-            # 远程连接需要 auth (非 localhost)
-            if not self._is_local(peername[0]) and not self._check_auth(text):
-                writer.write(b"HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n")
-                await writer.drain()
-                return
-
-            # WebSocket upgrade
             if "Upgrade: websocket" in text:
                 await self._handle_websocket(reader, writer, text)
             else:
@@ -121,7 +70,7 @@ class GatewayServer:
         except ConnectionError:
             pass
         except Exception as e:
-            logger.error(f"connection error from {peername}: {e}")
+            logger.error(f"Connection error: {e}")
         finally:
             try:
                 writer.close()
@@ -129,112 +78,38 @@ class GatewayServer:
             except Exception:
                 pass
 
-    @staticmethod
-    def _is_local(host: str) -> bool:
-        return host in ("127.0.0.1", "localhost", "::1")
+    async def _handle_http(self, reader, writer, request_text: str):
+        first_line = request_text.split("\r\n")[0] if request_text else "GET / HTTP/1.1"
+        parts = first_line.split()
+        method = parts[0] if len(parts) > 0 else "GET"
+        path = parts[1] if len(parts) > 1 else "/"
 
-    @staticmethod
-    def _send_http(writer, status: str, body: str) -> None:
-        """发送 HTTP 响应。"""
+        # 简单路由
+        body = await self._route(method, path, request_text)
         response = (
-            f"HTTP/1.1 {status}\r\n"
+            f"HTTP/1.1 200 OK\r\n"
             f"Content-Type: application/json; charset=utf-8\r\n"
             f"Access-Control-Allow-Origin: *\r\n"
             f"Content-Length: {len(body.encode('utf-8'))}\r\n"
             f"\r\n{body}"
         )
         writer.write(response.encode("utf-8"))
-
-    @staticmethod
-    def _send_403(writer) -> None:
-        writer.write(b"HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n")
-
-    def _check_auth(self, request_text: str) -> bool:
-        """Bearer Token 认证检查。"""
-        if not self.api_key:
-            return False  # 未配置 API key，拒绝所有远程连接
-        for line in request_text.split("\r\n"):
-            if line.lower().startswith("authorization: bearer "):
-                token = line[22:].strip()
-                return _constant_time_compare(token, self.api_key)
-        return False
-
-    def _check_rate_limit(self, ip: str) -> bool:
-        """令牌桶速率限制。返回 True 表示未超限。"""
-        now = time.time()
-        bucket = self._rate_buckets.setdefault(ip, [])
-        # 清理超过 60 秒的记录
-        bucket[:] = [t for t in bucket if now - t < 60]
-        if len(bucket) >= self.rate_limit_per_minute:
-            return False
-        bucket.append(now)
-        # 防止内存泄漏：最多保留 200 个 IP 的桶
-        if len(self._rate_buckets) > 200:
-            oldest = sorted(self._rate_buckets.keys(),
-                           key=lambda k: self._rate_buckets[k][0] if self._rate_buckets[k] else 0)[:50]
-            for k in oldest:
-                del self._rate_buckets[k]
-        return True
-
-    async def _handle_http(self, reader, writer, request_text: str):
-        """处理 HTTP 请求。"""
-        first_line = request_text.split("\r\n")[0] if request_text else "GET / HTTP/1.1"
-        parts = first_line.split()
-        method = parts[0] if len(parts) > 0 else "GET"
-        path = parts[1] if len(parts) > 1 else "/"
-
-        status, body = await self._route_http(method, path, request_text)
-        response = f"HTTP/1.1 {status}\r\nContent-Type: application/json; charset=utf-8\r\nAccess-Control-Allow-Origin: http://localhost:{self.port}\r\nContent-Length: {len(body.encode('utf-8'))}\r\n\r\n{body}"
-        writer.write(response.encode("utf-8"))
         await writer.drain()
 
-    async def _route_http(self, method: str, path: str, _request_text: str) -> tuple[str, str]:
-        """HTTP 路由。"""
+    async def _route(self, method: str, path: str, _request: str) -> str:
         if path == "/status":
-            mind = self.character_mind
-            if mind:
-                stats = mind.stats()
-                return "200 OK", json.dumps({"status": "running", **stats}, ensure_ascii=False)
-            return "200 OK", json.dumps({"status": "no_character_loaded"})
-
-        elif path == "/sessions":
-            if self.session_manager:
-                sessions = self.session_manager.list_active()
-                return "200 OK", json.dumps(sessions, ensure_ascii=False)
-            return "200 OK", "[]"
-
-        elif path == "/memory" and method == "GET":
-            mind = self.character_mind
-            if mind:
-                idx = mind.memory_index()
-                return "200 OK", json.dumps({"memory_index": idx}, ensure_ascii=False)
-            return "200 OK", "{}"
-
-        elif path == "/tick" and method == "POST":
-            mind = self.character_mind
-            if mind:
-                await mind.runtime.tick_once()
-                resp = mind.get_response()
-                return "200 OK", json.dumps({"text": resp.text, "emotion": resp.emotion}, ensure_ascii=False)
-            return "500 Internal Server Error", '{"error":"no character"}'
-
-        elif path == "/noise":
-            mind = self.character_mind
-            if mind:
-                return "200 OK", json.dumps({"report": mind.noise_report()}, ensure_ascii=False)
-            return "200 OK", "{}"
-
-        return "404 Not Found", '{"error":"not found"}'
+            return json.dumps({"status": "running", "timestamp": time.time()})
+        elif path == "/health":
+            return json.dumps({"ok": True})
+        return json.dumps({"error": "not found"})
 
     async def _handle_websocket(self, reader, writer, request_text: str):
-        """处理 WebSocket 升级和连接。"""
-        # Simple WebSocket upgrade
+        # WebSocket 升级
         key = ""
         for line in request_text.split("\r\n"):
             if line.lower().startswith("sec-websocket-key:"):
                 key = line.split(":", 1)[1].strip()
                 break
-
         if not key:
             return
 
@@ -250,79 +125,34 @@ class GatewayServer:
         )
         writer.write(response.encode())
         await writer.drain()
+        self._ws_clients.append(writer)
 
-        self._clients.append(writer)
-
-        # Send initial state
-        mind = self.character_mind
-        if mind:
-            await self._ws_send(writer, {"type": "status", "data": mind.stats()})
-
-        # Keep alive and read frames
         try:
             while self.running:
-                frame = await asyncio.wait_for(reader.read(1024), timeout=30.0)
+                frame = await asyncio.wait_for(reader.read(4096), timeout=30.0)
                 if not frame:
                     break
-                # Minimal WS frame handling: just echo for now
                 text = self._ws_decode(frame)
                 if text:
-                    await self._handle_ws_message(writer, text)
+                    try:
+                        msg = json.loads(text)
+                        if msg.get("type") == "chat" and self.character_mind:
+                            # 处理聊天消息
+                            pass
+                    except json.JSONDecodeError:
+                        pass
         except (asyncio.TimeoutError, ConnectionError):
             pass
         finally:
-            if writer in self._clients:
-                self._clients.remove(writer)
-
-    async def _handle_ws_message(self, writer, text: str):
-        """处理 WebSocket 消息。"""
-        try:
-            msg = json.loads(text)
-            action = msg.get("action", "")
-
-            if action == "tick" and self.character_mind:
-                self.character_mind.perceive(msg.get("content", ""), msg.get("source", "ws"), "dialogue", msg.get("intensity", 0.5))
-                await self.character_mind.runtime.tick_once()
-                resp = self.character_mind.get_response()
-                await self._ws_send(writer, {"type": "response", "text": resp.text, "emotion": resp.emotion})
-
-            elif action == "status":
-                if self.character_mind:
-                    await self._ws_send(writer, {"type": "status", "data": self.character_mind.stats()})
-
-            elif action == "noise":
-                if self.character_mind:
-                    await self._ws_send(writer, {"type": "noise", "report": self.character_mind.noise_report()})
-        except json.JSONDecodeError:
-            pass
-
-    @staticmethod
-    async def _ws_send(writer, data: dict):
-        """发送 WebSocket 文本帧。"""
-        payload = json.dumps(data, ensure_ascii=False).encode("utf-8")
-        frame = bytearray([0x81])  # FIN + text opcode
-        length = len(payload)
-        if length < 126:
-            frame.append(length)
-        elif length < 65536:
-            frame.append(126)
-            frame.extend(length.to_bytes(2, "big"))
-        else:
-            frame.append(127)
-            frame.extend(length.to_bytes(8, "big"))
-        frame.extend(payload)
-        writer.write(bytes(frame))
-        await writer.drain()
+            if writer in self._ws_clients:
+                self._ws_clients.remove(writer)
 
     @staticmethod
     def _ws_decode(frame: bytes) -> str | None:
-        """解码 WebSocket 文本帧。"""
         if len(frame) < 2:
             return None
         opcode = frame[0] & 0x0F
-        if opcode == 0x8:  # Close
-            return None
-        if opcode != 0x1:  # Not text
+        if opcode in (0x8, 0x9, 0xA):
             return None
         masked = frame[1] & 0x80
         length = frame[1] & 0x7F

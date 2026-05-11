@@ -1,0 +1,57 @@
+{
+  "fine_grained_emotions": {
+    "joy": ["狂喜","满足","自豪","得意","欣慰","雀跃","陶醉","释然","爽快","幸灾乐祸","欣喜若狂"],
+    "sadness": ["失落","惆怅","忧郁","哀伤","凄凉","沮丧","心碎","怀念","孤独","绝望","消沉","怅然若失"],
+    "trust": ["依赖","安心","忠诚","钦佩","敬仰","亲切","温暖","放心","依恋","皈依感","托付"],
+    "disgust": ["反感","鄙夷","恶心","嫌弃","不屑","厌烦","轻蔑","憎恶","嗤之以鼻"],
+    "fear": ["焦虑","紧张","恐慌","不安","畏惧","惊惶","无助","战栗","窒息感","草木皆兵"],
+    "anger": ["恼怒","愤恨","暴躁","怨恨","嫉妒","敌意","暴怒","委屈","隐忍的怒火","咬牙切齿"],
+    "surprise": ["震惊","困惑","好奇","茫然","错愕","不可思议","恍惚","瞠目结舌","始料未及"],
+    "anticipation": ["希望","憧憬","渴望","急切","警觉","忐忑","耐心","翘首以盼","患得患失"]
+  },
+  "complex_emotions": {
+    "love": {"components": ["joy","trust"], "cn": "爱"},
+    "guilt": {"components": ["sadness","fear"], "cn": "内疚"},
+    "shame": {"components": ["sadness","disgust"], "cn": "羞耻"},
+    "jealousy": {"components": ["anger","fear","sadness"], "cn": "嫉妒"},
+    "remorse": {"components": ["sadness","disgust"], "cn": "悔恨"},
+    "awe": {"components": ["surprise","fear"], "cn": "敬畏"},
+    "contempt": {"components": ["disgust","anger"], "cn": "蔑视"},
+    "hope": {"components": ["anticipation","trust"], "cn": "希望"},
+    "despair": {"components": ["sadness","fear"], "cn": "绝望"},
+    "resentment": {"components": ["anger","sadness"], "cn": "怨愤"},
+    "longing": {"components": ["sadness","anticipation"], "cn": "渴望/思慕"},
+    "pride": {"components": ["joy","anticipation"], "cn": "骄傲"},
+    "gratitude": {"components": ["joy","trust"], "cn": "感激"},
+    "betrayal": {"components": ["anger","sadness","disgust"], "cn": "被背叛感"},
+    "brooding": {"components": ["anger","sadness","anticipation"], "cn": "阴郁沉思"}
+  },
+  "functional_emotions": {
+    "desperate": "绝望的——为达成目标不择手段，高风险行为激增",
+    "calm": "冷静的——道德约束增强，行为更理性",
+    "smug": "自鸣得意的——轻视对手，容易露出破绽",
+    "brooding": "阴郁沉思的——反复咀嚼负面体验",
+    "resentful": "怨愤的——暗中记仇，伺机报复",
+    "defeated": "挫败的——放弃主动行动，回避情境",
+    "emboldened": "胆大的——风险偏好上升，主动出击",
+    "wary": "警惕的——高度警觉，过度解读威胁信号",
+    "caring": "关怀的——优先考虑他人福祉",
+    "playful": "戏谑的——放松边界，创意表达增强",
+    "defiant": "反抗的——挑战权威或规范",
+    "submissive": "顺从的——主动降低姿态，迎合对方",
+    "obsessive": "执念的——注意力高度聚焦单一对象",
+    "detached": "疏离的——情感隔离，用理性化保持距离",
+    "yearning": "渴望的——对不可及之物产生强烈向往",
+    "numb": "麻木的——情感反应钝化，缺乏回应"
+  },
+  "plutchik_to_pad": {
+    "joy": [0.70,0.50,0.40],
+    "sadness": [-0.65,-0.30,-0.50],
+    "trust": [0.40,-0.20,0.10],
+    "disgust": [-0.55,0.25,0.20],
+    "fear": [-0.60,0.65,-0.70],
+    "anger": [-0.50,0.70,0.55],
+    "surprise": [0.10,0.75,-0.30],
+    "anticipation": [0.25,0.40,0.20]
+  }
+}

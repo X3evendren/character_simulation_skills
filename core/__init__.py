@@ -1,13 +1,12 @@
-from .base import BaseSkill, SkillMeta, SkillResult, extract_json
-from .registry import SkillRegistry, get_registry, build_registry_from_profile
-from .orchestrator import CognitiveOrchestrator, CognitiveResult, get_orchestrator
-from .runtime import SessionRuntime, create_runtime
-from .emotion_decay import EmotionDecayModel, PADState, plutchik_to_pad, pad_to_plutchik, PLUTCHIK_TO_PAD
-from .episodic_memory import EpisodicMemory, EpisodicMemoryStore
-from .personality_state_machine import PersonalityStateMachine, OCEANProfile, PERSONALITY_STATES
-from .conversation_history import ConversationTurn, ConversationHistoryStore
-from .emotion_vocabulary import (
-    FINE_GRAINED_EMOTIONS, COMPLEX_EMOTIONS, FUNCTIONAL_EMOTIONS,
-    ALL_FINE_GRAINED, BASIC_TO_FINE, FINE_TO_BASIC,
-    get_fine_grained, get_basic, get_complex, get_functional_description,
-)
+"""Character Mind v3 — 核心模块。"""
+from .provider import LLMProvider, OpenAIProvider, AnthropicProvider, LLMResponse, ToolCallRequest, ToolResult
+from .json_parser import extract_json, extract_xml, extract_xml_attr
+from .fsm import FiniteStateMachine, State, FSMContext
+from .mind_state import MindState
+from .session import Session
+from .learning import SkillLibrary, FeedbackLoop, SelfReflection, RLInterface
+from .continuous_engine import SaturationState, ContinuousParams, detect_behavior_mode
+from .private_space import PrivateSpace, Workspace
+from .params import UnifiedParams, Param, ChangeSpeed
+from .params_modulator import ParamsModulator, ModulationRecord
+from .love import OathStore, Oath, OathType, OathState, SaturationDetector, PrecisionRouter, RelationMode, IrreduciblePrior, RepairEngine, LoveMetrics
