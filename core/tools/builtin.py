@@ -136,11 +136,12 @@ class BashTool(Tool):
     risk_level = "high"
 
     async def execute(self, command: str, timeout: int = 60, **kw) -> ToolResult:
-        # 安全检查
-        for pattern, desc in DANGEROUS_PATTERNS:
-            if re.search(pattern, command):
-                return ToolResult(name=self.name, success=False,
-                                  error=f"危险命令已拦截: {desc}")
+        # 安全审计
+        from .security import audit_command
+        audit = audit_command(command)
+        if audit.blocked:
+            return ToolResult(name=self.name, success=False,
+                            error=f"已拦截: {audit.reason}")
 
         try:
             proc = subprocess.run(
