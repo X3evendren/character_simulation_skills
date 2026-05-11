@@ -101,27 +101,13 @@ async def _chat(args):
             mem_text = "; ".join(m.content[:60] for m in mems)
         except: pass
 
-        # spinner thread
-        import threading
-        spin_stop = False
-        def spin():
-            frames = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"]
-            i = 0
-            while not spin_stop:
-                print(f"\r  {frames[i%len(frames)]} 思考中...", end="", flush=True)
-                time.sleep(0.1)
-                i += 1
-            print("\r", end="", flush=True)
-        t = threading.Thread(target=spin, daemon=True)
-        t.start()
+        sys.stdout.write("  ..."); sys.stdout.flush()
         try:
             psych_result = await psych_engine.analyze(
                 {"description": ui, "type": "social", "significance": 0.5},
                 memory_context=mem_text, assistant_config=config)
         except Exception as e:
-            spin_stop = True; t.join(0.2)
-            print(f"\r  [psych err: {e}]"); continue
-        spin_stop = True; t.join(0.2)
+            print(f" [psych err: {e}]"); continue
 
         # 2. modulate
         fast = modulator.modulate_fast(psych_result)
@@ -143,30 +129,18 @@ async def _chat(args):
             f"硬约束: 纯文本。禁止括号/动作/舞台指示。自然说话。\n"
             f"工具: read_file, write_file, list_dir, exec_command, search_content, search_files。需要时直接用。", anchor)
 
-        # 4. agent stream (with spinner)
+        # 4. agent stream
         turn = None
-        spin_stop2 = False
-        def spin2():
-            frames = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"]
-            i = 0
-            while not spin_stop2:
-                print(f"\r  {frames[i%len(frames)]} 生成中...", end="", flush=True)
-                time.sleep(0.1); i += 1
-            print("\r", end="", flush=True)
-        t2 = threading.Thread(target=spin2, daemon=True)
-        t2.start()
         try:
             first = True
             async def od(text):
                 nonlocal first
-                if first: spin_stop2 = True; t2.join(0.2); first = False
+                if first: first = False
                 print(text, end="", flush=True)
             turn = await agent.run(system, ui, on_delta=od)
-            if not first: print()
+            print()
         except Exception as e:
-            spin_stop2 = True; t2.join(0.2)
-            print(f"\r  [err: {e}]"); continue
-        spin_stop2 = True; t2.join(0.2)
+            print(f" [err: {e}]"); continue
 
         # 5. tools
         for tr in (turn.tool_results if turn else []):
