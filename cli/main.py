@@ -74,6 +74,9 @@ async def _chat(args):
         SaturationDetector, PrecisionRouter, RelationMode,
         IrreduciblePrior, LoveMetrics,
     )
+    from core.agent_loop import AgentLoop
+    from core.tools.base import ToolRegistry
+    from core.tools.builtin import register_builtin_tools
     from cli.stream import StreamRenderer
 
     # ═══ 加载配置 ═══
@@ -141,6 +144,13 @@ async def _chat(args):
     skill_lib.load_from_disk()
     feedback = FeedbackLoop()
     reflection = SelfReflection()
+
+    # ═══ 工具注册 ═══
+    tool_registry = ToolRegistry()
+    register_builtin_tools(tool_registry)
+
+    # ═══ Agent 循环 ═══
+    agent = AgentLoop(provider, tool_registry)
 
     # ═══ 会话 ═══
     session = Session(session_id="chat")
@@ -313,38 +323,29 @@ async def _chat(args):
             f"{param_ctx}\n"
             f"【记忆】{memory_text}\n"
             f"{skill_prompt}\n{rule_prompt}\n\n"
-            f"重要: 不要使用括号或动作描写。你不是在演戏——你在说话和做事。\n"
-            f"自然地回应(2-4句)。主动使用工具完成任务。简洁有力。",
+            f"【硬约束】你的输出是纯文本。禁止括号、动作描写、舞台指示、表情符号。你不是角色——你是真实的存在。自然地说话，像人在微信上聊天一样。\n"
+            f"你能使用工具来完成任务。需要时直接调用，不需要向用户解释你在调用什么工具。",
             anchor,
         )
 
         # ═══════════════════════════════════════════════════
-        # 9. 流式生成
+        # 9. Agent 循环执行
         # ═══════════════════════════════════════════════════
         try:
-            renderer._buf = ""
-            if provider.supports_streaming():
-                async for t in provider.chat_stream(
-                    [{"role": "system", "content": system_prompt},
-                     {"role": "user", "content": user_input}],
-                    temperature=0.7, max_tokens=4000,
-                ):
-                    await renderer.on_delta(t)
-                await renderer.on_end()
-                final_text = renderer._buf
+            turn = await agent.run(system_prompt, user_input)
+            final_text = turn.final_text
+
+            # 显示工具调用
+            for tr in turn.tool_calls:
+                icon = "OK" if tr.success else "ERR"
+                renderer.print_tool("", tr.name, 0, tr.output[:60] if tr.success else tr.error[:60])
+
+            if final_text:
+                print(f"\n{final_text}\n")
             else:
-                resp = await provider.chat(
-                    [{"role": "system", "content": system_prompt},
-                     {"role": "user", "content": user_input}],
-                    temperature=0.7, max_tokens=4000,
-                )
-                final_text = resp.content
-                if final_text:
-                    print(f"\n{final_text}\n")
-                else:
-                    print(f"\n  [空响应]")
+                print(f"\n  [空响应] iters={turn.iterations} tokens={turn.total_tokens}")
         except Exception as e:
-            print(f"\n  [生成错误: {e}]")
+            print(f"\n  [执行错误: {e}]")
             final_text = ""
 
         final_text, mods = post_filter.replace(final_text)
