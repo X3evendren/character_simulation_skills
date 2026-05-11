@@ -44,7 +44,7 @@ async def _chat(args):
     from prompt_toolkit.formatted_text import HTML
 
     console = Console()
-    console.print(f"\n  林雨  [/help /quit /stats]\n")
+    console.print("\n  林雨  [/help /quit /stats]\n", markup=False)
 
     # provider
     if args.provider == "deepseek":
