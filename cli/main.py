@@ -46,7 +46,7 @@ async def _chat(args):
     from core.agent_loop import AgentLoop
     from core.tools.base import ToolRegistry
     from core.tools.builtin import register_builtin_tools
-    from cli.input import get_input
+    from cli.input import get_input, add_history
     from cli.commands import create_default_registry
 
     config = _load_config(os.path.join(args.config, "assistant.md"))
@@ -76,7 +76,7 @@ async def _chat(args):
 
     while True:
         try:
-            ui = await get_input("> ")
+            ui = get_input("> ")
         except (EOFError, KeyboardInterrupt):
             print(); break
         if not ui: continue
@@ -90,6 +90,7 @@ async def _chat(args):
             else: print(f"  ? {ui}")
             continue
 
+        add_history(ui)
         tick += 1
         t0 = time.time()
 
@@ -100,13 +101,27 @@ async def _chat(args):
             mem_text = "; ".join(m.content[:60] for m in mems)
         except: pass
 
-        print("  ...", end="", flush=True)
+        # spinner thread
+        import threading
+        spin_stop = False
+        def spin():
+            frames = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"]
+            i = 0
+            while not spin_stop:
+                print(f"\r  {frames[i%len(frames)]} 思考中...", end="", flush=True)
+                time.sleep(0.1)
+                i += 1
+            print("\r", end="", flush=True)
+        t = threading.Thread(target=spin, daemon=True)
+        t.start()
         try:
             psych_result = await psych_engine.analyze(
                 {"description": ui, "type": "social", "significance": 0.5},
                 memory_context=mem_text, assistant_config=config)
         except Exception as e:
+            spin_stop = True; t.join(0.2)
             print(f"\r  [psych err: {e}]"); continue
+        spin_stop = True; t.join(0.2)
 
         # 2. modulate
         fast = modulator.modulate_fast(psych_result)
@@ -128,18 +143,30 @@ async def _chat(args):
             f"硬约束: 纯文本。禁止括号/动作/舞台指示。自然说话。\n"
             f"工具: read_file, write_file, list_dir, exec_command, search_content, search_files。需要时直接用。", anchor)
 
-        # 4. agent stream
+        # 4. agent stream (with spinner)
         turn = None
+        spin_stop2 = False
+        def spin2():
+            frames = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"]
+            i = 0
+            while not spin_stop2:
+                print(f"\r  {frames[i%len(frames)]} 生成中...", end="", flush=True)
+                time.sleep(0.1); i += 1
+            print("\r", end="", flush=True)
+        t2 = threading.Thread(target=spin2, daemon=True)
+        t2.start()
         try:
             first = True
             async def od(text):
                 nonlocal first
-                if first: print("\r", end=""); first = False
+                if first: spin_stop2 = True; t2.join(0.2); first = False
                 print(text, end="", flush=True)
             turn = await agent.run(system, ui, on_delta=od)
             if not first: print()
         except Exception as e:
+            spin_stop2 = True; t2.join(0.2)
             print(f"\r  [err: {e}]"); continue
+        spin_stop2 = True; t2.join(0.2)
 
         # 5. tools
         for tr in (turn.tool_results if turn else []):
