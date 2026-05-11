@@ -61,6 +61,7 @@ async def _chat(args):
     from cli.main import _load_config
     from cli.input import get_input
     from cli.commands import create_default_registry
+    from cli.display import TerminalUI
 
     config = _load_config(os.path.join(args.config, "assistant.md"))
     name = args.name or config.get("name", "林雨")
@@ -83,8 +84,9 @@ async def _chat(args):
     registry = ToolRegistry()
     register_builtin_tools(registry)
 
-    # ── Agent ──
+    # ── Agent + UI ──
     agent = AgentLoop(gen, registry)
+    ui = TerminalUI()
 
     anchor = silence.build_identity_anchor(config)
     tick = 0
@@ -94,12 +96,14 @@ async def _chat(args):
 
     print(f"\n  {name}")
     print("  /help 查看命令\n")
+    ui.start()
 
     while True:
         try:
             user_input = await get_input("> ")
         except (EOFError, KeyboardInterrupt):
             print()
+            ui.stop()
             break
         if not user_input:
             continue
@@ -109,6 +113,7 @@ async def _chat(args):
             cmd, args = cmd_registry.match(user_input)
             if cmd:
                 if cmd.name == "quit":
+                    ui.stop()
                     break
                 result = cmd.handler(args, {})
                 if result:
@@ -127,13 +132,15 @@ async def _chat(args):
             mem_text = "; ".join(m.content[:60] for m in mems)
         except: pass
 
+        ui.thinking("心理分析中...")
         try:
             psych_result = await psych_engine.analyze(
                 {"description": user_input, "type": "social", "significance": 0.5},
                 memory_context=mem_text, assistant_config=config,
             )
         except Exception as e:
-            print(f"  [心理引擎: {e}]")
+            print(f"\n  [心理引擎: {e}]")
+            ui.done()
             continue
 
         # ── 2. 参数调制 ──
@@ -162,6 +169,7 @@ async def _chat(args):
 
         # ── 4. Agent 流式执行 ──
         turn = None
+        ui.thinking("生成中...")
         try:
             first_token = True
             async def on_delta(text: str):
@@ -169,12 +177,18 @@ async def _chat(args):
                 if first_token:
                     print()
                     first_token = False
+                    ui.done()
                 print(text, end="", flush=True)
             turn = await agent.run(system_prompt, user_input, on_delta=on_delta)
             if not first_token:
                 print()
+            ui.done()
+            # 工具状态
+            if turn and turn.tool_results:
+                ui.update(status=f"工具: {len(turn.tool_results)}个")
         except Exception as e:
             print(f"\n  [错误: {e}]")
+            ui.done()
             continue
 
         # ── 5. 工具结果 (抄 Hermes get_cute_tool_message) ──
@@ -198,10 +212,11 @@ async def _chat(args):
                                         event_type="dialogue", timestamp=time.time()))
         except: pass
 
-        # ── 8. HUD ──
+        # ── 8. UI 更新 ──
         tools_n = len(turn.tool_results) if turn else 0
         elapsed = time.time() - t0
-        print(f"  [tick:{tick} tok:{turn.total_tokens if turn else 0} tools:{tools_n} {elapsed:.1f}s]")
+        ui.update(tick=tick, tokens=turn.total_tokens if turn else 0,
+                  tools=tools_n, elapsed=elapsed, status="")
 
 
 def _load_config(path: str) -> dict:
