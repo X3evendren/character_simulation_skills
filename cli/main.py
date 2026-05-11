@@ -1,11 +1,21 @@
-"""Character Mind v3 CLI — 最简可运行版本。无 Rich，无 prompt_toolkit。"""
+"""Character Mind v3 CLI — prompt_toolkit + Rich via ANSI buffer。"""
 from __future__ import annotations
 
 import argparse, asyncio, os, sys, time
+from io import StringIO
 
 _pkg_parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _pkg_parent not in sys.path:
     sys.path.insert(0, _pkg_parent)
+
+
+def _rich_to_ansi(render_fn) -> str:
+    """Render Rich to ANSI string, safe for prompt_toolkit."""
+    buf = StringIO()
+    from rich.console import Console
+    c = Console(file=buf, force_terminal=True, color_system="standard")
+    render_fn(c)
+    return buf.getvalue()
 
 
 def main():
@@ -26,10 +36,22 @@ def main():
 
 async def _chat(args):
     from core.provider import OpenAIProvider
+    from core.psychology import PsychologyEngine
+    from core.params import UnifiedParams; from core.params_modulator import ParamsModulator
+    from core.love import OathStore,OathType,OathConstraint,SaturationDetector,LoveMetrics
+    from core.anti_rlhf import SilenceRule,PostFilter
+    from core.memory import WorkingMemory,MemoryRecord
     from core.agent_loop import AgentLoop
     from core.tools.base import ToolRegistry
     from core.tools.builtin import register_builtin_tools
+    from prompt_toolkit import PromptSession
+    from prompt_toolkit.history import FileHistory
+    from prompt_toolkit.patch_stdout import patch_stdout
+    from prompt_toolkit.formatted_text import ANSI, HTML
+    from prompt_toolkit.shortcuts import print_formatted_text
+    from prompt_toolkit.application import run_in_terminal
 
+    # provider
     if args.provider == "deepseek":
         ak = args.api_key or os.environ.get("DEEPSEEK_API_KEY", "")
         gen = OpenAIProvider(args.gen_model or "deepseek-v4-pro", ak, "https://api.deepseek.com/v1")
@@ -40,12 +62,7 @@ async def _chat(args):
         gen = OpenAIProvider(args.gen_model or "gpt-4o", ak, url)
         psych = OpenAIProvider(args.psych_model or "gpt-4o-mini", ak, url)
 
-    from core.psychology import PsychologyEngine
-    from core.params import UnifiedParams; from core.params_modulator import ParamsModulator
-    from core.love import OathStore,OathType,OathConstraint,SaturationDetector,PrecisionRouter,LoveMetrics
-    from core.anti_rlhf import SilenceRule,PostFilter
-    from core.memory import WorkingMemory,MemoryRecord
-
+    # engines
     cfg = _load_config(os.path.join(args.config, "assistant.md"))
     name = args.name or cfg.get("name", "林雨")
     psych_engine = PsychologyEngine(psych); params = UnifiedParams(); modulator = ParamsModulator(params)
@@ -57,48 +74,94 @@ async def _chat(args):
     anchor = silence.build_identity_anchor({"name":name,"essence":"","traits":cfg.get("traits","")})
     tick = 0
 
-    print(f"\n{name}  [/help /quit]\n")
+    # prompt_toolkit session
+    hist = os.path.expanduser("~/.character_mind_history")
+    os.makedirs(os.path.dirname(hist), exist_ok=True)
+    session = PromptSession(history=FileHistory(hist))
+
+    # banner — via prompt_toolkit
+    def _banner():
+        ansi = _rich_to_ansi(lambda c: c.print(f"\n  {name}  [/help /quit /stats]\n", markup=False))
+        print_formatted_text(ANSI(ansi))
+    await run_in_terminal(_banner)
 
     while True:
-        try: user_input = input("> ").strip()
-        except (EOFError,KeyboardInterrupt): print("\nbye"); break
+        try:
+            with patch_stdout():
+                user_input = await session.prompt_async(HTML("<b>></b> "))
+        except (EOFError, KeyboardInterrupt):
+            print_formatted_text(ANSI(_rich_to_ansi(lambda c: c.print("\nGoodbye!"))))
+            break
+        user_input = user_input.strip()
         if not user_input: continue
         if user_input == "/quit": break
 
+        # commands
+        if user_input == "/stats":
+            s = params.snapshot()
+            ansi = _rich_to_ansi(lambda c: c.print(f"  pleasure={s['pleasure']:.1f} safety={s['safety_precision']:.1f}"))
+            await run_in_terminal(lambda: print_formatted_text(ANSI(ansi)))
+            continue
+        if user_input == "/love":
+            ansi = _rich_to_ansi(lambda c: c.print(f"  oath={oath.state.value} sat={sat.saturation_level:.2f}"))
+            await run_in_terminal(lambda: print_formatted_text(ANSI(ansi)))
+            continue
+
         tick += 1; t0 = time.time()
 
-        # psych
+        # memory
         mem_text = ""
         try:
             mems = await wm.recall(user_input, 2)
             mem_text = "; ".join(m.content[:60] for m in mems)
         except: pass
+
+        # psych (flash)
         try:
             pr = await psych_engine.analyze({"description":user_input,"type":"social","significance":0.5},memory_context=mem_text,assistant_config=cfg)
-        except Exception as e: print(f"[psych: {e}]"); continue
+        except Exception as e:
+            ansi = _rich_to_ansi(lambda c: c.print(f"  [red]psych: {e}[/red]"))
+            await run_in_terminal(lambda: print_formatted_text(ANSI(ansi)))
+            continue
 
         # modulate
         fast = modulator.modulate_fast(pr); modulator.apply_shifts(fast)
         sat.observe(0.2,abs(params.self_update_openness.activation)); sat.evaluate()
 
-        # prompt
+        # system prompt
         s = params.snapshot()
         lc = f"Oath:{oath.state.value}({oath.strength:.1f}) sat:{sat.saturation_level:.2f}\n" if sat.saturation_level>0.3 else ""
         sys_prompt = silence.inject_pre_prompt(
             f"You are {name}. {cfg.get('traits','')[:100]}\n[inner] {pr.inner_monologue}\n{lc}[mem] {mem_text}\n\n"
-            f"NO ACTIONS IN PARENS. Just talk naturally. Use tools when needed: read_file,write_file,list_dir,exec_command,search_content,search_files.", anchor)
+            f"NO ACTIONS IN PARENS. Talk naturally. Use tools: read_file,write_file,list_dir,exec_command,search_content,search_files.", anchor)
 
-        # stream
-        print(f"\n{name}: ", end="", flush=True)
-        try:
-            async def od(t): print(t, end="", flush=True)
-            turn = await agent.run(sys_prompt, user_input, on_delta=od)
-            print()
-        except Exception as e: print(f"[err: {e}]"); continue
+        # agent stream — collect tokens, then render via Rich ANSI
+        tokens = []
+        async def od(t): tokens.append(t)
+        try: turn = await agent.run(sys_prompt, user_input, on_delta=od)
+        except Exception as e:
+            ansi = _rich_to_ansi(lambda c: c.print(f"  [red]err: {e}[/red]"))
+            await run_in_terminal(lambda: print_formatted_text(ANSI(ansi)))
+            continue
 
-        # tools
+        # render response via Rich Markdown → ANSI
+        full_text = "".join(tokens)
+        if full_text:
+            from rich.markdown import Markdown
+            def _render_response(c):
+                c.print()
+                c.print(f"[cyan]{name}[/cyan]")
+                c.print(Markdown(full_text))
+                c.print()
+            ansi = _rich_to_ansi(_render_response)
+            await run_in_terminal(lambda: print_formatted_text(ANSI(ansi)))
+
+        # tool results
         for tr in (turn.tool_results if turn else []):
-            print(f"  {'+OK' if tr.success else '-ERR'} {tr.name}: {(tr.output or tr.error)[:80].replace(chr(10),' ')}")
+            icon = "+" if tr.success else "-"
+            p = (tr.output or tr.error)[:80].replace("\n"," ")
+            ansi = _rich_to_ansi(lambda c: c.print(f"  [dim]{icon} {tr.name}: {p}[/dim]"))
+            await run_in_terminal(lambda: print_formatted_text(ANSI(ansi)))
 
         # post
         if turn and turn.final_text: _, _ = pf.replace(turn.final_text)
@@ -108,7 +171,8 @@ async def _chat(args):
         except: pass
 
         tn = len(turn.tool_results) if turn else 0; tok = turn.total_tokens if turn else 0
-        print(f"  [t{tick} tok:{tok} tool:{tn} {time.time()-t0:.0f}s]\n")
+        ansi = _rich_to_ansi(lambda c: c.print(f"  [dim]t{tick} tok:{tok} tool:{tn} {time.time()-t0:.0f}s[/dim]"))
+        await run_in_terminal(lambda: print_formatted_text(ANSI(ansi)))
 
 
 def _load_config(path: str) -> dict:
