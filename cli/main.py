@@ -1,11 +1,7 @@
-"""Character Mind v3 CLI — 抄 Claude Code main.tsx + REPL.tsx 模式。"""
+"""Character Mind v3 CLI"""
 from __future__ import annotations
 
-import argparse
-import asyncio
-import os
-import sys
-import time
+import argparse, asyncio, os, sys, time
 
 _pkg_parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _pkg_parent not in sys.path:
@@ -13,42 +9,34 @@ if _pkg_parent not in sys.path:
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="character-mind", description="Character Mind v3")
-    sub = parser.add_subparsers(dest="command")
-    p = sub.add_parser("chat", help="交互对话")
-    p.add_argument("--config", default="config")
-    p.add_argument("--provider", default="deepseek")
-    p.add_argument("--psych-model", default="")
-    p.add_argument("--gen-model", default="")
-    p.add_argument("--api-key", default="")
-    p.add_argument("--base-url", default="")
-    p.add_argument("--name", default="")
-    sub.add_parser("serve", help="Gateway")
-    args = parser.parse_args()
-    if args.command == "chat":
+    p = argparse.ArgumentParser(prog="character-mind")
+    s = p.add_subparsers(dest="cmd")
+    c = s.add_parser("chat")
+    c.add_argument("--config", default="config")
+    c.add_argument("--provider", default="deepseek")
+    c.add_argument("--psych-model", default="")
+    c.add_argument("--gen-model", default="")
+    c.add_argument("--api-key", default="")
+    c.add_argument("--base-url", default="")
+    c.add_argument("--name", default="")
+    s.add_parser("serve")
+    args = p.parse_args()
+    if args.cmd == "chat":
         asyncio.run(_chat(args))
-    elif args.command == "serve":
-        print("Gateway: python -m cli serve")
-    else:
-        parser.print_help()
 
 
 async def _chat(args):
-    """主聊天循环 — 抄 Claude Code REPL 模式。"""
-    # ── Provider ──
     from core.provider import OpenAIProvider
     if args.provider == "deepseek":
         ak = args.api_key or os.environ.get("DEEPSEEK_API_KEY", "")
-        base_url = "https://api.deepseek.com/v1"
-        gen = OpenAIProvider(args.gen_model or "deepseek-v4-pro", ak, base_url)
-        psych = OpenAIProvider(args.psych_model or "deepseek-v4-flash", ak, base_url)
+        gen = OpenAIProvider(args.gen_model or "deepseek-v4-pro", ak, "https://api.deepseek.com/v1")
+        psych = OpenAIProvider(args.psych_model or "deepseek-v4-flash", ak, "https://api.deepseek.com/v1")
     else:
         ak = args.api_key or os.environ.get("OPENAI_API_KEY", "not-needed")
-        base_url = args.base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
-        gen = OpenAIProvider(args.gen_model or "gpt-4o", ak, base_url)
-        psych = OpenAIProvider(args.psych_model or "gpt-4o-mini", ak, base_url)
+        url = args.base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
+        gen = OpenAIProvider(args.gen_model or "gpt-4o", ak, url)
+        psych = OpenAIProvider(args.psych_model or "gpt-4o-mini", ak, url)
 
-    # ── 引擎 ──
     from core.psychology import PsychologyEngine
     from core.params import UnifiedParams
     from core.params_modulator import ParamsModulator
@@ -58,10 +46,8 @@ async def _chat(args):
     from core.agent_loop import AgentLoop
     from core.tools.base import ToolRegistry
     from core.tools.builtin import register_builtin_tools
-    from cli.main import _load_config
     from cli.input import get_input
     from cli.commands import create_default_registry
-    from cli.display import TerminalUI
 
     config = _load_config(os.path.join(args.config, "assistant.md"))
     name = args.name or config.get("name", "林雨")
@@ -73,166 +59,123 @@ async def _chat(args):
     oath = oath_store.declare("user", OathType.EXCLUSIVE,
                               OathConstraint(excluded_actions=["abandon", "betray"]))
     oath.renew()
-    sat_detector = SaturationDetector("user")
+    sat = SaturationDetector("user")
     router = PrecisionRouter("user")
     metrics = LoveMetrics("user")
     silence = SilenceRule()
     post_filter = PostFilter()
     wm = WorkingMemory()
-
-    # ── 工具 ──
     registry = ToolRegistry()
     register_builtin_tools(registry)
-
-    # ── Agent + UI ──
     agent = AgentLoop(gen, registry)
-    ui = TerminalUI()
-
+    cmd_reg = create_default_registry(params, oath, sat, metrics, None, None)
     anchor = silence.build_identity_anchor(config)
     tick = 0
 
-    # ── 命令系统 ──
-    cmd_registry = create_default_registry(params, oath, sat_detector, metrics, None, None)
-
-    print(f"\n  {name}")
-    print("  /help 查看命令\n")
-    ui.start()
+    print(f"\n  {name}  [/help]\n")
 
     while True:
         try:
-            user_input = await get_input("> ")
+            ui = await get_input("> ")
         except (EOFError, KeyboardInterrupt):
-            print()
-            ui.stop()
-            break
-        if not user_input:
-            continue
+            print(); break
+        if not ui: continue
 
-        # ── 命令 ──
-        if user_input.startswith("/"):
-            cmd, args = cmd_registry.match(user_input)
+        if ui.startswith("/"):
+            cmd, args = cmd_reg.match(ui)
             if cmd:
-                if cmd.name == "quit":
-                    ui.stop()
-                    break
-                result = cmd.handler(args, {})
-                if result:
-                    print(f"  {result}")
-            else:
-                print(f"  未知命令: {user_input}")
+                if cmd.name == "quit": break
+                r = cmd.handler(args, {})
+                if r: print(f"  {r}")
+            else: print(f"  ? {ui}")
             continue
 
         tick += 1
         t0 = time.time()
 
-        # ── 1. 心理学分析 (flash 模型) ──
+        # 1. psych (flash)
         mem_text = ""
         try:
-            mems = await wm.recall(user_input, 2)
+            mems = await wm.recall(ui, 2)
             mem_text = "; ".join(m.content[:60] for m in mems)
         except: pass
 
-        ui.thinking("心理分析中...")
+        print("  ...", end="", flush=True)
         try:
             psych_result = await psych_engine.analyze(
-                {"description": user_input, "type": "social", "significance": 0.5},
-                memory_context=mem_text, assistant_config=config,
-            )
+                {"description": ui, "type": "social", "significance": 0.5},
+                memory_context=mem_text, assistant_config=config)
         except Exception as e:
-            print(f"\n  [心理引擎: {e}]")
-            ui.done()
-            continue
+            print(f"\r  [psych err: {e}]"); continue
 
-        # ── 2. 参数调制 ──
+        # 2. modulate
         fast = modulator.modulate_fast(psych_result)
         modulator.apply_shifts(fast)
-        sat_detector.observe(0.2, abs(params.self_update_openness.activation))
-        sat_detector.evaluate()
+        sat.observe(0.2, abs(params.self_update_openness.activation))
+        sat.evaluate()
 
-        # ── 3. 构建 Prompt ──
+        # 3. prompt
         snap = params.snapshot()
         love_ctx = ""
-        if sat_detector.saturation_level > 0.3:
-            love_ctx = f"誓约:{oath.state.value}({oath.strength:.1f}) 关系:{sat_detector.saturation_level:.2f}\n"
+        if sat.saturation_level > 0.3:
+            love_ctx = f"誓约:{oath.state.value}({oath.strength:.1f}) 关系:{sat.saturation_level:.2f}\n"
 
-        system_prompt = silence.inject_pre_prompt(
+        system = silence.inject_pre_prompt(
             f"你是{name}。{config.get('traits','')[:100]}\n"
-            f"[内心] {psych_result.inner_monologue}\n"
-            f"{love_ctx}"
-            f"[状态] pleasure={snap['pleasure']:.1f} safety={snap['safety_precision']:.1f} "
-            f"express={snap['expressiveness']:.1f}\n"
+            f"[内心] {psych_result.inner_monologue}\n{love_ctx}"
+            f"[状态] pleasure={snap['pleasure']:.1f} safety={snap['safety_precision']:.1f} express={snap['expressiveness']:.1f}\n"
             f"[记忆] {mem_text}\n\n"
-            f"【硬约束】纯文本。禁止括号/动作/舞台指示。自然说话。\n"
-            f"你能用工具: read_file, write_file, list_dir, exec_command, search_content, search_files。需要时直接用。",
-            anchor,
-        )
+            f"硬约束: 纯文本。禁止括号/动作/舞台指示。自然说话。\n"
+            f"工具: read_file, write_file, list_dir, exec_command, search_content, search_files。需要时直接用。", anchor)
 
-        # ── 4. Agent 流式执行 ──
+        # 4. agent stream
         turn = None
-        ui.thinking("生成中...")
         try:
-            first_token = True
-            async def on_delta(text: str):
-                nonlocal first_token
-                if first_token:
-                    print()
-                    first_token = False
-                    ui.done()
+            first = True
+            async def od(text):
+                nonlocal first
+                if first: print("\r", end=""); first = False
                 print(text, end="", flush=True)
-            turn = await agent.run(system_prompt, user_input, on_delta=on_delta)
-            if not first_token:
-                print()
-            ui.done()
-            # 工具状态
-            if turn and turn.tool_results:
-                ui.update(status=f"工具: {len(turn.tool_results)}个")
+            turn = await agent.run(system, ui, on_delta=od)
+            if not first: print()
         except Exception as e:
-            print(f"\n  [错误: {e}]")
-            ui.done()
-            continue
+            print(f"\r  [err: {e}]"); continue
 
-        # ── 5. 工具结果 (抄 Hermes get_cute_tool_message) ──
-        for tr in turn.tool_results:
-            icon = "✓" if tr.success else "✗"
-            preview = (tr.output or tr.error)[:80].replace("\n", " ")
-            print(f"  {icon} {tr.name}: {preview}")
+        # 5. tools
+        for tr in (turn.tool_results if turn else []):
+            i = "+" if tr.success else "-"
+            print(f"  {i} {tr.name}: {(tr.output or tr.error)[:80].replace(chr(10),' ')}")
 
-        # ── 6. 后处理 ──
-        final = turn.final_text
-        if final:
-            final, mods = post_filter.replace(final)
+        # 6. post
+        if turn and turn.final_text:
+            _, mods = post_filter.replace(turn.final_text)
         slow = modulator.modulate_slow(psych_result, mem_text, fast)
         modulator.apply_shifts(slow, is_baseline=True)
         params.decay_all_activations(0.25)
         metrics.record_positive()
 
-        # ── 7. 存储 ──
-        try:
-            await wm.store(MemoryRecord(content=user_input, significance=0.5,
-                                        event_type="dialogue", timestamp=time.time()))
+        # 7. store
+        try: await wm.store(MemoryRecord(content=ui, significance=0.5, event_type="dialogue", timestamp=time.time()))
         except: pass
 
-        # ── 8. UI 更新 ──
-        tools_n = len(turn.tool_results) if turn else 0
-        elapsed = time.time() - t0
-        ui.update(tick=tick, tokens=turn.total_tokens if turn else 0,
-                  tools=tools_n, elapsed=elapsed, status="")
+        # 8. status
+        tn = len(turn.tool_results) if turn else 0
+        tok = turn.total_tokens if turn else 0
+        print(f"  [t{tick} tok:{tok} tool:{tn} {time.time()-t0:.0f}s]")
 
 
 def _load_config(path: str) -> dict:
     import re
-    config = {"name": "林雨", "traits": "", "essence": ""}
+    c = {"name": "林雨", "traits": "", "essence": ""}
     try:
-        with open(path, "r", encoding="utf-8") as f:
-            text = f.read()
-        for key in ["名字", "name"]:
-            m = re.search(rf'{key}[：:]\s*(.+)', text)
-            if m: config["name"] = m.group(1).strip(); break
+        with open(path, "r", encoding="utf-8") as f: text = f.read()
+        for k in ["名字", "name"]:
+            m = re.search(rf'{k}[：:]\s*(.+)', text)
+            if m: c["name"] = m.group(1).strip(); break
         m = re.search(r'## 人格底色\n(.*?)(?=\n##|\Z)', text, re.DOTALL)
-        if m: config["traits"] = m.group(1).strip().replace("\n", " ")
-    except FileNotFoundError:
-        pass
-    return config
+        if m: c["traits"] = m.group(1).strip().replace("\n", " ")
+    except FileNotFoundError: pass
+    return c
 
 
 if __name__ == "__main__":
