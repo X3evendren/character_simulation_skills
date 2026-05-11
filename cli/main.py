@@ -355,7 +355,7 @@ async def _chat(args):
                 print(f"\n  [空响应] iters={turn.iterations} tokens={turn.total_tokens}")
 
             # 工具调用反馈
-            for tr in turn.tool_calls:
+            for tr in turn.tool_results:
                 renderer.print_tool("", tr.name, 0,
                                     tr.output[:60] if tr.success else tr.error[:60])
         except Exception as e:
@@ -410,7 +410,7 @@ async def _chat(args):
         session.fsm.transition("done")
 
         # HUD 更新
-        tools_n = len(turn.tool_calls) if turn else 0
+        tools_n = len(turn.tool_results) if turn else 0
         hud.update(tick=tick, tokens=session.total_tokens, tools_used=tools_n)
         hud.show()
 
