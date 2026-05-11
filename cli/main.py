@@ -60,6 +60,7 @@ async def _chat(args):
     from core.tools.builtin import register_builtin_tools
     from cli.main import _load_config
     from cli.input import get_input
+    from cli.commands import create_default_registry
 
     config = _load_config(os.path.join(args.config, "assistant.md"))
     name = args.name or config.get("name", "林雨")
@@ -88,8 +89,11 @@ async def _chat(args):
     anchor = silence.build_identity_anchor(config)
     tick = 0
 
+    # ── 命令系统 ──
+    cmd_registry = create_default_registry(params, oath, sat_detector, metrics, None, None)
+
     print(f"\n  {name}")
-    print("  /quit /stats /love /good /bad\n")
+    print("  /help 查看命令\n")
 
     while True:
         try:
@@ -99,12 +103,18 @@ async def _chat(args):
             break
         if not user_input:
             continue
-        if user_input == "/quit":
-            break
 
         # ── 命令 ──
         if user_input.startswith("/"):
-            _handle_command(user_input, params, oath, sat_detector, metrics)
+            cmd, args = cmd_registry.match(user_input)
+            if cmd:
+                if cmd.name == "quit":
+                    break
+                result = cmd.handler(args, {})
+                if result:
+                    print(f"  {result}")
+            else:
+                print(f"  未知命令: {user_input}")
             continue
 
         tick += 1
@@ -153,11 +163,16 @@ async def _chat(args):
         # ── 4. Agent 流式执行 ──
         turn = None
         try:
+            first_token = True
             async def on_delta(text: str):
+                nonlocal first_token
+                if first_token:
+                    print()
+                    first_token = False
                 print(text, end="", flush=True)
-            print()
             turn = await agent.run(system_prompt, user_input, on_delta=on_delta)
-            print()
+            if not first_token:
+                print()
         except Exception as e:
             print(f"\n  [错误: {e}]")
             continue
@@ -187,25 +202,6 @@ async def _chat(args):
         tools_n = len(turn.tool_results) if turn else 0
         elapsed = time.time() - t0
         print(f"  [tick:{tick} tok:{turn.total_tokens if turn else 0} tools:{tools_n} {elapsed:.1f}s]")
-
-
-def _handle_command(cmd: str, params, oath, sat, metrics):
-    if cmd == "/stats":
-        snap = params.snapshot()
-        print(f"  pleasure={snap['pleasure']:.1f} safety={snap['safety_precision']:.1f} "
-              f"threat={snap['threat_precision']:.1f} intimacy={snap['intimacy']:.1f}")
-    elif cmd == "/love":
-        print(f"  oath={oath.state.value} sat={sat.saturation_level:.2f} "
-              f"health={metrics.gottman_status} assurance={metrics.assurance:.2f}")
-    elif cmd == "/good":
-        metrics.record_positive()
-        oath.renew()
-        print("  ✓")
-    elif cmd == "/bad":
-        metrics.record_negative()
-        print("  ✗")
-    else:
-        print(f"  未知命令: {cmd}")
 
 
 def _load_config(path: str) -> dict:
