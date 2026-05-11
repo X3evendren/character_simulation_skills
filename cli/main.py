@@ -34,8 +34,8 @@ def main():
     chat_parser = sub.add_parser("chat", help="交互对话")
     chat_parser.add_argument("--config", default="config", help="配置目录")
     chat_parser.add_argument("--provider", default="openai", help="openai / anthropic / deepseek")
-    chat_parser.add_argument("--psych-model", default="gpt-4o-mini", help="心理推理模型")
-    chat_parser.add_argument("--gen-model", default="gpt-4o", help="对话生成模型")
+    chat_parser.add_argument("--psych-model", default="", help="心理推理模型 (空=跟随provider默认)")
+    chat_parser.add_argument("--gen-model", default="", help="对话生成模型 (空=跟随provider默认)")
     chat_parser.add_argument("--api-key", default="", help="API Key")
     chat_parser.add_argument("--base-url", default="", help="API Base URL")
     chat_parser.add_argument("--name", default="", help="角色名字(覆盖config)")
@@ -89,9 +89,8 @@ async def _chat(args):
     elif args.provider == "deepseek":
         ak = args.api_key or os.environ.get("DEEPSEEK_API_KEY", "")
         base_url = "https://api.deepseek.com/v1"
-        provider = OpenAIProvider(model=args.gen_model or "deepseek-chat", api_key=ak, base_url=base_url)
-        psych_provider = OpenAIProvider(model=args.psych_model or "deepseek-chat", api_key=ak, base_url=base_url)
-        # deepseek-chat = 通用, deepseek-reasoner = 推理增强 (可选--gen-model指定)
+        provider = OpenAIProvider(model=args.gen_model or "deepseek-v4-pro", api_key=ak, base_url=base_url)
+        psych_provider = OpenAIProvider(model=args.psych_model or "deepseek-v4-flash", api_key=ak, base_url=base_url)
     else:
         base_url = args.base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
         ak = args.api_key or os.environ.get("OPENAI_API_KEY", "not-needed")
@@ -212,13 +211,18 @@ async def _chat(args):
         # 2. 心理学分析 + parameter_shifts
         # ═══════════════════════════════════════════════════
         renderer._start_spinner()
-        psych_result = await psych_engine.analyze(
-            event={"description": user_input, "type": "social", "significance": 0.5},
-            memory_context=memory_text,
-            current_mindstate=session.mindstate,
-            drive_state=drive_state.to_dict(),
-            assistant_config=assistant_config,
-        )
+        try:
+            psych_result = await psych_engine.analyze(
+                event={"description": user_input, "type": "social", "significance": 0.5},
+                memory_context=memory_text,
+                current_mindstate=session.mindstate,
+                drive_state=drive_state.to_dict(),
+                assistant_config=assistant_config,
+            )
+        except Exception as e:
+            renderer._stop_spinner()
+            print(f"\n  [心理引擎错误: {e}]")
+            continue
         renderer._stop_spinner()
 
         # ═══════════════════════════════════════════════════
@@ -317,23 +321,31 @@ async def _chat(args):
         # ═══════════════════════════════════════════════════
         # 9. 流式生成
         # ═══════════════════════════════════════════════════
-        if provider.supports_streaming():
-            async for t in provider.chat_stream(
-                [{"role": "system", "content": system_prompt},
-                 {"role": "user", "content": user_input}],
-                temperature=0.7, max_tokens=4000,
-            ):
-                await renderer.on_delta(t)
-            await renderer.on_end()
-            final_text = renderer._buf
-        else:
-            resp = await provider.chat(
-                [{"role": "system", "content": system_prompt},
-                 {"role": "user", "content": user_input}],
-                temperature=0.7, max_tokens=4000,
-            )
-            final_text = resp.content
-            print(f"\n{final_text}\n")
+        try:
+            renderer._buf = ""
+            if provider.supports_streaming():
+                async for t in provider.chat_stream(
+                    [{"role": "system", "content": system_prompt},
+                     {"role": "user", "content": user_input}],
+                    temperature=0.7, max_tokens=4000,
+                ):
+                    await renderer.on_delta(t)
+                await renderer.on_end()
+                final_text = renderer._buf
+            else:
+                resp = await provider.chat(
+                    [{"role": "system", "content": system_prompt},
+                     {"role": "user", "content": user_input}],
+                    temperature=0.7, max_tokens=4000,
+                )
+                final_text = resp.content
+                if final_text:
+                    print(f"\n{final_text}\n")
+                else:
+                    print(f"\n  [空响应]")
+        except Exception as e:
+            print(f"\n  [生成错误: {e}]")
+            final_text = ""
 
         final_text, mods = post_filter.replace(final_text)
         print()

@@ -92,40 +92,46 @@ class OpenAIProvider(LLMProvider):
         self.base_url = base_url.rstrip("/")
 
     async def chat(self, messages, temperature=0.7, max_tokens=4096, tools=None):
-        import aiohttp
+        import urllib.request
+        import urllib.error
+        import json as _json
 
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
-        payload = {
+        payload = _json.dumps({
             "model": self.model,
             "messages": messages,
             "temperature": temperature,
             "max_tokens": max_tokens,
-        }
-        if tools:
-            payload["tools"] = tools
+        }, ensure_ascii=False).encode("utf-8")
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                f"{self.base_url}/chat/completions",
-                headers=headers, json=payload,
-            ) as resp:
-                data = await resp.json()
+        req = urllib.request.Request(
+            f"{self.base_url}/chat/completions",
+            data=payload,
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                text = resp.read().decode("utf-8")
+        except urllib.error.HTTPError as e:
+            body = e.read().decode("utf-8", errors="replace")[:500]
+            return LLMResponse(content=f"[HTTP {e.code}] {body}", usage={})
+        except Exception as e:
+            return LLMResponse(content=f"[错误: {e}]", usage={})
 
+        data = _json.loads(text)
         choice = data.get("choices", [{}])[0]
-        message = choice.get("message", {})
+        message = choice.get("message", {}) if choice else {}
         content = message.get("content", "") or ""
 
         tool_calls = []
         for tc in message.get("tool_calls", []):
             func = tc.get("function", {})
-            import json
             args = {}
             try:
-                args = json.loads(func.get("arguments", "{}"))
-            except json.JSONDecodeError:
+                args = _json.loads(func.get("arguments", "{}"))
+            except Exception:
                 pass
             tool_calls.append(ToolCallRequest(
                 id=tc.get("id", ""),
@@ -137,46 +143,45 @@ class OpenAIProvider(LLMProvider):
             content=content,
             tool_calls=tool_calls,
             usage=data.get("usage", {}),
-            finish_reason=choice.get("finish_reason", "stop"),
+            finish_reason=choice.get("finish_reason", "stop") if choice else "stop",
         )
 
     async def chat_stream(self, messages, temperature=0.7, max_tokens=4096, tools=None):
-        import aiohttp
-        import json
+        """流式输出——urllib 实现。"""
+        import urllib.request
+        import json as _json
 
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
-        payload = {
+        payload = _json.dumps({
             "model": self.model,
             "messages": messages,
             "temperature": temperature,
             "max_tokens": max_tokens,
             "stream": True,
-        }
-        if tools:
-            payload["tools"] = tools
+        }, ensure_ascii=False).encode("utf-8")
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                f"{self.base_url}/chat/completions",
-                headers=headers, json=payload,
-            ) as resp:
-                async for line in resp.content:
-                    line = line.decode("utf-8").strip()
-                    if line.startswith("data: "):
-                        data_str = line[6:]
-                        if data_str == "[DONE]":
-                            break
-                        try:
-                            chunk = json.loads(data_str)
-                            delta = chunk.get("choices", [{}])[0].get("delta", {})
-                            content = delta.get("content", "")
-                            if content:
-                                yield content
-                        except json.JSONDecodeError:
-                            continue
+        req = urllib.request.Request(
+            f"{self.base_url}/chat/completions",
+            data=payload,
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            for line in resp:
+                line = line.decode("utf-8").strip()
+                if line.startswith("data: "):
+                    data_str = line[6:]
+                    if data_str == "[DONE]":
+                        break
+                    try:
+                        chunk = _json.loads(data_str)
+                        delta = chunk.get("choices", [{}])[0].get("delta", {})
+                        content = delta.get("content", "")
+                        if content:
+                            yield content
+                    except _json.JSONDecodeError:
+                        continue
 
     def supports_tools(self) -> bool:
         return True
