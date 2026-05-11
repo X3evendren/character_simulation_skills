@@ -1,4 +1,4 @@
-"""Character Mind v3 CLI — 抄 nanobot REPL 模式。顺序执行，不需 run_in_terminal。"""
+"""Character Mind v3 CLI — 抄 nanobot REPL: prompt_toolkit + patch_stdout + Rich Live。"""
 from __future__ import annotations
 
 import argparse, asyncio, os, sys, time
@@ -38,9 +38,15 @@ async def _chat(args):
     from core.tools.builtin import register_builtin_tools
     from cli.stream import StreamRenderer
     from rich.console import Console
+    from prompt_toolkit import PromptSession
+    from prompt_toolkit.history import FileHistory
+    from prompt_toolkit.patch_stdout import patch_stdout
+    from prompt_toolkit.formatted_text import HTML
 
     console = Console()
+    console.print(f"\n  林雨  [/help /quit /stats]\n")
 
+    # provider
     if args.provider == "deepseek":
         ak = args.api_key or os.environ.get("DEEPSEEK_API_KEY", "")
         gen = OpenAIProvider(args.gen_model or "deepseek-v4-pro", ak, "https://api.deepseek.com/v1")
@@ -51,15 +57,13 @@ async def _chat(args):
         gen = OpenAIProvider(args.gen_model or "gpt-4o", ak, url)
         psych = OpenAIProvider(args.psych_model or "gpt-4o-mini", ak, url)
 
-    config = _load_config(os.path.join(args.config, "assistant.md"))
-    name = args.name or config.get("name", "林雨")
-
+    # engines
+    name = args.name or "林雨"
     psych_engine = PsychologyEngine(psych)
     params = UnifiedParams()
     modulator = ParamsModulator(params)
-    oath_store = OathStore()
-    oath = oath_store.declare("user", OathType.EXCLUSIVE,
-                              OathConstraint(excluded_actions=["abandon", "betray"]))
+    oath = OathStore().declare("user", OathType.EXCLUSIVE,
+                               OathConstraint(excluded_actions=["abandon", "betray"]))
     oath.renew()
     sat = SaturationDetector("user")
     metrics = LoveMetrics("user")
@@ -68,24 +72,31 @@ async def _chat(args):
     wm = WorkingMemory()
     registry = ToolRegistry(); register_builtin_tools(registry)
     agent = AgentLoop(gen, registry)
-    anchor = silence.build_identity_anchor(config)
+    anchor = silence.build_identity_anchor(
+        {"name": name, "essence": "", "traits": _load_config(os.path.join(args.config, "assistant.md")).get("traits", "")})
     tick = 0
 
-    console.print(f"\n  {name}  [/help /quit /stats]\n")
+    # prompt_toolkit session
+    hist = os.path.expanduser("~/.character_mind_history")
+    os.makedirs(os.path.dirname(hist), exist_ok=True)
+    session = PromptSession(history=FileHistory(hist))
+
+    cfg = _load_config(os.path.join(args.config, "assistant.md"))
 
     while True:
         try:
-            user_input = input("> ").strip()
+            with patch_stdout():
+                user_input = await session.prompt_async(HTML("<b>></b> "))
         except (EOFError, KeyboardInterrupt):
-            console.print("\nGoodbye!")
-            break
+            console.print("\nGoodbye!"); break
+        user_input = user_input.strip()
         if not user_input: continue
         if user_input == "/quit": break
 
-        # commands
+        # commands (via Rich, prompt_toolkit already released terminal)
         if user_input == "/stats":
-            snap = params.snapshot()
-            console.print(f"  pleasure={snap['pleasure']:.1f} safety={snap['safety_precision']:.1f} threat={snap['threat_precision']:.1f}")
+            s = params.snapshot()
+            console.print(f"  pleasure={s['pleasure']:.1f} safety={s['safety_precision']:.1f} threat={s['threat_precision']:.1f}")
             continue
         if user_input == "/love":
             console.print(f"  oath={oath.state.value}({oath.strength:.1f}) sat={sat.saturation_level:.2f}")
@@ -104,13 +115,13 @@ async def _chat(args):
             mem_text = "; ".join(m.content[:60] for m in mems)
         except: pass
 
-        # psych
+        # psych (flash)
         try:
             psych_result = await psych_engine.analyze(
                 {"description": user_input, "type": "social", "significance": 0.5},
-                memory_context=mem_text, assistant_config=config)
+                memory_context=mem_text, assistant_config=cfg)
         except Exception as e:
-            console.print(f"  [err: {e}]"); continue
+            console.print(f"  [red]psych err: {e}[/red]"); continue
 
         # modulate
         fast = modulator.modulate_fast(psych_result)
@@ -118,18 +129,18 @@ async def _chat(args):
         sat.observe(0.2, abs(params.self_update_openness.activation))
         sat.evaluate()
 
-        # prompt
-        snap = params.snapshot()
-        love_ctx = f"誓约:{oath.state.value}({oath.strength:.1f}) 关系:{sat.saturation_level:.2f}\n" if sat.saturation_level > 0.3 else ""
+        # system prompt
+        s = params.snapshot()
+        lc = f"誓约:{oath.state.value}({oath.strength:.1f}) 关系:{sat.saturation_level:.2f}\n" if sat.saturation_level > 0.3 else ""
         system = silence.inject_pre_prompt(
-            f"你是{name}。{config.get('traits','')[:100]}\n"
-            f"[内心] {psych_result.inner_monologue}\n{love_ctx}"
-            f"[状态] pleasure={snap['pleasure']:.1f} safety={snap['safety_precision']:.1f} express={snap['expressiveness']:.1f}\n"
+            f"你是{name}。{cfg.get('traits','')[:100]}\n"
+            f"[内心] {psych_result.inner_monologue}\n{lc}"
+            f"[状态] pleasure={s['pleasure']:.1f} safety={s['safety_precision']:.1f} express={s['expressiveness']:.1f}\n"
             f"[记忆] {mem_text}\n\n"
             f"硬约束: 纯文本。禁止括号/动作/舞台指示。自然说话。\n"
             f"工具: read_file, write_file, list_dir, exec_command, search_content, search_files。需要时直接用。", anchor)
 
-        # agent stream with StreamRenderer
+        # agent stream with Rich Live
         renderer = StreamRenderer(bot_name=name)
         try:
             async def od(text): await renderer.on_delta(text)
@@ -138,13 +149,13 @@ async def _chat(args):
             else: await renderer.close()
         except Exception as e:
             await renderer.close()
-            console.print(f"  [err: {e}]"); continue
+            console.print(f"  [red]err: {e}[/red]"); continue
 
         # tool results
         for tr in (turn.tool_results if turn else []):
             icon = "+" if tr.success else "-"
-            preview = (tr.output or tr.error)[:80].replace("\n", " ")
-            console.print(f"  [dim]{icon} {tr.name}: {preview}[/dim]")
+            p = (tr.output or tr.error)[:80].replace("\n", " ")
+            console.print(f"  [dim]{icon} {tr.name}: {p}[/dim]")
 
         # post
         if turn and turn.final_text: _, _ = post_filter.replace(turn.final_text)
