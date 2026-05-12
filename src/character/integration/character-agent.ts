@@ -15,6 +15,7 @@ import { IrreduciblePrior } from "../love/irreducible-prior";
 import { OathStore } from "../love/oath-store";
 import { LoveMetrics } from "../love/love-metrics";
 import { SelfModel } from "../consciousness/self-model";
+import { AffectiveResidue } from "../consciousness/affective-residue";
 import { PredictionTracker } from "../consciousness/prediction";
 import { PostFilter } from "../anti-rlhf/post-filter";
 import { WorkingMemory } from "../memory/working";
@@ -69,6 +70,7 @@ export class CharacterAgent {
   oathStore: OathStore;
   loveMetrics: LoveMetrics;
   selfModel: SelfModel;
+  affectiveResidue: AffectiveResidue;
   predictionTracker: PredictionTracker;
   postFilter: PostFilter;
   workingMemory: WorkingMemory;
@@ -139,6 +141,7 @@ export class CharacterAgent {
     // Consciousness
     this.selfModel = new SelfModel();
     this.selfModel.initFromConfig(this.config as unknown as Record<string, string>);
+    this.affectiveResidue = new AffectiveResidue();
     this.predictionTracker = new PredictionTracker();
 
     // Anti-RLHF
@@ -227,6 +230,7 @@ export class CharacterAgent {
       taskMode,
       emotionDominant: emoDominant,
       emotionIntensity: emoIntensity,
+      affectiveResidueText: this.affectiveResidue.formatForPrompt(),
     });
     const userPrompt = buildUserPrompt(input, taskMode);
 
@@ -344,6 +348,15 @@ export class CharacterAgent {
     this.selfReflection.fastReflect(input, response, psychology ?? undefined);
     if (this.selfReflection.shouldSlowReflect(this.turnCount))
       await this.selfReflection.slowReflect(this.slowProvider, this.selfModel, this.skillLibrary);
+
+    // Affective Residue deposit — passive emotional sediment
+    if (psychology) {
+      const sig = Math.max(0.2, psychology.emotion.intensity);
+      this.affectiveResidue.deposit(
+        { dominant: psychology.emotion.dominant, intensity: psychology.emotion.intensity, pleasure: psychology.emotion.pleasure },
+        sig,
+      );
+    }
 
     this.fsm.transition("done");
     return psychology ?? new PsychologyResult();

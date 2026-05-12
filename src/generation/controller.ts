@@ -26,6 +26,7 @@ export interface ControllerAgent {
   snapshot: { formatForPrompt(): string; freeze(...args: any[]): string; markDirty(): void };
   psychologyEngine: { analyze(...args: any[]): Promise<any> };
   selfModel: { formatCapabilities(): string };
+  affectiveResidue: { formatForPrompt(): string };
   groundTruth: any;
   config: { name: string; traits: string; essence?: string; rules?: string };
   /** Run Cold Path — called when generation completes. Returns psychology result. */
@@ -170,6 +171,7 @@ export class GenerationController {
       characterConfig: this.agent.config,
       capabilities: this.agent.selfModel.formatCapabilities(),
       groundTruthText: "", // populated below if groundTruth exists
+      affectiveResidueText: this.agent.affectiveResidue.formatForPrompt(),
       taskMode,
     };
 

@@ -14,6 +14,7 @@ export interface RepackParams {
   characterConfig: { name: string; traits: string; essence?: string; rules?: string };
   capabilities: string;
   groundTruthText: string;
+  affectiveResidueText: string;
   taskMode: boolean;
 }
 
@@ -39,6 +40,11 @@ export class ContextRepacker {
 
     // Layer 1: Ground Truth
     if (params.groundTruthText) parts.push(params.groundTruthText);
+
+    // Layer 1.5: Passive affective sediment
+    if (params.affectiveResidueText) {
+      parts.push(params.affectiveResidueText);
+    }
 
     // Layer 2: Task mode gate
     if (params.taskMode) {

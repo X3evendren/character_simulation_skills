@@ -19,6 +19,7 @@ export interface PromptContext {
   taskMode: boolean;             // true = executing task, disable poetic mode
   emotionDominant?: string;      // Lightweight emotion label only
   emotionIntensity?: number;
+  affectiveResidueText?: string; // Layer 0: passive emotional sediment from AffectiveResidue
 }
 
 export function buildSystemPrompt(ctx: PromptContext): string {
@@ -29,6 +30,11 @@ export function buildSystemPrompt(ctx: PromptContext): string {
 
   // Layer 1: Ground Truth — confirmed facts, no hallucination allowed
   parts.push(formatGroundTruthForPrompt(ctx.groundTruth));
+
+  // Layer 1.5: Passive affective sediment (before task mode — it colours everything below)
+  if (ctx.affectiveResidueText) {
+    parts.push(ctx.affectiveResidueText);
+  }
 
   // Layer 2: Task mode gate
   if (ctx.taskMode) {
