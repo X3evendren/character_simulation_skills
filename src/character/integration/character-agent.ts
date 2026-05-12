@@ -10,7 +10,7 @@ import { ParamsModulator } from "../params/params-modulator";
 import { DriveState } from "../drive/desires";
 import { DriveDynamics } from "../drive/dynamics";
 import { DriveSublimator } from "../drive/sublimator";
-import { SaturationState, ContinuousParams, detectBehaviorMode } from "../engine/continuous-engine";
+import { SaturationState, ContinuousParams } from "../engine/continuous-engine";
 import { SaturationDetector, PrecisionRouter } from "../love/relational";
 import { IrreduciblePrior } from "../love/irreducible-prior";
 import { OathStore } from "../love/oath-store";
@@ -33,8 +33,6 @@ import { loadAssistantConfig, loadMemoryConfig, ensureSkillsDir } from "./config
 import { buildSystemPrompt, buildUserPrompt } from "./prompt-builder";
 import { SpanBasedGenerator } from "./dual-track";
 import { createGroundTruth, type GroundTruth } from "../state/ground-truth";
-import { formatGroundTruthForPrompt } from "../state/ground-truth";
-
 export interface AgentHook {
   beforeAnalyze?(ctx: TurnContext): Promise<void>;
   afterAnalyze?(ctx: TurnContext, r: PsychologyResult): Promise<void>;

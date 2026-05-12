@@ -2,7 +2,7 @@
  *  Manages span lifecycle: FLUID → STABLE → LOCKED.
  *  Not a React component — pure state with subscriber pattern.
  */
-import type { Span, SpanOp, SpanLayer } from "../generation/types";
+import type { Span, SpanOp } from "../generation/types";
 
 export interface SpanStateSnapshot {
   lockedSpans: Span[];

@@ -228,7 +228,7 @@ export class GenerationController {
     if (this.queuedTurn) {
       const next = this.queuedTurn;
       this.queuedTurn = null;
-      // Use setTimeout to avoid stack overflow from recursive handleTurn
+      // Avoid stack overflow from recursive handleTurn
       setImmediate(() => this.handleTurn(next));
     }
   }
