@@ -24,8 +24,9 @@ export const searchFilesTool: ToolDef<z.infer<typeof params>, string> = {
     if (!existsSync(root)) return errorResult(`Directory not found: ${p.path ?? "."}`);
 
     try {
-      const { glob } = await import("fast-glob");
-      const matches = await glob(p.pattern, {
+      const fg = await import("fast-glob");
+      const globFn = (fg as any).default ?? fg.glob ?? fg;
+      const matches = await globFn(p.pattern, {
         cwd: root,
         absolute: true,
         onlyFiles: true,

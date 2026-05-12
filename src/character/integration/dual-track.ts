@@ -8,7 +8,7 @@ import type { ToolCall } from "./provider";
 let _nextSpanId = 1;
 function nextSpanId(): string { return `s${_nextSpanId++}`; }
 
-interface StreamToken { text: string; done: boolean; toolCalls?: ToolCall[]; }
+interface StreamToken { text: string; done: boolean; toolCalls?: ToolCall[]; reasoningContent?: string; }
 
 /** Convert callback-based chatStream to async iterator with abort support. */
 async function* streamTokens(
@@ -19,12 +19,13 @@ async function* streamTokens(
   let streamDone = false;
   let streamError: Error | null = null;
   let toolCalls: ToolCall[] = [];
+  let reasoningContent = "";
 
   const promise = provider.chatStream(
     messages, temperature, maxTokens, tools,
     async (delta: string) => { buffer.push(delta); },
     "", signal,
-  ).then((r: any) => { toolCalls = r.toolCalls ?? []; streamDone = true; })
+  ).then((r: any) => { toolCalls = r.toolCalls ?? []; reasoningContent = r.reasoningContent ?? ""; streamDone = true; })
    .catch((e: Error) => { streamError = e; streamDone = true; });
 
   let idx = 0;
@@ -35,7 +36,7 @@ async function* streamTokens(
   }
   while (idx < buffer.length) { yield { text: buffer[idx], done: false }; idx++; }
   if (streamError) throw streamError;
-  yield { text: "", done: true, toolCalls: toolCalls.length > 0 ? toolCalls : undefined };
+  yield { text: "", done: true, toolCalls: toolCalls.length > 0 ? toolCalls : undefined, reasoningContent: reasoningContent || undefined };
 }
 
 // ═══════════════════════════════════════
@@ -104,7 +105,10 @@ export class SpanBasedGenerator {
 
       // Execute tools
       if (this.toolRegistry) {
-        const assistantMsg: any = { role: "assistant", content: "" };
+        const assistantMsg: any = { role: "assistant", content: null };
+        if (lastToken.reasoningContent) {
+          assistantMsg.reasoning_content = lastToken.reasoningContent;
+        }
         assistantMsg.tool_calls = toolCalls.map((tc: ToolCall) => ({
           id: tc.id, type: "function", function: { name: tc.name, arguments: JSON.stringify(tc.arguments) },
         }));
