@@ -26,8 +26,9 @@ export class PsychologyEngine {
     event: Record<string, any>, memoryContext = "",
     currentMindstate?: MindState | null, driveState?: Record<string, any> | null,
     assistantConfig?: Record<string, string> | null,
+    affectiveContext?: { warmth: number; tension: number; clarity: number; weight: number } | null,
   ): Promise<PsychologyResult> {
-    const prompt = this._buildPrompt(event, memoryContext, currentMindstate, driveState, assistantConfig);
+    const prompt = this._buildPrompt(event, memoryContext, currentMindstate, driveState, assistantConfig, affectiveContext);
     try {
       const resp = await this.provider.chat(
         [{ role: "user", content: prompt }], 0.3, 2000, undefined, this.model,
@@ -39,6 +40,7 @@ export class PsychologyEngine {
   private _buildPrompt(
     event: Record<string, any>, memCtx: string, ms?: MindState | null,
     driveState?: Record<string, any> | null, config?: Record<string, string> | null,
+    affectiveContext?: { warmth: number; tension: number; clarity: number; weight: number } | null,
   ): string {
     const m = ms ?? new MindState();
     let persona = "";
@@ -66,7 +68,7 @@ ${dt}
 【记忆】
 ${memCtx || "无"}
 
-【事件】
+【事件】${affectiveContext ? buildAffectiveFrame(affectiveContext) : ""}
 ${event.description ?? ""}
 
 输出 XML:
@@ -132,4 +134,42 @@ ${event.description ?? ""}
     };
     return r;
   }
+}
+
+// ═══════════════════════════════════════
+// Affective framing — 情调揭示
+// ═══════════════════════════════════════
+
+/**
+ * Build a subtle mood-framing prefix for the event description.
+ * Not an instruction — it colours the LLM's perception of the input.
+ *
+ * 现象学: 事件不是在真空中被感知的。情调先于感知——同一句话在不同底色下是不同的现象。
+ */
+function buildAffectiveFrame(ac: { warmth: number; tension: number; clarity: number; weight: number }): string {
+  const frames: string[] = [];
+
+  // Warmth frame — determines the default trust level
+  if (ac.warmth > 0.5) {
+    frames.push("在亲近温暖的氛围中");
+  } else if (ac.warmth > 0.25) {
+    frames.push("在一种舒适的基调中");
+  } else if (ac.warmth < -0.25) {
+    frames.push("在一种疏离的氛围中");
+  }
+
+  // Tension frame — determines alertness to potential threat
+  if (ac.tension > 0.4) {
+    frames.push("你们之间有一丝微妙的张力");
+  }
+
+  // Clarity frame — determines confidence in interpretation
+  if (ac.clarity < 0.2 && ac.weight > 0.3) {
+    frames.push("你还不太确定这个人的意思");
+  } else if (ac.clarity > 0.6) {
+    frames.push("你对这个人已经很熟悉了");
+  }
+
+  if (frames.length === 0) return "";
+  return "（" + frames.join("，") + "）\n";
 }

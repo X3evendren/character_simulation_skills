@@ -216,6 +216,7 @@ export class CharacterAgent {
       const lightPsych = await this.psychologyEngine.analyze(
         { description: input, type: taskMode ? "tool_use" : "social", significance: 0.5 },
         this.snapshot.formatForPrompt(), this.mindState, this.drives.toDict(), this.config as unknown as Record<string, string>,
+        this.affectiveResidue.vector,
       );
       ctx.psychology = lightPsych; // stored for Cold Path use later
       emoDominant = lightPsych.emotion.dominant;
@@ -294,6 +295,7 @@ export class CharacterAgent {
         psychology = await this.psychologyEngine.analyze(
           { description: input, type: "social", significance: 0.5 },
           this.snapshot.formatForPrompt(), this.mindState, this.drives.toDict(), this.config as unknown as Record<string, string>,
+          this.affectiveResidue.vector,
         );
       } catch { psychology = null; }
     }
