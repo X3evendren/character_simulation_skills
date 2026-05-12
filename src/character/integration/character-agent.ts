@@ -36,6 +36,8 @@ import { loadAssistantConfig, loadMemoryConfig, ensureSkillsDir } from "./config
 import { buildSystemPrompt, buildUserPrompt } from "./prompt-builder";
 import { SpanBasedGenerator } from "./dual-track";
 import { createGroundTruth, type GroundTruth } from "../state/ground-truth";
+import { ToolRegistry } from "../../tools/registry";
+import { registerAllTools } from "../../tools/register-all";
 export interface AgentHook {
   beforeAnalyze?(ctx: TurnContext): Promise<void>;
   afterAnalyze?(ctx: TurnContext, r: PsychologyResult): Promise<void>;
@@ -77,6 +79,7 @@ export class CharacterAgent {
   affectiveResidue: AffectiveResidue;
   temporalHorizon: TemporalHorizon;
   contextNoiseDetector: ContextNoiseDetector;
+  toolRegistry: ToolRegistry;
   predictionTracker: PredictionTracker;
   postFilter: PostFilter;
   workingMemory: WorkingMemory;
@@ -152,6 +155,8 @@ export class CharacterAgent {
     this.affectiveResidue = new AffectiveResidue();
     this.temporalHorizon = new TemporalHorizon();
     this.contextNoiseDetector = new ContextNoiseDetector();
+    this.toolRegistry = new ToolRegistry();
+    registerAllTools(this.toolRegistry);
     this.predictionTracker = new PredictionTracker();
 
     // Anti-RLHF
@@ -269,11 +274,11 @@ export class CharacterAgent {
     // Phase 4: Draft (Fast) + Refine (Slow) + Commit — shared GroundTruth
     for (const h of this.hooks) { await h.beforeBuild?.(ctx); }
 
-    const dualTrack = new SpanBasedGenerator(this.fastProvider, this.slowProvider);
+    const dualTrack = new SpanBasedGenerator(this.fastProvider, this.slowProvider, this.toolRegistry);
     const responseParts: string[] = [];
     const abortController = new AbortController();
 
-    for await (const op of dualTrack.generate(ctx.systemPrompt, userPrompt, abortController.signal)) {
+    for await (const op of dualTrack.generate(ctx.systemPrompt, userPrompt, abortController.signal, this.toolRegistry.getDefinitions())) {
       if (op.type === "invalidate") {
         responseParts.length = 0;
         continue;

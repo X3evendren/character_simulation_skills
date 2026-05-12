@@ -62,7 +62,7 @@ export function App() {
 
         // Build controller
         const inflightSummarizer = new InflightSummarizer(psych);
-        const spanGenerator = new SpanBasedGenerator(gen, gen); // fast=gen, slow=gen for MVP
+        const spanGenerator = new SpanBasedGenerator(gen, gen, a.toolRegistry);
 
         const controllerAdapter = createControllerAdapter(a, spanState);
         const controller = new GenerationController(spanState, inflightSummarizer, controllerAdapter);

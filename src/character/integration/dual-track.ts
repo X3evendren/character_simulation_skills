@@ -1,62 +1,41 @@
-/** Span-Based Generator — Fast (FLUID→STABLE) + Slow (STABLE→LOCKED).
+/** Span-Based Generator — Fast (FLUID→STABLE) + Slow (STABLE→LOCKED) + Tool calls.
  *  Replaces token-stream dual-track with span lifecycle management.
  */
 import type { SpanOp } from "../../generation/types";
+import type { ToolRegistry } from "../../tools/registry";
+import type { ToolCall } from "./provider";
 
 let _nextSpanId = 1;
 function nextSpanId(): string { return `s${_nextSpanId++}`; }
 
-// ═══════════════════════════════════════
-// Span token helper
-// ═══════════════════════════════════════
-
-interface StreamToken {
-  text: string;
-  done: boolean;
-}
+interface StreamToken { text: string; done: boolean; toolCalls?: ToolCall[]; }
 
 /** Convert callback-based chatStream to async iterator with abort support. */
 async function* streamTokens(
-  provider: any,
-  messages: Array<{ role: string; content: string }>,
-  temperature: number,
-  maxTokens: number,
-  signal: AbortSignal,
+  provider: any, messages: any[], temperature: number, maxTokens: number,
+  tools: any, signal: AbortSignal,
 ): AsyncGenerator<StreamToken> {
   const buffer: string[] = [];
   let streamDone = false;
   let streamError: Error | null = null;
+  let toolCalls: ToolCall[] = [];
 
   const promise = provider.chatStream(
-    messages, temperature, maxTokens, undefined,
+    messages, temperature, maxTokens, tools,
     async (delta: string) => { buffer.push(delta); },
     "", signal,
-  ).then(() => { streamDone = true; }).catch((e: Error) => { streamError = e; streamDone = true; });
+  ).then((r: any) => { toolCalls = r.toolCalls ?? []; streamDone = true; })
+   .catch((e: Error) => { streamError = e; streamDone = true; });
 
-  // Poll buffer until stream completes or aborted
   let idx = 0;
   while (!streamDone) {
     if (signal.aborted) break;
-
-    while (idx < buffer.length) {
-      yield { text: buffer[idx], done: false };
-      idx++;
-    }
-
-    // Wait for either more data or completion
+    while (idx < buffer.length) { yield { text: buffer[idx], done: false }; idx++; }
     await new Promise(r => setTimeout(r, 30));
   }
-
-  // Flush remaining
-  while (idx < buffer.length) {
-    yield { text: buffer[idx], done: false };
-    idx++;
-  }
-
-  // Surface error if any
+  while (idx < buffer.length) { yield { text: buffer[idx], done: false }; idx++; }
   if (streamError) throw streamError;
-
-  yield { text: "", done: true };
+  yield { text: "", done: true, toolCalls: toolCalls.length > 0 ? toolCalls : undefined };
 }
 
 // ═══════════════════════════════════════
@@ -78,101 +57,74 @@ function isSentenceBoundary(text: string): boolean {
 export class SpanBasedGenerator {
   private fastProvider: any;
   private slowProvider: any;
+  private toolRegistry?: ToolRegistry;
+  private maxToolRounds = 10;
 
-  constructor(fastProvider: any, slowProvider: any) {
+  constructor(fastProvider: any, slowProvider: any, toolRegistry?: ToolRegistry) {
     this.fastProvider = fastProvider;
     this.slowProvider = slowProvider;
+    this.toolRegistry = toolRegistry;
   }
 
   async *generate(
     systemPrompt: string,
     userMessage: string,
     signal: AbortSignal,
+    tools?: any,
   ): AsyncGenerator<SpanOp> {
-    const messages = [
+    const messages: any[] = [
       { role: "system", content: systemPrompt },
       { role: "user", content: userMessage },
     ];
 
-    let startPos = 0;
-    const stableSpanIds: string[] = [];
-
     // ═══════════════════════════════════════
-    // Phase 1: Fast Track — FLUID → STABLE at sentence boundaries
+    // Tool call loop
     // ═══════════════════════════════════════
-    let buffer = "";
+    for (let round = 0; round < this.maxToolRounds && !signal.aborted; round++) {
+      const lastToken: StreamToken = { text: "", done: false };
 
-    for await (const token of streamTokens(
-      this.fastProvider, messages, 0.6, 300, signal,
-    )) {
-      if (signal.aborted || token.done) break;
-
-      buffer += token.text;
-
-      if (isSentenceBoundary(buffer)) {
-        const spanId = nextSpanId();
-        const endPos = startPos + buffer.length;
-
-        // Emit FLUID span
-        yield { type: "append", span: { id: spanId, layer: "fluid", text: buffer, startPos, endPos } };
-
-        // FLUID → STABLE (auto-commit at sentence boundary)
-        yield { type: "lock", spanId };
-        stableSpanIds.push(spanId);
-
-        startPos = endPos;
-        buffer = "";
-      }
-    }
-
-    // Flush remaining buffer as FLUID (incomplete sentence)
-    if (buffer.trim() && !signal.aborted) {
-      const spanId = nextSpanId();
-      const endPos = startPos + buffer.length;
-      yield { type: "append", span: { id: spanId, layer: "fluid", text: buffer, startPos, endPos } };
-      yield { type: "lock", spanId };
-      stableSpanIds.push(spanId);
-    }
-
-    if (signal.aborted) {
-      // Invalidate any remaining FLUID
-      if (stableSpanIds.length > 0) {
-        yield { type: "invalidate", fromSpanId: stableSpanIds[stableSpanIds.length - 1] };
-      }
-      return;
-    }
-
-    // ═══════════════════════════════════════
-    // Phase 2: Slow Track — STABLE → LOCKED (background)
-    // ═══════════════════════════════════════
-    if (stableSpanIds.length === 0) return;
-
-    const slowMessages = [
-      { role: "system", content: `${systemPrompt}\n\n【核实任务】检查已输出的内容是否与事实一致。如有错误请修正。如果正确，回复"OK"。` },
-      { role: "user", content: `已输出内容:\n${buffer}\n\n用户输入: ${userMessage}\n\n请核实并修正（如有必要）。` },
-    ];
-
-    try {
-      const slowResp = await this.slowProvider.chat(
-        slowMessages, 0.3, 1000, undefined, "", signal,
-      );
-
-      const slowContent: string = slowResp?.content ?? "";
-
-      if (slowContent && slowContent.trim().toUpperCase() !== "OK" && slowContent.trim()) {
-        // Slow has corrections — patch last STABLE span
-        const lastStableId = stableSpanIds[stableSpanIds.length - 1];
-        if (lastStableId) {
-          yield { type: "patch", spanId: lastStableId, newText: slowContent.trim() };
+      for await (const token of streamTokens(
+        this.fastProvider, messages, 0.6, 300, tools, signal,
+      )) {
+        if (signal.aborted) break;
+        if (token.done) { Object.assign(lastToken, token); break; }
+        // Stream text as FLUID spans
+        if (token.text) {
+          const spanId = nextSpanId();
+          yield { type: "append", span: { id: spanId, layer: "fluid", text: token.text, startPos: 0, endPos: token.text.length } };
+          yield { type: "lock", spanId };
         }
       }
 
-      // STABLE → LOCKED for all verified spans
-      for (const spanId of stableSpanIds) {
-        yield { type: "lock", spanId };
+      if (signal.aborted) return;
+
+      // Check for tool calls
+      const toolCalls = lastToken.toolCalls;
+      if (!toolCalls || toolCalls.length === 0) break;
+
+      // Execute tools
+      if (this.toolRegistry) {
+        const assistantMsg: any = { role: "assistant", content: "" };
+        assistantMsg.tool_calls = toolCalls.map((tc: ToolCall) => ({
+          id: tc.id, type: "function", function: { name: tc.name, arguments: JSON.stringify(tc.arguments) },
+        }));
+        messages.push(assistantMsg);
+
+        for (const tc of toolCalls) {
+          const result = await this.toolRegistry.execute(tc.name, tc.arguments, {
+            workingDir: process.cwd(), sessionId: "",
+          });
+          messages.push({
+            role: "tool", tool_call_id: tc.id,
+            content: result.output,
+          });
+          // Yield tool result as a visible span
+          const toolSpanId = nextSpanId();
+          yield { type: "append", span: { id: toolSpanId, layer: "locked", text: `[${tc.name}] ${result.output.slice(0, 200)}`, startPos: 0, endPos: 0, committedAt: Date.now() } };
+        }
+      } else {
+        break; // No registry, can't execute tools
       }
-    } catch {
-      // Slow failed — STABLE stays as-is (degraded but not broken)
     }
   }
 }
