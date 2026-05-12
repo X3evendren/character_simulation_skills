@@ -75,6 +75,7 @@ export class SleepCycleMetabolism {
     const now = Date.now() / 1000;
     report.archived += this.ltm.decayConfidence(7 * 86400, now); // 7-day half-life
     report.archived += this.ltm.compressOld(30 * 86400, now);    // 30-day old → compressed
+    report.merged += this.ltm.extractPatterns(3);               // cross-event pattern extraction
 
     const conflicts = this.ltm.detectContradictions();
     report.conflicts = conflicts.length;

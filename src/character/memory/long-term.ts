@@ -129,6 +129,59 @@ export class LongTermMemory extends MemoryStore {
     ).run(Math.exp(-lambda), now, halfLifeSeconds).changes;
   }
 
+  /** Cross-event pattern extraction: cluster similar events → synthesize higher-order knowledge.
+   *  Anda Hippocampus 对应: 跨事件模式提取 (精华提取阶段)
+   */
+  extractPatterns(minClusterSize = 3): number {
+    const rows = this._db!.prepare(
+      "SELECT * FROM ltm WHERE superseded=0 AND memory_type='episodic' AND significance > 0.2 ORDER BY timestamp DESC LIMIT 100"
+    ).all() as any[];
+    if (rows.length < minClusterSize) return 0;
+
+    // Cluster by dominant emotion + event_type
+    const clusters = new Map<string, any[]>();
+    for (const row of rows) {
+      const record = this._rowToRecord(row);
+      const emoDominant = Object.entries(record.emotionalSignature)
+        .sort((a, b) => b[1] - a[1])[0]?.[0] ?? "neutral";
+      const key = `${emoDominant}|${record.eventType}`;
+      if (!clusters.has(key)) clusters.set(key, []);
+      clusters.get(key)!.push(record);
+    }
+
+    let patternsCreated = 0;
+    for (const [key, cluster] of clusters) {
+      if (cluster.length < minClusterSize) continue;
+
+      const [emoKey, eventType] = key.split("|");
+      // Build pattern summary from cluster's common content
+      const commonTags = [...new Set(cluster.flatMap(r => r.tags))].slice(0, 5);
+      const avgSig = cluster.reduce((s, r) => s + r.significance, 0) / cluster.length;
+      const summary = `从 ${cluster.length} 次"${eventType}"事件中提取的模式：共通情感=${emoKey}，标签=${commonTags.join(",")}`;
+
+      const pattern = createMemoryRecord({
+        recordId: `ltm_pattern_${key}_${Date.now()}`,
+        content: summary,
+        eventType: "pattern_extracted",
+        tags: [...commonTags, "pattern", emoKey],
+        significance: Math.min(1, avgSig * 1.2),
+        memoryType: "semantic",
+        confidence: Math.min(0.9, 0.4 + cluster.length * 0.1),
+        emotionalSignature: { [emoKey]: 0.5 },
+      });
+      this.store(pattern);
+      patternsCreated++;
+
+      // Lower significance of source events (fade, don't delete)
+      for (const r of cluster) {
+        this._db!.prepare("UPDATE ltm SET significance = significance * 0.6 WHERE record_id=?").run(r.recordId);
+        this._db!.prepare("UPDATE ltm SET recall_count = recall_count + 1 WHERE record_id=?").run(r.recordId);
+      }
+    }
+
+    return patternsCreated;
+  }
+
   /** Compress old records: full text → short summary + emotional vector. */
   compressOld(minAgeSeconds: number, now: number): number {
     return this._db!.prepare(
