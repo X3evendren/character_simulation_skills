@@ -1,6 +1,6 @@
 /**
  * Oath Layer — Oath lifecycle manager.
- * 1:1 translation from core/love/oath_store.py
+ * 
  *
  * An oath is not a prediction. It's a will-based constraint that excludes
  * future action space. In Bayesian terms, it structurally modifies the

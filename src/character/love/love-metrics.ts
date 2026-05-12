@@ -1,6 +1,6 @@
 /**
  * Love Metrics — Assurance vs Confidence.
- * 1:1 translation from core/love/love_metrics.py
+ * 
  *
  * Confidence = P(belief | evidence), Bayesian posterior. Evidence-dependent.
  * Assurance = non-probabilistic, will-based certainty. Not evidence-dependent.

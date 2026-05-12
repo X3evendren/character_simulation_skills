@@ -1,5 +1,5 @@
 /**
- * Command Registry — Static import → COMMANDS array, copied from Claude Code src/commands.ts
+ * Command Registry — Static import → COMMANDS array, 
  * Supports multi-source merging and linear find-by-name/alias.
  */
 import type { Command, CommandContext } from "./types";
@@ -31,7 +31,7 @@ export function getCommands(ctx?: CommandContext): Command[] {
 }
 
 /**
- * Find a command by name or alias. Linear search (same as Claude Code findCommand).
+ * Find a command by name or alias. Linear search .
  */
 export function findCommand(name: string): Command | undefined {
   const lower = name.toLowerCase();

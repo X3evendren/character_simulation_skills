@@ -1,6 +1,6 @@
 /**
  * Drive System — Five intrinsic drives + reward system.
- * 1:1 translation from core/drive/desires.py
+ * 
  *
  * Drives: curiosity / helpfulness / achievement / connection / autonomy
  * Unsatisfied drives rise over time; satisfaction events reduce them.

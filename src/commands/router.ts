@@ -1,5 +1,5 @@
 /**
- * Command Router — 4-layer dispatch copied from nanobot command/router.py
+ * Command Router — 4-layer dispatch 4-layer dispatch (priority → exact → prefix → interceptor)
  *
  * Layers (highest priority first):
  *   1. priority  — execute outside turn lock (e.g., /quit, /stop)

@@ -1,4 +1,4 @@
-/** Provider Registry — Declarative LLM provider system. Copied nanobot pattern. */
+/** Provider Registry — Declarative LLM provider system. LLM provider system. */
 
 export interface ProviderSpec {
   name: string;
@@ -66,7 +66,7 @@ export const PROVIDERS: ProviderSpec[] = [
 
 /**
  * Multi-level match: API key prefix → base URL keywords → model name keywords → explicit provider name.
- * Copied from nanobot providers/registry.py detect pattern.
+ * 
  */
 export function detectProvider(
   apiKey?: string, baseUrl?: string, model?: string,

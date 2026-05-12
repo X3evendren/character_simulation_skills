@@ -1,6 +1,6 @@
 /**
  * Finite State Machine — Dialog phase management.
- * 1:1 translation from core/fsm.py
+ * 
  *
  * Provides deterministic scaffolding; LLM provides the muscle.
  * State transitions are driven by action fields, not LLM reasoning.

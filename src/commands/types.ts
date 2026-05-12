@@ -1,5 +1,5 @@
 /**
- * Command types — Discriminated union copied from Claude Code src/types/command.ts
+ * Command types — Discriminated union 
  * Supports PromptCommand (expands to prompt text) and LocalCommand (executes immediately).
  */
 import type { CharacterAgent } from "../character/integration/character-agent";

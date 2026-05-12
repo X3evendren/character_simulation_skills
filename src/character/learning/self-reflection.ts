@@ -1,4 +1,4 @@
-/** Self Reflection — Dual-process fast/slow reflection. 1:1 from core/learning/self_reflection.py */
+/** Self Reflection — Dual-process fast/slow reflection.  */
 export interface ReflectionEntry {
   timestamp: number; type: "fast" | "slow";
   whatWentWell: string; whatWentWrong: string; insight: string; actionItems: string[];

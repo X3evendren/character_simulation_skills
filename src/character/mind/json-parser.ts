@@ -1,6 +1,6 @@
 /**
  * JSON/XML Parser — Extract structured data from LLM raw output.
- * 1:1 translation from core/json_parser.py
+ * 
  */
 
 export function extractJSON(rawOutput: string): Record<string, unknown> {

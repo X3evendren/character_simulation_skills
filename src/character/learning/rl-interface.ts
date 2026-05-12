@@ -1,4 +1,4 @@
-/** RL Interface — Trajectory collection stub. 1:1 from core/learning/rl_interface.py */
+/** RL Interface — Trajectory collection stub.  */
 export interface TrajectoryStep {
   state: string; action: string; reward: number; nextState: string;
 }

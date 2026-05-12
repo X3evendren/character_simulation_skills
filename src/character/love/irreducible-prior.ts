@@ -1,6 +1,6 @@
 /**
  * Irreducible Prior — Meta-prior that forbids posterior collapse.
- * 1:1 translation from core/love/irreducible_prior.py
+ * 
  *
  * Constraint: KL[q(s_beloved) || P(s_beloved | all_data)] > delta_min
  * Normal Bayesian learning shrinks posterior variance with more data.

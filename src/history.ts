@@ -1,5 +1,5 @@
 /**
- * History Store — File persistence + Ctrl+R search. Copied from nanobot SafeFileHistory.
+ * History Store — File persistence + Ctrl+R search. File persistence + search.
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";

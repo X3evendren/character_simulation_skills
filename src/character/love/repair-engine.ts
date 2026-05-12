@@ -1,4 +1,4 @@
-/** Repair Engine — 4-phase rupture repair. 1:1 from core/love/repair_engine.py */
+/** Repair Engine — 4-phase rupture repair.  */
 export enum RepairPhase { IDLE = "idle", PERSPECTIVE_FLIP = "perspective_flip", RESPONSIBILITY_CHECK = "responsibility_check", RE_OATH_DECISION = "re_oath_decision", NARRATIVE_INTEGRATION = "narrative_integration", COMPLETE = "complete", FAILED = "failed" }
 
 export class RepairResult {

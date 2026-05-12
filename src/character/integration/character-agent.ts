@@ -1,5 +1,5 @@
 /**
- * Character Agent — Main orchestrator fusing nanobot FSM + Claude Code streaming + Character Mind engine.
+ * Character Agent — Main orchestrator ties all character subsystems together.
  * This is the master entry point that ties all character subsystems together.
  */
 import { MindState } from "../mind/mind-state";

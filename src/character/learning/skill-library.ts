@@ -1,4 +1,4 @@
-/** Skill Library — Memento-Skills externalized behavior memory. 1:1 from core/learning/skill_library.py */
+/** Skill Library — Memento-Skills externalized behavior memory.  */
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 

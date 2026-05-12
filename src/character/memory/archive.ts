@@ -1,8 +1,8 @@
 /** Archive Memory — Final resting place for superseded/expired memories.
  *  Timeline-only retrieval. TTL hard deletion is the ONLY deletion path.
  *
- *  Hermes 对应: 淘汰记忆层
- *  Anda 对应: Archived domain + TTL 硬删除
+
+
  */
 import Database from "better-sqlite3";
 import { MemoryStore, MemoryRecord, createMemoryRecord, ConsolidationReport, createConsolidationReport } from "./store";

@@ -130,7 +130,7 @@ export class LongTermMemory extends MemoryStore {
   }
 
   /** Cross-event pattern extraction: cluster similar events → synthesize higher-order knowledge.
-   *  Anda Hippocampus 对应: 跨事件模式提取 (精华提取阶段)
+
    */
   extractPatterns(minClusterSize = 3): number {
     const rows = this._db!.prepare(

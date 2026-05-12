@@ -1,6 +1,6 @@
 /**
  * MindState — Unified psychological state vector.
- * 1:1 translation from core/mind_state.py
+ * 
  *
  * Single source of truth for all psychological modules.
  * 7D state: pleasure, arousal, dominance, control, attachment, defense, goal_tension

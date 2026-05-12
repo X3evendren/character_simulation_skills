@@ -1,4 +1,4 @@
-/** Ink TUI entry point — Claude Code-style terminal interface */
+/** Ink TUI entry point — terminal interface */
 import React from "react";
 import { render } from "ink";
 import { App } from "./ui/app";

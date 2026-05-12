@@ -1,4 +1,4 @@
-/** Feedback Loop — DBNT-style 3-level feedback + FSRS-6 decay. 1:1 from core/learning/feedback_loop.py */
+/** Feedback Loop — DBNT-style 3-level feedback + FSRS-6 decay.  */
 export enum FeedbackLevel { GENTLE = "gentle", NORMAL = "normal", CRITICAL = "critical" }
 
 export interface FeedbackEvent {

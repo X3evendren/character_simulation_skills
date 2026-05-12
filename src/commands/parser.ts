@@ -1,5 +1,5 @@
 /**
- * Slash command parser — copied from Claude Code src/utils/slashCommandParsing.ts
+ * Slash command parser — 
  * Extracts command name and arguments from /command input.
  */
 

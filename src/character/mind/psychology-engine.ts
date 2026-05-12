@@ -1,4 +1,4 @@
-/** Psychology Engine — Single-model XML psychology analysis. 1:1 from core/psychology/engine.py */
+/** Psychology Engine — Single-model XML psychology analysis.  */
 import { MindState } from "./mind-state";
 import { extractXML, extractXMLAttr } from "./json-parser";
 

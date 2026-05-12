@@ -1,4 +1,4 @@
-/** Sleep Cycle Metabolism — 3-stage memory consolidation. 1:1 from core/memory/metabolism.py */
+/** Sleep Cycle Metabolism — 3-stage memory consolidation.  */
 import { WorkingMemory } from "./working";
 import { ShortTermMemory } from "./short-term";
 import { LongTermMemory } from "./long-term";

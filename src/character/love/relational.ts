@@ -1,6 +1,6 @@
 /**
  * Relational Layer — Saturation detection + Precision rerouting.
- * 1:1 translation from core/love/relational.py
+ * 
  *
  * S1 (ENCODE): Normal Bayesian update on the other-model
  * S2 (SATURATED): Reroute prediction error to update self-model
