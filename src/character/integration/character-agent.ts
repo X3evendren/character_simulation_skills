@@ -3,7 +3,8 @@
  * This is the master entry point that ties all character subsystems together.
  */
 import { MindState } from "../mind/mind-state";
-import { FiniteStateMachine, State, createFSMContext } from "../mind/fsm";
+// FSM available for future state-based branching
+import { FiniteStateMachine } from "../mind/fsm";
 import { PsychologyEngine, PsychologyResult } from "../mind/psychology-engine";
 import { UnifiedParams } from "../params/unified-params";
 import { ParamsModulator } from "../params/params-modulator";
@@ -246,7 +247,6 @@ export class CharacterAgent {
     const userPrompt = buildUserPrompt(input, taskMode);
 
     // Phase 4: Draft (Fast) + Refine (Slow) + Commit — shared GroundTruth
-    this.fsm.transition("user_input", createFSMContext());
     for (const h of this.hooks) { await h.beforeBuild?.(ctx); }
 
     const dualTrack = new SpanBasedGenerator(this.fastProvider, this.slowProvider);
@@ -379,7 +379,6 @@ export class CharacterAgent {
       );
     }
 
-    this.fsm.transition("done");
     return psychology ?? new PsychologyResult();
   }
 

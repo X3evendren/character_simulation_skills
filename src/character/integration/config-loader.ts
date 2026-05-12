@@ -109,10 +109,6 @@ export function loadMemoryConfig(configDir: string): MemoryConfig {
   return defaults;
 }
 
-export interface SkillsConfig {
-  skillsDir: string;
-}
-
 export function ensureSkillsDir(baseDir: string): string {
   const d = resolve(baseDir, "skills");
   if (!existsSync(d)) mkdirSync(d, { recursive: true });

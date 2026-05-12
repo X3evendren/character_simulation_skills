@@ -21,12 +21,9 @@ export const helpCommand: LocalCommand = {
     lines.push("  text      — talk to " + ctx.agent.config.name);
     lines.push("");
     lines.push("Keys:");
-    lines.push("  Ctrl+C    — interrupt");
-    lines.push("  Ctrl+D    — quit");
-    lines.push("  Ctrl+L    — clear screen");
-    lines.push("  Ctrl+R    — search history");
+    lines.push("  Ctrl+C    — interrupt / quit");
     lines.push("  Up/Down   — navigate history");
-    lines.push("  Tab       — complete command");
+    lines.push("  !command  — run shell command");
     return lines.join("\n");
   },
 };

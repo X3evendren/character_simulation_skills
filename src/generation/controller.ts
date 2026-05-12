@@ -2,7 +2,7 @@
  *  Core state machine: idle → generating → aborting → idle.
  */
 import type { Span, SpanOp, GenStatus, RepackContext, ToolResult } from "./types";
-import { ContextRepacker, detectIntent, type RepackParams } from "./context-repacker";
+import { ContextRepacker, detectIntent, detectIntentWithModel, type RepackParams } from "./context-repacker";
 import { InflightSummarizer } from "./inflight-summarizer";
 
 export interface SpanRenderer {
@@ -24,7 +24,7 @@ export interface SpanBasedGenerator {
 export interface ControllerAgent {
   getCommittedSpans(): Span[];
   snapshot: { formatForPrompt(): string; freeze(...args: any[]): string; markDirty(): void };
-  psychologyEngine: { analyze(...args: any[]): Promise<any> };
+  psychologyEngine: { analyze(...args: any[]): Promise<any>; provider?: any };
   selfModel: { formatCapabilities(): string; formatForHotPath(): string };
   affectiveResidue: { formatForPrompt(): string };
   temporalHorizon: { formatForPrompt(): string };
@@ -150,8 +150,13 @@ export class GenerationController {
     this.status = "generating";
     this.abortController = new AbortController();
 
-    // Detect intent
-    const intentState = detectIntent(input);
+    // Detect intent — rule-first, model fallback for ambiguous cases
+    let intentState = detectIntent(input);
+    if (intentState.topic === "general" && input.length > 15 && this.agent.psychologyEngine?.provider) {
+      try {
+        intentState = await detectIntentWithModel(input, this.agent.psychologyEngine.provider);
+      } catch { /* keep rule-based result */ }
+    }
     const taskMode = intentState.constraints.includes("task_mode");
 
     // Get committed spans from renderer
