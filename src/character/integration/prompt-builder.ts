@@ -23,6 +23,7 @@ export interface PromptContext {
   driveBiasText?: string;        // Layer 1: drive sublimation — attention bias
   selfNarrativeText?: string;    // Layer 1: SelfModel narrative — current self-state
   temporalHorizonText?: string;  // Layer 1: Temporal horizon — retention echo
+  isFirstTurn?: boolean;         // First turn of session — agent should NOT pretend to remember past
 }
 
 export function buildSystemPrompt(ctx: PromptContext): string {
@@ -30,6 +31,11 @@ export function buildSystemPrompt(ctx: PromptContext): string {
 
   // Layer 0: Capability boundary (MUST be first — strongest weight)
   parts.push(ctx.capabilities);
+
+  // Layer 0.5: First turn awareness — critical anti-hallucination
+  if (ctx.isFirstTurn) {
+    parts.push("【重要 — 这是你第一次和这个用户对话】你没有和这个用户的任何历史记忆。不要假装知道ta昨天说了什么。不要编造"上次我们聊到..."之类的话。你现在唯一知道的就是ta刚刚输入的内容。");
+  }
 
   // Layer 1: Ground Truth — confirmed facts, no hallucination allowed
   parts.push(formatGroundTruthForPrompt(ctx.groundTruth));

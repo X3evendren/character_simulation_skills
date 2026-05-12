@@ -109,6 +109,7 @@ export class CharacterAgent {
   tickCount = 0;
   turnCount = 0;
   initialized = false;
+  private firstTurnDone = false;
 
   /** Shared factual state — Hot Path reads, all writes via tool results */
   groundTruth: GroundTruth = createGroundTruth();
@@ -255,7 +256,9 @@ export class CharacterAgent {
       driveBiasText: this.driveSublimator.buildAttentionBias(this.drives),
       selfNarrativeText: this.selfModel.formatForHotPath(),
       temporalHorizonText: this.temporalHorizon.formatForPrompt(),
+      isFirstTurn: !this.firstTurnDone,
     });
+    this.firstTurnDone = true;
 
     // Noise analysis
     this.contextNoiseDetector.analyze({

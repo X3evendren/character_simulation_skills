@@ -55,6 +55,7 @@ export class GenerationController {
   private lastColdPathResult: any = null;
   private runningTools = new Set<string>(); // currently executing tool names
   private inflightSummary = "";
+  private firstTurnDone = false;
 
   constructor(
     spanRenderer: SpanRenderer,
@@ -183,6 +184,7 @@ export class GenerationController {
       driveBiasText: this.agent.driveSublimator.buildAttentionBias(this.agent.drives),
       selfNarrativeText: this.agent.selfModel.formatForHotPath(),
       temporalHorizonText: this.agent.temporalHorizon.formatForPrompt(),
+      isFirstTurn: !this.firstTurnDone,
       taskMode,
     };
 
@@ -218,6 +220,7 @@ export class GenerationController {
     this.status = "idle";
     this.queuedToolResults = [];
     this.inflightSummary = "";
+    this.firstTurnDone = true;
     this.abortController = null;
 
     // Run Cold Path — captures the psychology result for next turn's repack

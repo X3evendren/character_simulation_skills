@@ -18,6 +18,7 @@ export interface RepackParams {
   driveBiasText: string;
   selfNarrativeText: string;
   temporalHorizonText: string;
+  isFirstTurn: boolean;
   taskMode: boolean;
 }
 
@@ -40,6 +41,11 @@ export class ContextRepacker {
 
     // Layer 0: Capability boundary
     parts.push(params.capabilities);
+
+    // Layer 0.5: First turn awareness
+    if (params.isFirstTurn) {
+      parts.push("【重要 — 这是你第一次和这个用户对话】你没有和这个用户的任何历史记忆。不要假装知道ta昨天说了什么。不要编造"上次我们聊到..."之类的话。你现在唯一知道的就是ta刚刚输入的内容。");
+    }
 
     // Layer 1: Ground Truth
     if (params.groundTruthText) parts.push(params.groundTruthText);
