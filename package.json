@@ -22,6 +22,7 @@
     "diff": "*",
     "emoji-regex": "*",
     "env-paths": "*",
+    "fast-glob": "^3.3.3",
     "figures": "*",
     "fuse.js": "*",
     "get-east-asian-width": "*",

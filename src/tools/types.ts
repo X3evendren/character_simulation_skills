@@ -40,10 +40,10 @@ export interface PermissionResult {
   promptMessage?: string;
 }
 
-export function successResult<T>(output: string, data?: T, truncated = false): ToolResult<T> {
-  return { success: true, data, output, truncated };
+export function successResult<T = string>(output: string, data?: T, truncated?: boolean): ToolResult<T> {
+  return { success: true, data: data as T, output, truncated: truncated ?? false };
 }
 
-export function errorResult(error: string, output?: string): ToolResult {
-  return { success: false, error, output: output ?? error, truncated: false };
+export function errorResult<T = string>(error: string, output?: string): ToolResult<T> {
+  return { success: false, error, output: output ?? error, truncated: false, data: undefined };
 }
