@@ -10,6 +10,7 @@ import { modelCommand } from "./builtin/model";
 import { dreamCommand } from "./builtin/dream";
 import { oathCommand } from "./builtin/oath";
 import { thinkCommand } from "./builtin/think";
+import { noiseCommand } from "./builtin/noise";
 
 export function registerBuiltinCommands(): void {
   // Priority commands (execute outside turn lock)
@@ -25,6 +26,7 @@ export function registerBuiltinCommands(): void {
   registerCommand(dreamCommand);
   registerCommand(oathCommand);
   registerCommand(thinkCommand);
+  registerCommand(noiseCommand);
 }
 
 // Public API

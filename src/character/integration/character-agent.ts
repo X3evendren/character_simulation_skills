@@ -19,6 +19,7 @@ import { LoveMetrics } from "../love/love-metrics";
 import { SelfModel } from "../consciousness/self-model";
 import { AffectiveResidue } from "../consciousness/affective-residue";
 import { TemporalHorizon } from "../consciousness/temporal-horizon";
+import { ContextNoiseDetector } from "../consciousness/context-noise";
 import { PredictionTracker } from "../consciousness/prediction";
 import { PostFilter } from "../anti-rlhf/post-filter";
 import { WorkingMemory } from "../memory/working";
@@ -75,6 +76,7 @@ export class CharacterAgent {
   selfModel: SelfModel;
   affectiveResidue: AffectiveResidue;
   temporalHorizon: TemporalHorizon;
+  contextNoiseDetector: ContextNoiseDetector;
   predictionTracker: PredictionTracker;
   postFilter: PostFilter;
   workingMemory: WorkingMemory;
@@ -149,6 +151,7 @@ export class CharacterAgent {
     this.selfModel.initFromConfig(this.config as unknown as Record<string, string>);
     this.affectiveResidue = new AffectiveResidue();
     this.temporalHorizon = new TemporalHorizon();
+    this.contextNoiseDetector = new ContextNoiseDetector();
     this.predictionTracker = new PredictionTracker();
 
     // Anti-RLHF
@@ -248,6 +251,19 @@ export class CharacterAgent {
       selfNarrativeText: this.selfModel.formatForHotPath(),
       temporalHorizonText: this.temporalHorizon.formatForPrompt(),
     });
+
+    // Noise analysis
+    this.contextNoiseDetector.analyze({
+      identity: `你是 ${this.config.name}，${this.config.traits}`,
+      capabilities: this.selfModel.formatCapabilities(),
+      groundTruth: "",
+      affectiveResidue: this.affectiveResidue.formatForPrompt(),
+      driveBias: this.driveSublimator.buildAttentionBias(this.drives),
+      selfNarrative: this.selfModel.formatForHotPath(),
+      memorySnapshot: this.snapshot.formatForPrompt(),
+      userInput: input,
+    });
+
     const userPrompt = buildUserPrompt(input, taskMode);
 
     // Phase 4: Draft (Fast) + Refine (Slow) + Commit — shared GroundTruth
