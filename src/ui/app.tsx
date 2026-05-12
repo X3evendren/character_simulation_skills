@@ -186,8 +186,10 @@ export function App() {
     // Header
     React.createElement(Text, { bold: true, color: "cyan" }, `  ${agentName}`),
 
-    // Messages — spans flow chronologically top-to-bottom
+    // Messages — padded from bottom so latest appear near input
     React.createElement(Box, { flexDirection: "column", flexGrow: 1 },
+      // Spacer pushes content to bottom
+      React.createElement(Box, { key: "spacer", flexGrow: 1 }),
       ...visibleSpans.map(s =>
         React.createElement(Text, { key: s.id, dimColor: s.layer === "fluid" }, s.text || " ")
       ),
