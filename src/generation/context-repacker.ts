@@ -17,6 +17,7 @@ export interface RepackParams {
   affectiveResidueText: string;
   driveBiasText: string;
   selfNarrativeText: string;
+  temporalHorizonText: string;
   taskMode: boolean;
 }
 
@@ -56,6 +57,11 @@ export class ContextRepacker {
     // Layer 1.7: Self narrative
     if (params.selfNarrativeText) {
       parts.push(params.selfNarrativeText);
+    }
+
+    // Layer 1.8: Temporal horizon
+    if (params.temporalHorizonText) {
+      parts.push(params.temporalHorizonText);
     }
 
     // Layer 2: Task mode gate

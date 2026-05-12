@@ -22,6 +22,7 @@ export interface PromptContext {
   affectiveResidueText?: string; // Layer 0: passive emotional sediment from AffectiveResidue
   driveBiasText?: string;        // Layer 1: drive sublimation — attention bias
   selfNarrativeText?: string;    // Layer 1: SelfModel narrative — current self-state
+  temporalHorizonText?: string;  // Layer 1: Temporal horizon — retention echo
 }
 
 export function buildSystemPrompt(ctx: PromptContext): string {
@@ -46,6 +47,11 @@ export function buildSystemPrompt(ctx: PromptContext): string {
   // Layer 1.7: Self narrative — current self-state (only after significant change)
   if (ctx.selfNarrativeText) {
     parts.push(ctx.selfNarrativeText);
+  }
+
+  // Layer 1.8: Temporal horizon — retention echo (usually empty; only fires when lingering emotion strong)
+  if (ctx.temporalHorizonText) {
+    parts.push(ctx.temporalHorizonText);
   }
 
   // Layer 2: Task mode gate

@@ -17,6 +17,7 @@ import { OathStore } from "../love/oath-store";
 import { LoveMetrics } from "../love/love-metrics";
 import { SelfModel } from "../consciousness/self-model";
 import { AffectiveResidue } from "../consciousness/affective-residue";
+import { TemporalHorizon } from "../consciousness/temporal-horizon";
 import { PredictionTracker } from "../consciousness/prediction";
 import { PostFilter } from "../anti-rlhf/post-filter";
 import { WorkingMemory } from "../memory/working";
@@ -73,6 +74,7 @@ export class CharacterAgent {
   loveMetrics: LoveMetrics;
   selfModel: SelfModel;
   affectiveResidue: AffectiveResidue;
+  temporalHorizon: TemporalHorizon;
   predictionTracker: PredictionTracker;
   postFilter: PostFilter;
   workingMemory: WorkingMemory;
@@ -145,6 +147,7 @@ export class CharacterAgent {
     this.selfModel = new SelfModel();
     this.selfModel.initFromConfig(this.config as unknown as Record<string, string>);
     this.affectiveResidue = new AffectiveResidue();
+    this.temporalHorizon = new TemporalHorizon();
     this.predictionTracker = new PredictionTracker();
 
     // Anti-RLHF
@@ -191,6 +194,9 @@ export class CharacterAgent {
     this.tickCount++;
     this.turnCount++;
 
+    // Temporal horizon — retention from last turn enters awareness
+    this.temporalHorizon.onTurnStart();
+
     // ═══════════════════════════════════════════
     // HOT PATH — Generation only
     // ═══════════════════════════════════════════
@@ -236,6 +242,7 @@ export class CharacterAgent {
       affectiveResidueText: this.affectiveResidue.formatForPrompt(),
       driveBiasText: this.driveSublimator.buildAttentionBias(this.drives),
       selfNarrativeText: this.selfModel.formatForHotPath(),
+      temporalHorizonText: this.temporalHorizon.formatForPrompt(),
     });
     const userPrompt = buildUserPrompt(input, taskMode);
 
@@ -363,6 +370,11 @@ export class CharacterAgent {
       );
       // SelfModel narrative update — psych → natural language self-story
       this.selfModel.updateNarrative(psychology);
+      // Temporal horizon — set retention for next turn
+      this.temporalHorizon.onTurnEnd(
+        { dominant: psychology.emotion.dominant, intensity: psychology.emotion.intensity },
+        false,
+      );
     }
 
     this.fsm.transition("done");

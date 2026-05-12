@@ -227,6 +227,7 @@ function createControllerAdapter(agent: CharacterAgent, spanState: SpanState) {
     },
     psychologyEngine: agent.psychologyEngine,
     selfModel: agent.selfModel,
+    temporalHorizon: agent.temporalHorizon,
     affectiveResidue: agent.affectiveResidue,
     driveSublimator: agent.driveSublimator,
     drives: agent.drives,

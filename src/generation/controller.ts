@@ -27,6 +27,7 @@ export interface ControllerAgent {
   psychologyEngine: { analyze(...args: any[]): Promise<any> };
   selfModel: { formatCapabilities(): string; formatForHotPath(): string };
   affectiveResidue: { formatForPrompt(): string };
+  temporalHorizon: { formatForPrompt(): string };
   driveSublimator: { buildAttentionBias(drives: any): string };
   drives: any;
   groundTruth: any;
@@ -176,6 +177,7 @@ export class GenerationController {
       affectiveResidueText: this.agent.affectiveResidue.formatForPrompt(),
       driveBiasText: this.agent.driveSublimator.buildAttentionBias(this.agent.drives),
       selfNarrativeText: this.agent.selfModel.formatForHotPath(),
+      temporalHorizonText: this.agent.temporalHorizon.formatForPrompt(),
       taskMode,
     };
 
