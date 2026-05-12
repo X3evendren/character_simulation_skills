@@ -5,6 +5,7 @@ import { LongTermMemory } from "./long-term";
 import { ConsolidationReport, createConsolidationReport } from "./store";
 import type { CoreGraphMemory } from "./core-graph";
 import type { ArchiveMemory } from "./archive";
+import type { SkillLibrary } from "../learning/skill-library";
 
 export interface MetabolismStats {
   daydreamCount: number; quickSleepCount: number; fullSleepCount: number;
@@ -18,10 +19,11 @@ export class SleepCycleMetabolism {
   private ltm: LongTermMemory;
   private core: CoreGraphMemory | null;
   private archive: ArchiveMemory | null;
+  private skills: SkillLibrary | null;
   stats: MetabolismStats;
 
-  constructor(working: WorkingMemory, stm: ShortTermMemory, ltm: LongTermMemory, core: CoreGraphMemory | null = null, archive: ArchiveMemory | null = null) {
-    this.working = working; this.stm = stm; this.ltm = ltm; this.core = core; this.archive = archive;
+  constructor(working: WorkingMemory, stm: ShortTermMemory, ltm: LongTermMemory, core: CoreGraphMemory | null = null, archive: ArchiveMemory | null = null, skills: SkillLibrary | null = null) {
+    this.working = working; this.stm = stm; this.ltm = ltm; this.core = core; this.archive = archive; this.skills = skills;
     this.stats = {
       daydreamCount: 0, quickSleepCount: 0, fullSleepCount: 0,
       totalMerged: 0, totalPromoted: 0, totalArchived: 0, totalConflicts: 0,
@@ -95,6 +97,12 @@ export class SleepCycleMetabolism {
 
     report.archived += await this.working.forget();
     report.archived += await this.stm.forget();
+    // Skills cleanup
+    if (this.skills) {
+      const { archived } = this.skills.cleanupStale();
+      if (archived.length) report.archived += archived.length;
+    }
+
     report.archived += await this.ltm.forget();
 
     this.stats.totalPromoted += report.promoted;

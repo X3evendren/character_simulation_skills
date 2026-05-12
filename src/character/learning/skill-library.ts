@@ -108,6 +108,53 @@ export class SkillLibrary {
     return null;
   }
 
+  /** Hermes pattern: auto-deprecation. Check all skills for staleness. */
+  cleanupStale(): { archived: string[]; warnings: string[] } {
+    const now = Date.now() / 1000;
+    const archived: string[] = [];
+    const warnings: string[] = [];
+
+    for (const [name, sk] of this._skills) {
+      if (sk.archived) continue;
+      const age = now - sk.lastUsed;
+      const daysSinceUse = age / 86400;
+
+      // 60 days unused + low success → archive
+      if (daysSinceUse > 60 && sk.successRate < 0.3 && sk.usageCount > 0) {
+        sk.archived = true;
+        archived.push(name);
+      }
+      // 30 days unused → warn
+      else if (daysSinceUse > 30 && sk.usageCount > 0) {
+        warnings.push(`${name}: ${Math.round(daysSinceUse)}天未使用`);
+      }
+      // Low success rate after sufficient trials → warn
+      else if (sk.usageCount >= 10 && sk.successRate < 0.1 && !sk.archived) {
+        sk.archived = true;
+        archived.push(name);
+      }
+    }
+    return { archived, warnings };
+  }
+
+  /** Detect similar skills that could be merged. */
+  detectMergeCandidates(): string[][] {
+    const active = this.listActive();
+    const candidates: string[][] = [];
+
+    for (let i = 0; i < active.length; i++) {
+      for (let j = i + 1; j < active.length; j++) {
+        const a = active[i], b = active[j];
+        // Check trigger overlap
+        const overlap = a.triggers.filter(t => b.triggers.includes(t));
+        if (overlap.length >= 2) {
+          candidates.push([a.name, b.name]);
+        }
+      }
+    }
+    return candidates;
+  }
+
   get(name: string): Skill | undefined { return this._skills.get(name); }
   listActive(): Skill[] { return [...this._skills.values()].filter(s => !s.archived); }
   archive(name: string): void { const s = this._skills.get(name); if (s) s.archived = true; }

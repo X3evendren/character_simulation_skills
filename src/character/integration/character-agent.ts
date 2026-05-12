@@ -163,7 +163,7 @@ export class CharacterAgent {
     this.longTermMemory = new LongTermMemory(":memory:", this.memConfig.longTermMemorySize);
     this.coreGraph = new CoreGraphMemory(":memory:", this.memConfig.coreGraphMaxNodes, this.memConfig.coreGraphMaxEdges);
     this.archiveMemory = new ArchiveMemory(":memory:");
-    this.metabolism = new SleepCycleMetabolism(this.workingMemory, this.shortTermMemory, this.longTermMemory, this.coreGraph, this.archiveMemory);
+    this.metabolism = new SleepCycleMetabolism(this.workingMemory, this.shortTermMemory, this.longTermMemory, this.coreGraph, this.archiveMemory, this.skillLibrary);
     this.snapshot = new FrozenSnapshot();
 
     // Learning
