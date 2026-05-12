@@ -105,6 +105,8 @@ export function App() {
     // Add user input as locked span
     const userSpan: Span = { id: `usr_${Date.now()}`, layer: "locked", text: `❯ ${text}`, startPos: 0, endPos: 0, committedAt: Date.now() };
     spanState.apply({ type: "append", span: userSpan });
+    // Mark generation boundary so abort can roll back correctly
+    spanState.markGenStart();
 
     setGenStatus("generating");
     const t0 = Date.now();

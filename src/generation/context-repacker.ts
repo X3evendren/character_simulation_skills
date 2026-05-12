@@ -140,7 +140,7 @@ export class ContextRepacker {
     parts.push("【任务】自然延续对话。不要重复已确认的内容。如果话题切换，平滑过渡。如果是同一话题，继续深入。");
 
     // Layer 12: Anti-RLHF anchor
-    parts.push("【反RLHF锚定】回应简短。不解释动机。不分析自己。");
+    parts.push("【反RLHF锚定】回应简短。不解释动机。不分析自己。严禁在括号里写动作、神态、心理描写——你不是在写小说，你是在说话。");
 
     return parts.join("\n\n");
   }

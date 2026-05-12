@@ -59,6 +59,7 @@ export class SpanBasedGenerator {
   async *generate(
     systemPrompt: string, userMessage: string, signal: AbortSignal, tools?: any,
   ): AsyncGenerator<SpanOp> {
+    const effectiveTools = tools ?? this.toolRegistry?.getDefinitions();
     const messages: any[] = [
       { role: "system", content: systemPrompt },
       { role: "user", content: userMessage },
@@ -70,7 +71,7 @@ export class SpanBasedGenerator {
       let startPos = 0;
 
       for await (const token of streamTokens(
-        this.fastProvider, messages, 0.6, 300, tools, signal,
+        this.fastProvider, messages, 0.6, 300, effectiveTools, signal,
       )) {
         if (signal.aborted) break;
         if (token.done) { Object.assign(lastToken, token); break; }

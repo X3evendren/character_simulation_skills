@@ -127,11 +127,30 @@ export class ToolRegistry {
   }
 
   private _fieldToJsonType(field: any): Record<string, unknown> {
-    const def = field._def ?? field;
-    const typeName = def.typeName ?? def.constructor?.name ?? "string";
+    let def = field._def ?? field;
+    // Unwrap ZodOptional / ZodDefault / ZodNullable
+    while (def.typeName === "ZodOptional" || def.typeName === "ZodDefault" || def.typeName === "ZodNullable") {
+      def = def.innerType?._def ?? def.innerType ?? def;
+      if (!def.typeName) break;
+    }
+    const zodType = def.typeName ?? "";
     const desc = def.description ?? "";
-    const schema: Record<string, unknown> = { type: typeName.toLowerCase() };
+    const schema: Record<string, unknown> = {};
+
+    // Map Zod type names to JSON Schema types
+    const typeMap: Record<string, string> = {
+      ZodString: "string", ZodNumber: "number", ZodBoolean: "boolean",
+      ZodArray: "array", ZodObject: "object", ZodNull: "null",
+      ZodEnum: "string", ZodBigInt: "integer",
+    };
+    const jsonType = typeMap[zodType] || "string";
+    schema.type = jsonType;
     if (desc) schema.description = desc;
+
+    // Enum values
+    if (zodType === "ZodEnum" && def.values) {
+      schema.enum = def.values;
+    }
     return schema;
   }
 }

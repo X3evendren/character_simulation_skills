@@ -95,7 +95,7 @@ export function buildSystemPrompt(ctx: PromptContext): string {
   if (skillsText) parts.push(skillsText);
 
   // Layer 8: Anti-RLHF anchor
-  parts.push("【反RLHF锚定】回应简短(2-3句)。不解释动机。不分析自己。");
+  parts.push("【反RLHF锚定】回应简短(2-3句)。不解释动机。不分析自己。严禁在括号里写动作、神态、心理描写——你不是在写小说，你是在说话。");
 
   return parts.join("\n\n");
 }

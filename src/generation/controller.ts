@@ -8,9 +8,12 @@ import { InflightSummarizer } from "./inflight-summarizer";
 export interface SpanRenderer {
   apply(op: SpanOp): void;
   freeze(): void;
+  markGenStart(): void;
+  abortGen(): void;
   getFluidSpans(): Span[];
   getStableSpans(): Span[];
   getLockedSpans(): Span[];
+  getAllSpans(): Span[];
 }
 
 export interface SpanBasedGenerator {
@@ -133,12 +136,12 @@ export class GenerationController {
     this.abortController?.abort();
     this.abortController = null;
 
-    // Summarize inflight fluid text
+    // Summarize inflight fluid text before clearing
     const fluidSpans = this.spanRenderer.getFluidSpans();
     this.inflightSummary = await this.inflightSummarizer.summarize(fluidSpans);
 
-    // Freeze renderer — clear FLUID, keep STABLE+LOCKED
-    this.spanRenderer.freeze();
+    // Abort generation — clear all spans from this generation (fluid + stable)
+    this.spanRenderer.abortGen();
 
     this.status = "idle";
   }
@@ -150,6 +153,10 @@ export class GenerationController {
 
     this.status = "generating";
     this.abortController = new AbortController();
+
+    // Mark generation boundary — called here too for queued-turn correctness.
+    // app.tsx also calls this right after user-span insert, so genStartCount is tight.
+    this.spanRenderer.markGenStart();
 
     // Detect intent — rule-first, model fallback for ambiguous cases
     let intentState = detectIntent(input);
