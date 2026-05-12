@@ -9,6 +9,7 @@ import { UnifiedParams } from "../params/unified-params";
 import { ParamsModulator } from "../params/params-modulator";
 import { DriveState } from "../drive/desires";
 import { DriveDynamics } from "../drive/dynamics";
+import { DriveSublimator } from "../drive/sublimator";
 import { SaturationState, ContinuousParams, detectBehaviorMode } from "../engine/continuous-engine";
 import { SaturationDetector, PrecisionRouter } from "../love/relational";
 import { IrreduciblePrior } from "../love/irreducible-prior";
@@ -62,6 +63,7 @@ export class CharacterAgent {
   modulator: ParamsModulator;
   drives: DriveState;
   dynamics: DriveDynamics;
+  driveSublimator: DriveSublimator;
   saturation: SaturationState;
   continuousParams: ContinuousParams;
   saturationDetector: SaturationDetector;
@@ -126,6 +128,7 @@ export class CharacterAgent {
     // Drive
     this.drives = new DriveState();
     this.dynamics = new DriveDynamics();
+    this.driveSublimator = new DriveSublimator();
 
     // Saturation engine
     this.saturation = new SaturationState();
@@ -231,6 +234,8 @@ export class CharacterAgent {
       emotionDominant: emoDominant,
       emotionIntensity: emoIntensity,
       affectiveResidueText: this.affectiveResidue.formatForPrompt(),
+      driveBiasText: this.driveSublimator.buildAttentionBias(this.drives),
+      selfNarrativeText: this.selfModel.formatForHotPath(),
     });
     const userPrompt = buildUserPrompt(input, taskMode);
 
@@ -356,6 +361,8 @@ export class CharacterAgent {
         { dominant: psychology.emotion.dominant, intensity: psychology.emotion.intensity, pleasure: psychology.emotion.pleasure },
         sig,
       );
+      // SelfModel narrative update — psych → natural language self-story
+      this.selfModel.updateNarrative(psychology);
     }
 
     this.fsm.transition("done");

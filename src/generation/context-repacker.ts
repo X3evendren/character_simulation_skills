@@ -15,6 +15,8 @@ export interface RepackParams {
   capabilities: string;
   groundTruthText: string;
   affectiveResidueText: string;
+  driveBiasText: string;
+  selfNarrativeText: string;
   taskMode: boolean;
 }
 
@@ -44,6 +46,16 @@ export class ContextRepacker {
     // Layer 1.5: Passive affective sediment
     if (params.affectiveResidueText) {
       parts.push(params.affectiveResidueText);
+    }
+
+    // Layer 1.6: Drive sublimation
+    if (params.driveBiasText) {
+      parts.push(params.driveBiasText);
+    }
+
+    // Layer 1.7: Self narrative
+    if (params.selfNarrativeText) {
+      parts.push(params.selfNarrativeText);
     }
 
     // Layer 2: Task mode gate

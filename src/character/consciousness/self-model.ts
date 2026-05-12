@@ -82,6 +82,90 @@ export class SelfModel {
     } catch { return this.currentChapter; }
   }
 
+  /**
+   * Cold Path → SelfModel: translate psychology result into narrative update.
+   * Not "recording parameter changes" but "continuing the self story."
+   *
+   * Only updates when there's a significant change worth narrating.
+   * The narrative is what Hot Path reads — it never sees raw params.
+   */
+  updateNarrative(psych: any): void {
+    const emo = psych?.emotion;
+    const att = psych?.attachment;
+    const df = psych?.defense;
+    const rel = psych?.relation;
+    if (!emo) return;
+
+    const changes: string[] = [];
+
+    // Emotional shift — only when intensity is significant
+    if (emo.intensity > 0.4) {
+      const emoMap: Record<string, string> = {
+        joy: "心情明亮了些",
+        sadness: "心里有些沉",
+        fear: "感到一丝不安",
+        anger: "有些不悦",
+        trust: "对这个人多了些信任",
+        anticipation: "对未来有些期待",
+        surprise: "有些意外",
+        disgust: "本能地想回避什么",
+        neutral: "",
+      };
+      const mapped = emoMap[emo.dominant];
+      if (mapped) {
+        changes.push(mapped);
+      } else if (emo.nuance && emo.nuance.length < 30) {
+        // Use the nuance description from psych if available
+        changes.push(emo.nuance);
+      }
+    }
+
+    // Relationship shift
+    if (rel?.intimacy > 0.4) {
+      changes.push("感到一种亲近");
+    } else if (rel?.intimacy < -0.15) {
+      changes.push("感到一种微妙的距离");
+    }
+
+    // Attachment
+    if (att?.strategy === "seeking_reassurance") {
+      changes.push("有些想确认对方的在意");
+    } else if (att?.strategy === "distancing") {
+      changes.push("不自觉地想保持距离");
+    }
+
+    // Defense — only when clearly active
+    if (df?.intensity > 0.5 && df?.active && df.active !== "无") {
+      changes.push("本能地有些防御");
+    }
+
+    // Self-reflection from inner monologue
+    const inner = psych?.innerMonologue ?? "";
+    if (inner && ["触动", "改变", "原来", "他教会", "因为他"].some((w: string) => inner.includes(w))) {
+      changes.push("感到自己在改变");
+    }
+    if (inner && ["不确定", "困惑", "不知道为什么", "矛盾"].some((w: string) => inner.includes(w))) {
+      changes.push("还有些困惑");
+    }
+
+    // Only update if there are meaningful changes
+    if (changes.length === 0) return;
+
+    // Assemble narrative — at most 2 changes
+    const chosen = changes.slice(0, 2);
+    this.currentChapter = chosen.join("。") + "。";
+  }
+
+  /** Hot Path: returns narrative text, never raw params. */
+  formatForHotPath(): string {
+    if (!this.currentChapter) return "";
+    // Don't output the generic initial state
+    if (this.currentChapter.includes("刚刚醒来") || this.currentChapter.includes("准备好帮助用户")) {
+      return "";
+    }
+    return `【自我状态】${this.currentChapter}`;
+  }
+
   toDict(): Record<string, unknown> {
     return {
       coreIdentity: this.coreIdentity, currentChapter: this.currentChapter,

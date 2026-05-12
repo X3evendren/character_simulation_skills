@@ -25,8 +25,10 @@ export interface ControllerAgent {
   getCommittedSpans(): Span[];
   snapshot: { formatForPrompt(): string; freeze(...args: any[]): string; markDirty(): void };
   psychologyEngine: { analyze(...args: any[]): Promise<any> };
-  selfModel: { formatCapabilities(): string };
+  selfModel: { formatCapabilities(): string; formatForHotPath(): string };
   affectiveResidue: { formatForPrompt(): string };
+  driveSublimator: { buildAttentionBias(drives: any): string };
+  drives: any;
   groundTruth: any;
   config: { name: string; traits: string; essence?: string; rules?: string };
   /** Run Cold Path — called when generation completes. Returns psychology result. */
@@ -172,6 +174,8 @@ export class GenerationController {
       capabilities: this.agent.selfModel.formatCapabilities(),
       groundTruthText: "", // populated below if groundTruth exists
       affectiveResidueText: this.agent.affectiveResidue.formatForPrompt(),
+      driveBiasText: this.agent.driveSublimator.buildAttentionBias(this.agent.drives),
+      selfNarrativeText: this.agent.selfModel.formatForHotPath(),
       taskMode,
     };
 

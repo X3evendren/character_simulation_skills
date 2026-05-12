@@ -228,6 +228,8 @@ function createControllerAdapter(agent: CharacterAgent, spanState: SpanState) {
     psychologyEngine: agent.psychologyEngine,
     selfModel: agent.selfModel,
     affectiveResidue: agent.affectiveResidue,
+    driveSublimator: agent.driveSublimator,
+    drives: agent.drives,
     groundTruth: agent.groundTruth,
     config: {
       name: agent.config.name,

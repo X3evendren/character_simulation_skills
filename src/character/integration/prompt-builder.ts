@@ -20,6 +20,8 @@ export interface PromptContext {
   emotionDominant?: string;      // Lightweight emotion label only
   emotionIntensity?: number;
   affectiveResidueText?: string; // Layer 0: passive emotional sediment from AffectiveResidue
+  driveBiasText?: string;        // Layer 1: drive sublimation — attention bias
+  selfNarrativeText?: string;    // Layer 1: SelfModel narrative — current self-state
 }
 
 export function buildSystemPrompt(ctx: PromptContext): string {
@@ -34,6 +36,16 @@ export function buildSystemPrompt(ctx: PromptContext): string {
   // Layer 1.5: Passive affective sediment (before task mode — it colours everything below)
   if (ctx.affectiveResidueText) {
     parts.push(ctx.affectiveResidueText);
+  }
+
+  // Layer 1.6: Drive sublimation — felt attention bias (only when drives deviate from baseline)
+  if (ctx.driveBiasText) {
+    parts.push(ctx.driveBiasText);
+  }
+
+  // Layer 1.7: Self narrative — current self-state (only after significant change)
+  if (ctx.selfNarrativeText) {
+    parts.push(ctx.selfNarrativeText);
   }
 
   // Layer 2: Task mode gate
