@@ -41,12 +41,20 @@ export class SleepCycleMetabolism {
     this.stats.quickSleepCount++; this.stats.lastQuick = Date.now() / 1000;
     const report = createConsolidationReport();
 
+    // WM → STM
     for (const record of this.working.promoteCandidates()) {
       await this.stm.store(record); report.promoted++;
     }
+
+    // STM progressive degradation: oldest 5 records → compressed LTM
+    const promoted = await this.stm.promoteToLtm(this.ltm, 5);
+    report.promoted += promoted.length;
+
+    // STM candidates → LTM (recall_count ≥ 3)
     for (const record of this.stm.promoteCandidates()) {
       await this.ltm.store(record); report.promoted++;
     }
+
     const ltmReport = await this.ltm.consolidate();
     report.merged += ltmReport.merged;
     this.stats.totalPromoted += report.promoted;
@@ -60,6 +68,11 @@ export class SleepCycleMetabolism {
 
     const qr = await this.quickSleep();
     report.promoted += qr.promoted;
+
+    // Confidence decay: old unverified LTM facts lose confidence
+    const now = Date.now() / 1000;
+    report.archived += this.ltm.decayConfidence(7 * 86400, now); // 7-day half-life
+    report.archived += this.ltm.compressOld(30 * 86400, now);    // 30-day old → compressed
 
     const conflicts = this.ltm.detectContradictions();
     report.conflicts = conflicts.length;

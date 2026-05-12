@@ -21,25 +21,30 @@ export class LongTermMemory extends MemoryStore {
       record_id TEXT PRIMARY KEY, content TEXT NOT NULL, emotion TEXT DEFAULT '{}',
       significance REAL DEFAULT 0.5, event_type TEXT DEFAULT 'unknown', tags TEXT DEFAULT '[]',
       timestamp REAL, recall_count INTEGER DEFAULT 0, related_ids TEXT DEFAULT '[]',
-      embedding BLOB, superseded INTEGER DEFAULT 0
+      memory_type TEXT DEFAULT 'episodic', confidence REAL DEFAULT 0.7,
+      superseded INTEGER DEFAULT 0, superseded_by TEXT, embedding BLOB
     )`);
     this._db.exec("CREATE INDEX IF NOT EXISTS idx_ltm_emotion ON ltm(event_type)");
     this._db.exec("CREATE INDEX IF NOT EXISTS idx_ltm_sig ON ltm(significance)");
+    this._db.exec("CREATE INDEX IF NOT EXISTS idx_ltm_conf ON ltm(confidence)");
   }
 
   async store(record: MemoryRecord): Promise<string> {
     const rid = record.recordId || `ltm_${Date.now()}_${this.length}`;
     record.recordId = rid;
-    this._db!.prepare("INSERT OR REPLACE INTO ltm VALUES (?,?,?,?,?,?,?,?,?,?,?)").run(
+    this._db!.prepare("INSERT OR REPLACE INTO ltm VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(
       rid, record.content, JSON.stringify(record.emotionalSignature), record.significance,
       record.eventType, JSON.stringify(record.tags), record.timestamp, record.recallCount,
-      JSON.stringify(record.metadata?.relatedIds ?? []), null, 0,
+      JSON.stringify(record.metadata?.relatedIds ?? []), record.memoryType,
+      record.confidence, record.superseded ? 1 : 0, record.supersededBy, null,
     );
     this._trim(); return rid;
   }
 
   async recall(query: string, n = 5): Promise<MemoryRecord[]> {
-    const rows = this._db!.prepare("SELECT * FROM ltm WHERE superseded=0 ORDER BY timestamp DESC LIMIT ?").all(n * 5) as any[];
+    const rows = this._db!.prepare(
+      "SELECT * FROM ltm WHERE superseded=0 ORDER BY (significance * confidence) DESC LIMIT ?"
+    ).all(n * 5) as any[];
     const now = Date.now() / 1000;
     const scored: Array<[number, MemoryRecord]> = [];
     for (const row of rows) {
@@ -62,7 +67,15 @@ export class LongTermMemory extends MemoryStore {
     const report = createConsolidationReport();
     const rows = this._db!.prepare("SELECT record_id, content FROM ltm WHERE superseded=0 ORDER BY timestamp DESC LIMIT 50").all() as any[];
     const seen = new Set<string>();
-    for (const [rid, content] of rows) { if (seen.has(content)) { this._db!.prepare("UPDATE ltm SET superseded=1 WHERE record_id=?").run(rid); report.merged++; } seen.add(content); }
+    for (const row of rows) {
+      const rid: string = row[0] ?? row.record_id;
+      const content: string = row[1] ?? row.content;
+      if (seen.has(content)) {
+        this._db!.prepare("UPDATE ltm SET superseded=1 WHERE record_id=?").run(rid);
+        report.merged++;
+      }
+      seen.add(content);
+    }
     return report;
   }
 
@@ -92,7 +105,51 @@ export class LongTermMemory extends MemoryStore {
     const c = (this._db!.prepare("SELECT COUNT(*) as c FROM ltm").get() as any).c;
     if (c > this.maxItems) this._db!.prepare("DELETE FROM ltm WHERE rowid IN (SELECT rowid FROM ltm ORDER BY significance ASC, timestamp ASC LIMIT ?)").run(c - this.maxItems);
   }
+  /** Update confidence — reinforced by recall or contradicted by new evidence. */
+  updateConfidence(recordId: string, delta: number): void {
+    this._db!.prepare(
+      "UPDATE ltm SET confidence = MAX(0.0, MIN(1.0, confidence + ?)) WHERE record_id=?"
+    ).run(delta, recordId);
+  }
+
+  /** Mark a fact as superseded by a newer version. Never silently delete. */
+  markSuperseded(recordId: string, byRecordId: string): void {
+    this._db!.prepare(
+      "UPDATE ltm SET superseded=1, superseded_by=?, confidence=0.1 WHERE record_id=?"
+    ).run(byRecordId, recordId);
+  }
+
+  /** Decay confidence of old, unverified facts. */
+  decayConfidence(halfLifeSeconds: number, now: number): number {
+    const lambda = Math.LN2 / halfLifeSeconds;
+    return this._db!.prepare(
+      `UPDATE ltm SET confidence = confidence * ?
+       WHERE superseded=0 AND recall_count=0 AND confidence > 0.2
+       AND (? - timestamp) > ?`
+    ).run(Math.exp(-lambda), now, halfLifeSeconds).changes;
+  }
+
+  /** Compress old records: full text → short summary + emotional vector. */
+  compressOld(minAgeSeconds: number, now: number): number {
+    return this._db!.prepare(
+      `UPDATE ltm SET significance = significance * 0.5
+       WHERE superseded=0 AND confidence < 0.3
+       AND (? - timestamp) > ? AND recall_count = 0`
+    ).run(now, minAgeSeconds).changes;
+  }
+
   private _rowToRecord(row: any): MemoryRecord {
-    return createMemoryRecord({ recordId: row[0], content: row[1], emotionalSignature: JSON.parse(row[2] || "{}"), significance: row[3], eventType: row[4], tags: JSON.parse(row[5] || "[]"), timestamp: row[6], recallCount: row[7], metadata: { relatedIds: JSON.parse(row[8] || "[]"), embedding: row[9], superseded: !!row[10] } });
+    return createMemoryRecord({
+      recordId: row[0], content: row[1],
+      emotionalSignature: JSON.parse(row[2] || "{}"),
+      significance: row[3], eventType: row[4],
+      tags: JSON.parse(row[5] || "[]"), timestamp: row[6],
+      recallCount: row[7],
+      memoryType: (row[9] as any) ?? "episodic",
+      confidence: row[10] ?? 0.7,
+      superseded: !!row[11],
+      supersededBy: row[12] ?? null,
+      metadata: { relatedIds: JSON.parse(row[8] || "[]"), embedding: row[13] },
+    });
   }
 }

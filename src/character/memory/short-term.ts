@@ -1,6 +1,6 @@
 /** Short-Term Memory — SQLite + FTS5. better-sqlite3 for Node.js */
 import Database from "better-sqlite3";
-import { MemoryStore, MemoryRecord, createMemoryRecord, ConsolidationReport, createConsolidationReport } from "./store";
+import { MemoryStore, MemoryRecord, createMemoryRecord, ConsolidationReport, createConsolidationReport, type MemoryType } from "./store";
 
 export class ShortTermMemory extends MemoryStore {
   private dbPath: string;
@@ -25,7 +25,9 @@ export class ShortTermMemory extends MemoryStore {
     this._db.exec(`CREATE TABLE IF NOT EXISTS stm (
       record_id TEXT PRIMARY KEY, content TEXT NOT NULL, emotion TEXT DEFAULT '{}',
       significance REAL DEFAULT 0.5, event_type TEXT DEFAULT 'unknown', tags TEXT DEFAULT '[]',
-      timestamp REAL, trust REAL DEFAULT 1.0, recall_count INTEGER DEFAULT 0, embedding BLOB
+      timestamp REAL, trust REAL DEFAULT 1.0, recall_count INTEGER DEFAULT 0,
+      memory_type TEXT DEFAULT 'episodic', confidence REAL DEFAULT 0.7,
+      superseded INTEGER DEFAULT 0, superseded_by TEXT, embedding BLOB
     )`);
     this._db.exec(`CREATE VIRTUAL TABLE IF NOT EXISTS stm_fts USING fts5(
       content, event_type, tags, content=stm, content_rowid=rowid
@@ -41,10 +43,11 @@ export class ShortTermMemory extends MemoryStore {
     if (this._embeddingFn) {
       try { const buf = new Float32Array(this._embeddingFn(record.content)); embBlob = Buffer.from(buf.buffer); } catch { /* */ }
     }
-    this._db!.prepare("INSERT OR REPLACE INTO stm VALUES (?,?,?,?,?,?,?,?,?,?)").run(
+    this._db!.prepare("INSERT OR REPLACE INTO stm VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(
       rid, record.content, JSON.stringify(record.emotionalSignature), record.significance,
       record.eventType, JSON.stringify(record.tags), record.timestamp, record.trust,
-      record.recallCount, embBlob,
+      record.recallCount, record.memoryType, record.confidence, record.superseded ? 1 : 0,
+      record.supersededBy, embBlob,
     );
     this._trim();
     return rid;
@@ -81,6 +84,51 @@ export class ShortTermMemory extends MemoryStore {
     this._db!.prepare("UPDATE stm SET recall_count = recall_count + 1 WHERE record_id = ?").run(recordId);
   }
 
+  /** Progressive degradation: compress N oldest records to summary, reduce significance. */
+  degradeOldest(count: number, summaryPrompt?: string): MemoryRecord[] {
+    const rows = this._db!.prepare(
+      "SELECT * FROM stm WHERE superseded=0 ORDER BY timestamp ASC LIMIT ?"
+    ).all(count) as any[];
+    if (!rows.length) return [];
+
+    const records = rows.map((r: any) => this._rowToRecord(r));
+    // Reduce significance by 0.3 → fades over multiple degradation passes
+    for (const r of records) {
+      const newSig = Math.max(0.1, r.significance - 0.3);
+      this._db!.prepare(
+        "UPDATE stm SET significance=?, content=? WHERE record_id=?"
+      ).run(newSig, r.content, r.recordId);
+      r.significance = newSig;
+    }
+    return records;
+  }
+
+  /** Move records from STM to LTM, keeping only emotional signature + summary. */
+  async promoteToLtm(ltmStore: MemoryStore, count: number): Promise<MemoryRecord[]> {
+    const records = this.degradeOldest(count);
+    const promoted: MemoryRecord[] = [];
+    for (const r of records) {
+      // Compress: keep emotional sig + first 150 chars as summary
+      const summary = r.content.slice(0, 150);
+      const upgraded = createMemoryRecord({
+        recordId: r.recordId.replace("stm_", "ltm_"),
+        content: summary,
+        emotionalSignature: r.emotionalSignature,
+        significance: Math.max(0.2, r.significance - 0.2),
+        eventType: r.eventType,
+        tags: r.tags,
+        timestamp: r.timestamp,
+        trust: r.trust,
+        recallCount: r.recallCount,
+        memoryType: "episodic",
+        confidence: r.trust * r.significance,
+      });
+      await ltmStore.store(upgraded);
+      promoted.push(upgraded);
+    }
+    return promoted;
+  }
+
   promoteCandidates(): MemoryRecord[] {
     return (this._db!.prepare("SELECT * FROM stm WHERE recall_count >= 3").all() as any[]).map((r: any) => this._rowToRecord(r));
   }
@@ -99,7 +147,11 @@ export class ShortTermMemory extends MemoryStore {
       significance: row[3], eventType: row[4],
       tags: JSON.parse(row[5] || "[]"), timestamp: row[6],
       trust: row[7], recallCount: row[8],
-      metadata: row[9] ? { embedding: row[9] } : {},
+      memoryType: (row[9] as MemoryType) ?? "episodic",
+      confidence: row[10] ?? 0.7,
+      superseded: !!row[11],
+      supersededBy: row[12] ?? null,
+      metadata: row[13] ? { embedding: row[13] } : {},
     });
   }
 }

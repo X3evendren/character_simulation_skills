@@ -1,3 +1,5 @@
+export type MemoryType = "episodic" | "semantic" | "procedural";
+
 export interface MemoryRecord {
   recordId: string;
   content: string;
@@ -8,6 +10,10 @@ export interface MemoryRecord {
   timestamp: number;
   trust: number;
   recallCount: number;
+  memoryType: MemoryType;
+  confidence: number;      // 0-1, decays without verification
+  superseded: boolean;     // old version of a fact
+  supersededBy: string | null; // pointer to newer version
   metadata: Record<string, unknown>;
 }
 
@@ -42,6 +48,10 @@ export function createMemoryRecord(opts: Partial<MemoryRecord> = {}): MemoryReco
     timestamp: opts.timestamp ?? Date.now() / 1000,
     trust: opts.trust ?? 1.0,
     recallCount: opts.recallCount ?? 0,
+    memoryType: opts.memoryType ?? "episodic",
+    confidence: opts.confidence ?? 0.7,
+    superseded: opts.superseded ?? false,
+    supersededBy: opts.supersededBy ?? null,
     metadata: opts.metadata ?? {},
   };
 }

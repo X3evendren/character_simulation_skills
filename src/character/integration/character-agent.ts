@@ -345,10 +345,12 @@ export class CharacterAgent {
     await this.workingMemory.store(createMemoryRecord({
       content: input, eventType: "user_input", significance: 0.5,
       emotionalSignature: { [emoKey]: emoVal }, tags: ["user", emoKey],
+      memoryType: "episodic", confidence: 0.8,
     }));
     await this.workingMemory.store(createMemoryRecord({
       content: response, eventType: "assistant_response", significance: 0.5,
       emotionalSignature: { [emoKey]: emoVal }, tags: ["assistant", emoKey],
+      memoryType: "episodic", confidence: 0.7,
     }));
     this.snapshot.markDirty();
 
