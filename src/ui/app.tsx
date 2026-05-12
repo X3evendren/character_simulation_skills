@@ -180,33 +180,31 @@ export function App() {
   // Render
   // ═══════════════════════════════════════
   const allSpans = spanState.getAllSpans();
-  const visibleSpans = allSpans.length <= maxMsg ? allSpans : allSpans.slice(-maxMsg);
+  const visibleCount = Math.max(1, maxMsg - 1);
+  const visibleSpans = allSpans.length <= visibleCount ? allSpans : allSpans.slice(-visibleCount);
 
   return React.createElement(Box, { flexDirection: "column", height: "100%" },
     // Header
     React.createElement(Text, { bold: true, color: "cyan" }, `  ${agentName} · ${genStatus === "generating" ? "⚡" : "○"} ${genStatus}`),
 
-    // Messages — spans
+    // Single scrolling area — spans + current input flow together
     React.createElement(Box, { flexDirection: "column", flexGrow: 1 },
       ...visibleSpans.map(s =>
-        React.createElement(Text, {
-          key: s.id,
-          color: s.layer === "fluid" ? "white" : s.layer === "locked" ? "white" : "white",
-          dimColor: s.layer === "fluid",
-        }, s.text || " ")
+        React.createElement(Text, { key: s.id, dimColor: s.layer === "fluid" }, s.text || " ")
       ),
-    ),
-
-    // Input area
-    React.createElement(Box, { flexDirection: "column", flexShrink: 0 },
-      React.createElement(Text, { dimColor: true }, `  ${status}`),
-      React.createElement(Text, { dimColor: true }, `  ${"─".repeat((stdout?.columns ?? 80) - 4)}`),
+      // Live input shown at end of conversation
       ...inputDisplay.split("\n").map((line, i) =>
         React.createElement(Text, {
-          key: i,
+          key: `in_${i}`,
           color: i === inputDisplay.split("\n").length - 1 ? "cyan" : "white",
         }, `  ${i === 0 ? "❯ " : "  "}${line || " "}`)
       ),
+    ),
+
+    // Bottom bar
+    React.createElement(Box, { flexDirection: "column", flexShrink: 0 },
+      React.createElement(Text, { dimColor: true }, `  ${status}`),
+      React.createElement(Text, { dimColor: true }, `  ${"─".repeat((stdout?.columns ?? 80) - 4)}`),
     ),
   );
 }
