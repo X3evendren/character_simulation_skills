@@ -4,6 +4,7 @@ import { ShortTermMemory } from "./short-term";
 import { LongTermMemory } from "./long-term";
 import { ConsolidationReport, createConsolidationReport } from "./store";
 import type { CoreGraphMemory } from "./core-graph";
+import type { ArchiveMemory } from "./archive";
 
 export interface MetabolismStats {
   daydreamCount: number; quickSleepCount: number; fullSleepCount: number;
@@ -16,10 +17,11 @@ export class SleepCycleMetabolism {
   private stm: ShortTermMemory;
   private ltm: LongTermMemory;
   private core: CoreGraphMemory | null;
+  private archive: ArchiveMemory | null;
   stats: MetabolismStats;
 
-  constructor(working: WorkingMemory, stm: ShortTermMemory, ltm: LongTermMemory, core: CoreGraphMemory | null = null) {
-    this.working = working; this.stm = stm; this.ltm = ltm; this.core = core;
+  constructor(working: WorkingMemory, stm: ShortTermMemory, ltm: LongTermMemory, core: CoreGraphMemory | null = null, archive: ArchiveMemory | null = null) {
+    this.working = working; this.stm = stm; this.ltm = ltm; this.core = core; this.archive = archive;
     this.stats = {
       daydreamCount: 0, quickSleepCount: 0, fullSleepCount: 0,
       totalMerged: 0, totalPromoted: 0, totalArchived: 0, totalConflicts: 0,
@@ -82,6 +84,12 @@ export class SleepCycleMetabolism {
       for (const record of this.ltm.promoteCandidates()) {
         await this.core.store(record); report.promoted++;
       }
+    }
+
+    // Archive: sweep superseded LTM records + TTL cleanup
+    if (this.archive) {
+      report.archived += await this.archive.absorbSuperseded(this.ltm);
+      report.archived += await this.archive.forget();
     }
 
     report.archived += await this.working.forget();

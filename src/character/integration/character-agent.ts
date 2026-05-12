@@ -25,6 +25,7 @@ import { WorkingMemory } from "../memory/working";
 import { ShortTermMemory } from "../memory/short-term";
 import { LongTermMemory } from "../memory/long-term";
 import { CoreGraphMemory } from "../memory/core-graph";
+import { ArchiveMemory } from "../memory/archive";
 import { SleepCycleMetabolism } from "../memory/metabolism";
 import { FrozenSnapshot } from "../memory/snapshot";
 import { FeedbackLoop } from "../learning/feedback-loop";
@@ -80,6 +81,7 @@ export class CharacterAgent {
   shortTermMemory: ShortTermMemory;
   longTermMemory: LongTermMemory;
   coreGraph: CoreGraphMemory;
+  archiveMemory: ArchiveMemory;
   metabolism: SleepCycleMetabolism;
   snapshot: FrozenSnapshot;
   feedbackLoop: FeedbackLoop;
@@ -157,7 +159,8 @@ export class CharacterAgent {
     this.shortTermMemory = new ShortTermMemory(":memory:", this.memConfig.shortTermMemorySize);
     this.longTermMemory = new LongTermMemory(":memory:", this.memConfig.longTermMemorySize);
     this.coreGraph = new CoreGraphMemory(":memory:", this.memConfig.coreGraphMaxNodes, this.memConfig.coreGraphMaxEdges);
-    this.metabolism = new SleepCycleMetabolism(this.workingMemory, this.shortTermMemory, this.longTermMemory, this.coreGraph);
+    this.archiveMemory = new ArchiveMemory(":memory:");
+    this.metabolism = new SleepCycleMetabolism(this.workingMemory, this.shortTermMemory, this.longTermMemory, this.coreGraph, this.archiveMemory);
     this.snapshot = new FrozenSnapshot();
 
     // Learning
@@ -177,6 +180,7 @@ export class CharacterAgent {
     await this.shortTermMemory.initialize();
     await this.longTermMemory.initialize();
     await this.coreGraph.initialize();
+    await this.archiveMemory.initialize();
     this.initialized = true;
   }
 

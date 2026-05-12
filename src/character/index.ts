@@ -40,6 +40,7 @@ export { WorkingMemory } from "./memory/working";
 export { ShortTermMemory } from "./memory/short-term";
 export { LongTermMemory } from "./memory/long-term";
 export { CoreGraphMemory } from "./memory/core-graph";
+export { ArchiveMemory } from "./memory/archive";
 export { SleepCycleMetabolism } from "./memory/metabolism";
 export type { MetabolismStats } from "./memory/metabolism";
 export { FrozenSnapshot } from "./memory/snapshot";
