@@ -24,42 +24,37 @@ async function* streamTokens(
   signal: AbortSignal,
 ): AsyncGenerator<StreamToken> {
   const buffer: string[] = [];
-  let done = false;
+  let streamDone = false;
+  let streamError: Error | null = null;
 
   const promise = provider.chatStream(
     messages, temperature, maxTokens, undefined,
     async (delta: string) => { buffer.push(delta); },
     "", signal,
-  );
+  ).then(() => { streamDone = true; }).catch((e: Error) => { streamError = e; streamDone = true; });
 
   // Poll buffer until stream completes or aborted
   let idx = 0;
-  while (!done) {
-    if (signal.aborted) { done = true; break; }
+  while (!streamDone) {
+    if (signal.aborted) break;
 
     while (idx < buffer.length) {
       yield { text: buffer[idx], done: false };
       idx++;
     }
 
-    // Check if stream finished
-    try {
-      const result = await Promise.race([
-        promise.then(() => "done"),
-        new Promise(r => setTimeout(r, 50)).then(() => "timeout"),
-      ]);
-      if (result === "done") {
-        // Flush remaining
-        while (idx < buffer.length) {
-          yield { text: buffer[idx], done: false };
-          idx++;
-        }
-        done = true;
-      }
-    } catch {
-      done = true;
-    }
+    // Wait for either more data or completion
+    await new Promise(r => setTimeout(r, 30));
   }
+
+  // Flush remaining
+  while (idx < buffer.length) {
+    yield { text: buffer[idx], done: false };
+    idx++;
+  }
+
+  // Surface error if any
+  if (streamError) throw streamError;
 
   yield { text: "", done: true };
 }

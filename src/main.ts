@@ -17,7 +17,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const CONFIG_DIR = resolve(__dirname, "../config");
 
 const API_KEY = process.env.DEEPSEEK_API_KEY || "";
-const API_BASE = process.env.DEEPSEEK_API_BASE || "https://api.deepseek.com/v1";
+const API_BASE = process.env.DEEPSEEK_API_BASE || "https://api.deepseek.com";
 const GEN_MODEL = process.env.GEN_MODEL || "deepseek-v4-pro";
 const PSYCH_MODEL = process.env.PSYCH_MODEL || "deepseek-v4-flash";
 
