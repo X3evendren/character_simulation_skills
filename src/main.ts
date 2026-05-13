@@ -2,16 +2,19 @@
  * Character Mind v3 — Main Entry
  * readline + ANSI terminal. Works on Windows (PowerShell/cmd) + Unix.
  */
-import { CharacterAgent } from "./character/index";
-import { OpenAICompatProvider } from "./character/integration/provider";
+import { CharacterAgent } from "./agent/agent";
+import { OpenAICompatProvider } from "./agent/provider";
 import { registerBuiltinCommands, router, isCommandInput } from "./commands/index";
 import type { CommandContext } from "./commands/types";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { createInterface } from "readline";
 import { execSync } from "child_process";
-import { StreamRenderer } from "./stream-renderer";
-import { HistoryStore } from "./history";
+import { StreamRenderer } from "./ui/stream-renderer";
+import { HistoryStore } from "./ui/history";
+import { Tracer, JsonlExporter, ConsoleExporter, CompositeExporter } from "./telemetry";
+import { CheckpointManager, RecoveryManager } from "./recovery";
+import { ContinuousLoop } from "./agent/loop";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CONFIG_DIR = resolve(__dirname, "../config");
@@ -46,14 +49,39 @@ async function main() {
   process.stdout.write("Initializing... ");
   const gen = new OpenAICompatProvider(GEN_MODEL, API_KEY, API_BASE);
   const psych = new OpenAICompatProvider(PSYCH_MODEL, API_KEY, API_BASE);
+  const tracer = new Tracer(new CompositeExporter(
+    new JsonlExporter(),
+    new ConsoleExporter(),
+  ));
+  const ckpt = new CheckpointManager();
+  const recovery = new RecoveryManager(ckpt);
+  const decision = recovery.detect();
+
+  if (decision.action === "resume" && decision.checkpoint) {
+    console.log(`\n  ${C.yellow}Found checkpoint: turn ${decision.checkpoint.turnCount}${C.reset}`);
+  }
+
   const agent = new CharacterAgent({
     configDir: CONFIG_DIR, genProvider: gen, psychProvider: psych,
     genModel: GEN_MODEL, psychModel: PSYCH_MODEL,
+    tracer,
+    checkpointManager: ckpt,
   });
+  await agent.initialize();
+
+  // Resume from checkpoint if applicable
+  if (decision.action === "resume" && decision.checkpoint) {
+    agent.restoreFromCheckpoint(recovery.resume(decision.checkpoint));
+    console.log(`  ${C.green}Resumed from checkpoint.${C.reset}`);
+  }
   await agent.initialize();
   registerBuiltinCommands();
   console.log(`${C.green}ready${C.reset}`);
   console.log(`\n  ${C.bold}${C.cyan}${agent.config.name}${C.reset}${C.bold} · ${C.reset}s=${agent.saturation.s.toFixed(2)}  [/help /quit /stats]\n`);
+
+  // Start background loop
+  const loop = new ContinuousLoop(30_000);
+  loop.start(agent);
 
   const cmdCtx: CommandContext = { agent, args: "", raw: "" };
   const renderer = new StreamRenderer(agent.config.name);
@@ -61,6 +89,8 @@ async function main() {
 
   process.on("SIGINT", async () => {
     console.log(`\n\n${C.dim}Shutting down...${C.reset}`);
+    loop.stop();
+    await tracer.shutdown();
     await agent.shutdown();
     process.exit(0);
   });

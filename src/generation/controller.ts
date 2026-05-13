@@ -21,6 +21,9 @@ export interface SpanBasedGenerator {
     systemPrompt: string,
     userMessage: string,
     signal: AbortSignal,
+    tools?: any,
+    temperature?: number,
+    maxTokens?: number,
   ): AsyncGenerator<SpanOp>;
 }
 
@@ -35,6 +38,7 @@ export interface ControllerAgent {
   drives: any;
   groundTruth: any;
   config: { name: string; traits: string; essence?: string; rules?: string };
+  genParams: { temperature: number; maxTokens: number };
   /** Run Cold Path — called when generation completes. Returns psychology result. */
   runColdPath(turnCtx: any): Promise<any>;
   /** Consume stale Slow results from aborted turns */
@@ -197,7 +201,7 @@ export class GenerationController {
 
     // GroundTruth
     if (this.agent.groundTruth) {
-      const { formatGroundTruthForPrompt } = await import("../character/state/ground-truth");
+      const { formatGroundTruthForPrompt } = await import("../mind/ground-truth");
       repackParams.groundTruthText = formatGroundTruthForPrompt(this.agent.groundTruth);
     }
 
@@ -210,8 +214,10 @@ export class GenerationController {
 
     // Generate
     try {
+      const { temperature, maxTokens } = this.agent.genParams;
       for await (const spanOp of this.spanGenerator.generate(
         systemPrompt, userMessage, this.abortController.signal,
+        undefined, temperature, maxTokens,
       )) {
         if (this.abortController.signal.aborted) break;
         this.spanRenderer.apply(spanOp);

@@ -1,17 +1,20 @@
 /** Ink App — Span-based layout with Controller integration. */
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Text, useInput, useApp, useStdout } from "ink";
-import { CharacterAgent } from "../character/index";
-import { OpenAICompatProvider } from "../character/integration/provider";
+import { CharacterAgent } from "../agent/agent";
+import { OpenAICompatProvider } from "../agent/provider";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { registerBuiltinCommands, router, isCommandInput } from "../commands/index";
-import { HistoryStore } from "../history";
+import { HistoryStore } from "./history";
 import { SpanState } from "./span-renderer";
 import { GenerationController } from "../generation/controller";
 import { InflightSummarizer } from "../generation/inflight-summarizer";
-import { SpanBasedGenerator } from "../character/integration/dual-track";
+import { SpanBasedGenerator } from "../agent/dual-track";
 import type { Span, SpanOp, ToolResult } from "../generation/types";
+import { Tracer, JsonlExporter, ConsoleExporter, CompositeExporter } from "../telemetry";
+import { CheckpointManager, RecoveryManager } from "../recovery";
+import { ContinuousLoop } from "../agent/loop";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CONFIG_DIR = resolve(__dirname, "../../config");
@@ -51,18 +54,37 @@ export function App() {
       try {
         const gen = new OpenAICompatProvider("deepseek-v4-pro", API_KEY, API_BASE);
         const psych = new OpenAICompatProvider("deepseek-v4-flash", API_KEY, API_BASE);
+        const tracer = new Tracer(new CompositeExporter(
+          new JsonlExporter(),
+          new ConsoleExporter(),
+        ));
+        const ckpt = new CheckpointManager();
+        const recovery = new RecoveryManager(ckpt);
+        const decision = recovery.detect();
         const a = new CharacterAgent({
           configDir: CONFIG_DIR, genProvider: gen, psychProvider: psych,
           genModel: "deepseek-v4-pro", psychModel: "deepseek-v4-flash",
+          tracer,
+          checkpointManager: ckpt,
         });
         await a.initialize();
         registerBuiltinCommands();
+
+        // Resume from checkpoint if available
+        if (decision.action === "resume" && decision.checkpoint) {
+          a.restoreFromCheckpoint(recovery.resume(decision.checkpoint));
+        }
+
         setAgent(a);
         setAgentName(a.config.name);
 
+        // Start background loop
+        const loop = new ContinuousLoop(30_000);
+        loop.start(a);
+
         // Build controller
         const inflightSummarizer = new InflightSummarizer(psych);
-        const spanGenerator = new SpanBasedGenerator(gen, gen, a.toolRegistry);
+        const spanGenerator = new SpanBasedGenerator(gen, gen, a.toolRegistry, tracer);
 
         const controllerAdapter = createControllerAdapter(a, spanState);
         const controller = new GenerationController(spanState, inflightSummarizer, controllerAdapter);
@@ -237,6 +259,12 @@ function createControllerAdapter(agent: CharacterAgent, spanState: SpanState) {
       traits: agent.config.traits,
       essence: agent.config.essence as string | undefined,
       rules: agent.config.rules as string | undefined,
+    },
+    get genParams() {
+      return {
+        temperature: agent.continuousParams.responseTemperature,
+        maxTokens: Math.round(agent.continuousParams.verbosity * 500),
+      };
     },
     async runColdPath(turnCtx: any) {
       return agent.runColdPath({ input: turnCtx.input, response: turnCtx.response ?? "" });

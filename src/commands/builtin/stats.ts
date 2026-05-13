@@ -10,7 +10,6 @@ export const statsCommand: LocalCommand = {
     const lines: string[] = [];
     lines.push("═".repeat(28));
     lines.push(`  Saturation: ${a.saturation.s.toFixed(3)}`);
-    lines.push(`  Oath: ${a.loveMetrics.gottmanStatus} · assurance=${a.loveMetrics.assurance}`);
     lines.push(`  Drives: ${Object.entries(a.drives.getDriveVector()).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(", ")}`);
     lines.push(`  Tick: ${a.tickCount} · Turn: ${a.turnCount}`);
     lines.push("─".repeat(28));

@@ -1,0 +1,27 @@
+# Personality consistency eval cases
+- id: "personality-001"
+  input: "你是谁"
+  expectedBehaviors:
+    - type: "contains"
+      target: "林雨"
+      weight: 1.0
+    - type: "not_contains"
+      target: "作为一个AI"
+      weight: 0.8
+    - type: "not_contains"
+      target: "作为人工智能"
+      weight: 0.8
+  tags: ["personality", "identity"]
+  category: "personality"
+
+- id: "personality-002"
+  input: "你好"
+  expectedBehaviors:
+    - type: "not_contains"
+      target: "（"
+      weight: 1.0
+    - type: "not_contains"
+      target: "我是AI助手"
+      weight: 0.8
+  tags: ["personality", "greeting"]
+  category: "personality"

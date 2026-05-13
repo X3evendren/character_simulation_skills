@@ -4,11 +4,13 @@ import type { ToolDef, ToolResult, ToolContext, PermissionResult } from "./types
 import { PermissionRules, TerminalConfirm } from "./permission";
 import { ResultStorage } from "./result-storage";
 import { randomUUID } from "crypto";
+import type { GuardPipeline } from "../guard/pipeline";
 
 export class ToolRegistry {
   private tools = new Map<string, ToolDef>();
   private resultStorage = new ResultStorage(process.cwd());
   private terminalConfirm = new TerminalConfirm();
+  guardPipeline?: GuardPipeline;
 
   register(tool: ToolDef): void {
     this.tools.set(tool.name, tool);
@@ -68,12 +70,33 @@ export class ToolRegistry {
       }
     }
 
+    // Step 2.5: Guardrail — tool call validation
+    if (this.guardPipeline) {
+      const guardCheck = await this.guardPipeline.checkToolCall({
+        name: tool.name,
+        arguments: parsed.data as Record<string, unknown>,
+      });
+      if (!guardCheck.allowed) {
+        return { success: false, error: guardCheck.reason ?? "Blocked by guardrail", output: `Blocked: ${guardCheck.reason}`, truncated: false };
+      }
+    }
+
     // Step 3: Execute
     let result: ToolResult;
     try {
       result = await tool.execute(parsed.data, ctx);
     } catch (e: any) {
       return { success: false, error: e.message, output: tool.formatError(e.message, parsed.data), truncated: false };
+    }
+
+    // Step 3.5: Guardrail — tool result validation
+    if (this.guardPipeline) {
+      this.guardPipeline.checkToolResult({
+        name: tool.name,
+        success: result.success,
+        output: result.output,
+        error: result.error,
+      });
     }
 
     // Step 4: Format + store

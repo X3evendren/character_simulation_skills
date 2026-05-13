@@ -1,5 +1,5 @@
 import type { LocalCommand, CommandContext } from "../types";
-import { PROVIDERS } from "../../character/integration/provider-registry";
+import { PROVIDERS } from "../../agent/provider-registry";
 
 export const modelCommand: LocalCommand = {
   type: "local",

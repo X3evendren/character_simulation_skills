@@ -1,0 +1,12 @@
+export { CharacterAgent } from "./agent";
+export type { AgentHook, TurnContext } from "./agent";
+export { SpanBasedGenerator } from "./dual-track";
+export { buildSystemPrompt, buildUserPrompt } from "./prompt";
+export type { PromptContext } from "./prompt";
+export { OpenAICompatProvider } from "./provider";
+export type { LLMResponse, ToolCall } from "./provider";
+export { loadAssistantConfig, loadToolDefinitions, loadMemoryConfig, ensureSkillsDir } from "./config-loader";
+export type { AssistantConfig, MemoryConfig, ToolDefinition } from "./config-loader";
+export { PROVIDERS, detectProvider, resolveProvider } from "./provider-registry";
+export type { ProviderSpec, ResolvedProvider } from "./provider-registry";
+export { ContinuousLoop } from "./loop";

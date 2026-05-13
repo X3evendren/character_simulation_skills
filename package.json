@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "tsx src/dev-entry.ts",
-    "start": "tsx src/dev-entry.ts"
+    "start": "tsx src/dev-entry.ts",
+    "eval": "tsx src/eval/run-eval.ts",
+    "eval:safety": "tsx src/eval/run-eval.ts --suite safety",
+    "eval:personality": "tsx src/eval/run-eval.ts --suite personality"
   },
   "dependencies": {
     "@alcalzone/ansi-tokenize": "*",

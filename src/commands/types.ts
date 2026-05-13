@@ -2,7 +2,7 @@
  * Command types — Discriminated union 
  * Supports PromptCommand (expands to prompt text) and LocalCommand (executes immediately).
  */
-import type { CharacterAgent } from "../character/integration/character-agent";
+import type { CharacterAgent } from "../agent/agent";
 
 export interface CommandContext {
   agent: CharacterAgent;
